@@ -1,12 +1,11 @@
 
+import java.awt.Desktop;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
+import java.io.IOException;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
-import javax.swing.filechooser.FileNameExtensionFilter;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -18,7 +17,6 @@ import javax.swing.filechooser.FileNameExtensionFilter;
  * @author User
  */
 public class test extends javax.swing.JFrame {
-
     /**
      * Creates new form test
      */
@@ -40,12 +38,12 @@ public class test extends javax.swing.JFrame {
         jButton2 = new javax.swing.JButton();
         destinotxt = new javax.swing.JTextField();
         jButton3 = new javax.swing.JButton();
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        nomefile = new javax.swing.JTextField();
-        extfile = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         idfile = new javax.swing.JTextField();
+        jLabel5 = new javax.swing.JLabel();
+        nometxt2 = new javax.swing.JTextField();
+        jButton4 = new javax.swing.JButton();
+        jButton5 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -70,11 +68,25 @@ public class test extends javax.swing.JFrame {
             }
         });
 
-        jLabel1.setText("Nome");
-
-        jLabel2.setText("Extensão");
-
         jLabel3.setText("ID");
+
+        jLabel5.setText("Nome");
+
+        nometxt2.setEditable(false);
+
+        jButton4.setText("Salvar");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
+
+        jButton5.setText("remover");
+        jButton5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton5ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -82,39 +94,53 @@ public class test extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel3)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(idfile)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jLabel1))
-                    .addComponent(jButton1)
-                    .addComponent(jButton3))
-                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(caminhotxt, javax.swing.GroupLayout.DEFAULT_SIZE, 516, Short.MAX_VALUE)
-                            .addComponent(destinotxt))
+                        .addGap(10, 10, 10)
+                        .addComponent(jButton1)
+                        .addGap(18, 18, 18)
+                        .addComponent(caminhotxt, javax.swing.GroupLayout.PREFERRED_SIZE, 566, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(nomefile, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel2)
-                        .addGap(31, 31, 31)
-                        .addComponent(extfile, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 96, Short.MAX_VALUE)
-                        .addComponent(jButton2)
-                        .addGap(26, 26, 26))))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel3)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(idfile)
+                                .addGap(37, 37, 37))
+                            .addComponent(jButton3))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(18, 18, 18)
+                                .addComponent(destinotxt, javax.swing.GroupLayout.PREFERRED_SIZE, 516, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addContainerGap(20, Short.MAX_VALUE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jButton2)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jButton5)
+                                .addGap(147, 147, 147))))))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(67, 67, 67)
+                .addComponent(jLabel5)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(nometxt2, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(40, 40, 40)
+                .addComponent(jButton4)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(60, 60, 60)
+                .addGap(32, 32, 32)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
                     .addComponent(caminhotxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel5)
+                    .addComponent(nometxt2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton4))
                 .addGap(57, 57, 57)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(destinotxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -122,47 +148,60 @@ public class test extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton2)
-                    .addComponent(jLabel1)
-                    .addComponent(jLabel2)
-                    .addComponent(nomefile, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(extfile, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel3)
-                    .addComponent(idfile, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(103, Short.MAX_VALUE))
+                    .addComponent(idfile, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton5))
+                .addContainerGap(102, Short.MAX_VALUE))
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         JFileChooser fl = new JFileChooser();
         fl.setDialogTitle("Importar arquivo");
-        fl.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        fl.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
 
-//        FileNameExtensionFilter filter = new FileNameExtensionFilter("Arquivo CSV", "csv", "xlsm");
-//        fl.setFileFilter(filter);
         int op = fl.showOpenDialog(null);
         if (op == JFileChooser.APPROVE_OPTION) {
-            File file = fl.getSelectedFile();
-            InputStream is = null;
-            try {
-                is = new FileInputStream(file);
-            } catch (FileNotFoundException ex) {
-                Logger.getLogger(test.class.getName()).log(Level.SEVERE, null, ex);
+            if (fl.getSelectedFile().isDirectory()) {
+                System.out.println("é diretório");
+            } else {
+                System.out.println("é arquivo");
+                try {
+                    Desktop.getDesktop().open(fl.getSelectedFile());
+                } catch (IOException ex) {
+                    Logger.getLogger(test.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
-            caminhotxt.setText(file.getPath());
-            ArrayBits a = new ArrayBits();
-            a.fazerByte(file);
-            if (new ArrayBitsDAO().addArquivo(is)) {
-                System.out.println("foi");
+//            List<File> files = new ArrayList<>();
+//            File diretorio = fl.getSelectedFile();
+//            System.out.println("diretório: "+diretorio.getPath());
+//            String[] arquivos = fl.getSelectedFile().list();
+//            for (String f:arquivos){
+//                File f_temp = new File(diretorio+"\\"+f);
+//                files.add(f_temp);
+//                System.out.println(f_temp.getPath());
+//            }
 
-            }
+//            File file = fl.getSelectedFile();
+//            caminhotxt.setText(file.getPath());
+//            nometxt2.setText(file.getName());
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        ArrayBits a = new ArrayBits();
-        a.pegarByte(new ArrayBitsDAO().getArquivo(Integer.parseInt(idfile.getText())), destinotxt.getText(), nomefile.getText(), extfile.getText());
+        //pega o arquivo no banco de dados e mantem ele salvo no diretorio temporariamente
+        File arquivo = new DocumentoDAO().getArquivo(Integer.parseInt(idfile.getText()), destinotxt.getText());
+        //esse comando faz o arquivo ser deletado ao finalizar o programa
+        arquivo.deleteOnExit();
+        try {
+            Desktop.getDesktop().open(arquivo);
+        } catch (IOException ex) {
+            Logger.getLogger(test.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
@@ -172,10 +211,20 @@ public class test extends javax.swing.JFrame {
 
         int op = fl.showOpenDialog(null);
         if (op == JFileChooser.APPROVE_OPTION) {
-            ArrayBits a = new ArrayBits();
             destinotxt.setText(fl.getSelectedFile().getPath() + "\\");
         }
     }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        File f = new File(caminhotxt.getText());
+        if (!new DocumentoDAO().addArquivo(f)) {
+            System.out.println("nao salvou");
+        }
+    }//GEN-LAST:event_jButton4ActionPerformed
+
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+        
+    }//GEN-LAST:event_jButton5ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -215,14 +264,14 @@ public class test extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField caminhotxt;
     private javax.swing.JTextField destinotxt;
-    private javax.swing.JTextField extfile;
     private javax.swing.JTextField idfile;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
+    private javax.swing.JButton jButton4;
+    private javax.swing.JButton jButton5;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JTextField nomefile;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JTextField nometxt2;
     // End of variables declaration//GEN-END:variables
 }
