@@ -1,0 +1,31 @@
+## escolher arquivo        
+    JFileChooser fl = new JFileChooser();
+    fl.setDialogTitle("Importar arquivo CSV");
+    fl.setFileSelectionMode(JFileChooser.FILES_ONLY);
+
+    FileNameExtensionFilter filter = new FileNameExtensionFilter("Arquivo CSV", "csv", "xlsm");
+    fl.setFileFilter(filter);
+
+    int op = fl.showOpenDialog(null);
+    if (op == JFileChooser.APPROVE_OPTION) {
+        File file = fl.getSelectedFile();
+        System.out.println(file.getPath());
+    }
+
+## redimensionar imagem
+
+        ImageIcon icon = (ImageIcon) back.getIcon();  //back é uma label ja com a imagem
+        icon.setImage(icon.getImage().getScaledInstance(back.getWidth(), back.getHeight(),1));      //redefine a imagem pro tamanho da label chamada back
+        back.setIcon(icon);         //seta a nota imagem da label back
+
+
+## arrastar frame com frame no modo undecorated
+    private static Point point = new Point();  //variavel criada no inicio da classe;
+
+    //isso vai no evento "mouse pressed"
+    point.x = evt.getX();
+    point.y = evt.getY();
+
+    //isso vai no evendo "mouse dragged"    (obs: o this é o frame)
+    Point p = this.getLocation();
+    this.setLocation(p.x + evt.getX() - point.x, p.y + evt.getY() - point.y);

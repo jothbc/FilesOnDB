@@ -2,6 +2,7 @@
 import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -17,6 +18,7 @@ import javax.swing.JFileChooser;
  * @author User
  */
 public class test extends javax.swing.JFrame {
+
     /**
      * Creates new form test
      */
@@ -167,6 +169,15 @@ public class test extends javax.swing.JFrame {
         if (op == JFileChooser.APPROVE_OPTION) {
             if (fl.getSelectedFile().isDirectory()) {
                 System.out.println("é diretório");
+                List<File> files = new ArrayList<>();
+                File diretorio = fl.getSelectedFile();
+                System.out.println("diretório: " + diretorio.getPath());
+                String[] arquivos = fl.getSelectedFile().list();
+                for (String f : arquivos) {
+                    File f_temp = new File(diretorio + "\\" + f);
+                    files.add(f_temp);
+                    System.out.println(f_temp.getPath());
+                }
             } else {
                 System.out.println("é arquivo");
                 try {
@@ -175,15 +186,6 @@ public class test extends javax.swing.JFrame {
                     Logger.getLogger(test.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
-//            List<File> files = new ArrayList<>();
-//            File diretorio = fl.getSelectedFile();
-//            System.out.println("diretório: "+diretorio.getPath());
-//            String[] arquivos = fl.getSelectedFile().list();
-//            for (String f:arquivos){
-//                File f_temp = new File(diretorio+"\\"+f);
-//                files.add(f_temp);
-//                System.out.println(f_temp.getPath());
-//            }
 
 //            File file = fl.getSelectedFile();
 //            caminhotxt.setText(file.getPath());
@@ -223,7 +225,7 @@ public class test extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-        
+
     }//GEN-LAST:event_jButton5ActionPerformed
 
     /**
