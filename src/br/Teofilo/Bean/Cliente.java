@@ -26,8 +26,10 @@ public class Cliente {
     private double valor;
     private boolean ativo;
 
+
     public Cliente() {
     }
+    
 
     /**
      * @return the id
@@ -238,5 +240,9 @@ public class Cliente {
      */
     public void setSexo(String sexo) {
         this.sexo = sexo;
+    }
+    @Override
+    public String toString(){
+        return this.nome;
     }
 }

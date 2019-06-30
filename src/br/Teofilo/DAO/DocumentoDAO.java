@@ -1,5 +1,8 @@
+package br.Teofilo.DAO;
+
 
 import JDBC.ConnectionFactoryMySQL;
+import br.Teofilo.Bean.InfoArquivo;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -11,6 +14,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -34,13 +39,14 @@ public class DocumentoDAO {
         con = ConnectionFactoryMySQL.getConnection();
     }
 
-    public boolean addArquivo(File f) {
-        sql = "INSERT INTO documentos (documento,nome) values (?,?)";
+    public boolean addArquivo(File f,int idCliente) {
+        sql = "INSERT INTO documentos (documento,nome,id_cliente) values (?,?,?)";
         try {
             InputStream is = new FileInputStream(f);
             stmt = con.prepareStatement(sql);
             stmt.setBlob(1, is);
             stmt.setString(2, f.getName());
+            stmt.setInt(3, idCliente);
             stmt.execute();
             return true;
         } catch (SQLException | FileNotFoundException ex) {
@@ -71,6 +77,27 @@ public class DocumentoDAO {
             ConnectionFactoryMySQL.closeConnection(con, stmt);
         }
         return f;
+    }
+    
+    public List<InfoArquivo> getInfoArquivos(int idCliente){
+        List<InfoArquivo> arquivos = new ArrayList<>();
+        sql = "SELECT id,nome FROM documentos WHERE id_cliente = ?";
+        try {
+            stmt=con.prepareStatement(sql);
+            stmt.setInt(1, idCliente);
+            rs = stmt.executeQuery();
+            while (rs.next()){
+                InfoArquivo i = new InfoArquivo();
+                i.setId(rs.getInt("id"));
+                i.setNome(rs.getString("nome"));
+                arquivos.add(i);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DocumentoDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }finally{
+            ConnectionFactoryMySQL.closeConnection(con, stmt, rs);
+        }
+        return arquivos;
     }
 
 }

@@ -44,8 +44,16 @@ public class ClienteDAO {
             stmt.setString(5, c.getSexo());
             stmt.setString(6, c.getCpf());
             stmt.setString(7, c.getRg());
-            stmt.setString(8, CDate.DataPTBRtoDataMySQL(c.getNascimento()));
-            stmt.setString(9, CDate.DataPTBRtoDataMySQL(c.getData_cadastro()));
+            if (c.getNascimento() != null) {
+                stmt.setString(8, CDate.DataPTBRtoDataMySQL(c.getNascimento()));
+            } else {
+                stmt.setString(8, null);
+            }
+            if (c.getData_cadastro() != null) {
+                stmt.setString(9, CDate.DataPTBRtoDataMySQL(c.getData_cadastro()));
+            } else {
+                stmt.setString(9, null);
+            }
             stmt.setString(10, c.getEndereco());
             stmt.setString(11, c.getN_casa());
             stmt.setString(12, c.getComplemento());
@@ -70,42 +78,22 @@ public class ClienteDAO {
             while (rs.next()) {
                 Cliente c = new Cliente();
                 c.setId(rs.getInt("id"));
-                if (rs.getString("nome") != null) {
-                    c.setNome(rs.getString("nome"));
-                }
-                if (rs.getString("email") != null) {
-                    c.setEmail(rs.getString("email"));
-                }
-                if (rs.getString("telefone") != null) {
-                    c.setTelefone(rs.getString("telefone"));
-                }
-                if (rs.getString("telefone2") != null) {
-                    c.setTelefone2(rs.getString("telefone2"));
-                }
-                if (rs.getString("cpf") != null) {
-                    c.setCpf(rs.getString("cpf"));
-                }
-                if (rs.getString("rg") != null) {
-                    c.setRg(rs.getString("rg"));
-                }
-                if (rs.getString("sexo") != null) {
-                    c.setSexo(rs.getString("sexo"));
-                }
+                c.setNome(rs.getString("nome"));
+                c.setEmail(rs.getString("email"));
+                c.setTelefone(rs.getString("telefone"));
+                c.setTelefone2(rs.getString("telefone2"));
+                c.setCpf(rs.getString("cpf"));
+                c.setRg(rs.getString("rg"));
+                c.setSexo(rs.getString("sexo"));
                 if (rs.getString("nascimento") != null) {
                     c.setNascimento(CDate.DataMySQLtoDataStringPT(rs.getString("nascimento")));
                 }
                 if (rs.getString("data_cadastro") != null) {
                     c.setData_cadastro(CDate.DataMySQLtoDataStringPT(rs.getString("data_cadastro")));
                 }
-                if (rs.getString("endereco") != null) {
-                    c.setEndereco(rs.getString("endereco"));
-                }
-                if (rs.getString("n_casa") != null) {
-                    c.setN_casa(rs.getString("n_casa"));
-                }
-                if (rs.getString("complemento") != null) {
-                    c.setComplemento(rs.getString("complemento"));
-                }
+                c.setEndereco(rs.getString("endereco"));
+                c.setN_casa(rs.getString("n_casa"));
+                c.setComplemento(rs.getString("complemento"));
                 c.setValor(rs.getDouble("valor"));
                 c.setAtivo(rs.getBoolean("ativo"));
                 clientes.add(c);
@@ -117,5 +105,74 @@ public class ClienteDAO {
         }
         return clientes;
     }
+
+    public boolean updateCliente(Cliente c) {
+        sql = "UPDATE clientes SET nome = ?, cpf = ?, rg = ?, email =?, telefone =?, "
+                + "telefone2 = ?, sexo = ?, nascimento = ?, data_cadastro = ?, "
+                + "endereco = ?,n_casa = ?, complemento = ? WHERE id= ?";
+        try {
+            stmt = con.prepareStatement(sql);
+            stmt.setString(1, c.getNome());
+            stmt.setString(2, c.getCpf());
+            stmt.setString(3, c.getRg());
+            stmt.setString(4, c.getEmail());
+            stmt.setString(5, c.getTelefone());
+            stmt.setString(6, c.getTelefone2());
+            stmt.setString(7, c.getSexo());
+            if (c.getNascimento() != null) {
+                stmt.setString(8, CDate.DataPTBRtoDataMySQL(c.getNascimento()));
+            } else {
+                stmt.setString(8, null);
+            }
+            if (c.getData_cadastro() != null) {
+                stmt.setString(9, CDate.DataPTBRtoDataMySQL(c.getData_cadastro()));
+            } else {
+                stmt.setString(9, null);
+            }
+            stmt.setString(10, c.getEndereco());
+            stmt.setString(11, c.getN_casa());
+            stmt.setString(12, c.getComplemento());
+            stmt.setInt(13, c.getId());
+            stmt.executeUpdate();
+            return true;
+        } catch (SQLException ex) {
+            Logger.getLogger(ClienteDAO.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        } finally {
+            ConnectionFactoryMySQL.closeConnection(con, stmt);
+        }
+    }
+
+    public boolean inativarCliente(Cliente c) {
+        sql = "UPDATE clientes SET ativo = 0 WHERE id = ?";
+        try {
+            stmt = con.prepareStatement(sql);
+            stmt.setInt(1, c.getId());
+            stmt.executeUpdate();
+            return true;
+        } catch (SQLException ex) {
+            Logger.getLogger(ClienteDAO.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        } finally {
+            ConnectionFactoryMySQL.closeConnection(con, stmt);
+        }
+    }
+
+    public boolean reativarCliente(Cliente c) {
+        sql = "UPDATE clientes SET ativo = 1 WHERE id = ?";
+        try {
+            stmt = con.prepareStatement(sql);
+            stmt.setInt(1, c.getId());
+            stmt.executeUpdate();
+            return true;
+        } catch (SQLException ex) {
+            Logger.getLogger(ClienteDAO.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        } finally {
+            ConnectionFactoryMySQL.closeConnection(con, stmt);
+        }
+    }
+
+    
 
 }

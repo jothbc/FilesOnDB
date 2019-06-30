@@ -29,3 +29,12 @@
     //isso vai no evendo "mouse dragged"    (obs: o this é o frame)
     Point p = this.getLocation();
     this.setLocation(p.x + evt.getX() - point.x, p.y + evt.getY() - point.y);
+
+## trabalhar com lista ja com o objeto pronto
+    DefaultListModel lista = new DefaultListModel();  //declara no inicio da classe;
+    jList1.setModel(lista); //coloca no construtor da classe;
+    
+    //a partir daqui é só adicionar na lista os objetos
+    lista.addElement(umObjeto ou classe);
+    // se for usar classe lembrar de criar o metodo toString pra retornar a informação que vai aparecer na lista
+    lista.getElementAt(jList1.getSelectedIndex()) //é só fazer Cast pra classe pra pegar ela de novo...

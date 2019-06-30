@@ -1,4 +1,5 @@
 
+import br.Teofilo.DAO.DocumentoDAO;
 import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
@@ -187,9 +188,9 @@ public class test extends javax.swing.JFrame {
                 }
             }
 
-//            File file = fl.getSelectedFile();
-//            caminhotxt.setText(file.getPath());
-//            nometxt2.setText(file.getName());
+            File file = fl.getSelectedFile();
+            caminhotxt.setText(file.getPath());
+            nometxt2.setText(file.getName());
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 
@@ -219,7 +220,7 @@ public class test extends javax.swing.JFrame {
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         File f = new File(caminhotxt.getText());
-        if (!new DocumentoDAO().addArquivo(f)) {
+        if (!new DocumentoDAO().addArquivo(f,1)) {
             System.out.println("nao salvou");
         }
     }//GEN-LAST:event_jButton4ActionPerformed

@@ -9,6 +9,7 @@ import br.Teofilo.Bean.Cliente;
 import br.Teofilo.DAO.ClienteDAO;
 import java.awt.Point;
 import java.util.List;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 
@@ -21,6 +22,7 @@ public class ClienteJF extends javax.swing.JFrame {
     private static Point point = new Point();
     List<Cliente> clientes;
     DefaultTableModel tb;
+
     /**
      * Creates new form ClienteJF
      */
@@ -45,6 +47,9 @@ public class ClienteJF extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Cliente");
@@ -119,6 +124,11 @@ public class ClienteJF extends javax.swing.JFrame {
         });
         jTable1.setGridColor(new java.awt.Color(0, 0, 0));
         jTable1.setSelectionBackground(new java.awt.Color(0, 0, 0));
+        jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTable1MouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(jTable1);
         if (jTable1.getColumnModel().getColumnCount() > 0) {
             jTable1.getColumnModel().getColumn(0).setMinWidth(0);
@@ -131,11 +141,42 @@ public class ClienteJF extends javax.swing.JFrame {
             jTable1.getColumnModel().getColumn(4).setMaxWidth(100);
         }
 
+        jLabel3.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/Teofilo/IMG/1x/ic_person_add_24px.png"))); // NOI18N
+        jLabel3.setText("Novo");
         jLabel3.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jLabel3MouseClicked(evt);
+            }
+        });
+
+        jLabel4.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/Teofilo/IMG/1x/pencil.png"))); // NOI18N
+        jLabel4.setText("Editar");
+        jLabel4.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel4MouseClicked(evt);
+            }
+        });
+
+        jLabel6.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/Teofilo/IMG/1x/ic_visibility_off_24px.png"))); // NOI18N
+        jLabel6.setText("Inativar");
+        jLabel6.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel6MouseClicked(evt);
+            }
+        });
+
+        jLabel5.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jLabel5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/Teofilo/IMG/1x/ic_playlist_add_24px.png"))); // NOI18N
+        jLabel5.setText("Reativar");
+        jLabel5.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel5MouseClicked(evt);
             }
         });
 
@@ -150,11 +191,18 @@ public class ClienteJF extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 858, Short.MAX_VALUE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 858, Short.MAX_VALUE)
+                        .addContainerGap())
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel6)
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel5)
+                        .addGap(38, 38, 38))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -163,7 +211,13 @@ public class ClienteJF extends javax.swing.JFrame {
                     .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(26, 26, 26)
-                .addComponent(jLabel3)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.LEADING))
+                    .addComponent(jLabel5))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -201,8 +255,29 @@ public class ClienteJF extends javax.swing.JFrame {
     }//GEN-LAST:event_jLabel2MousePressed
 
     private void jLabel3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel3MouseClicked
-        adicionarUsuario();
+        adicionarCliente();
     }//GEN-LAST:event_jLabel3MouseClicked
+
+    private void jLabel4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel4MouseClicked
+        editarCliente();
+    }//GEN-LAST:event_jLabel4MouseClicked
+
+    private void jLabel6MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel6MouseClicked
+        inativarCliente();
+    }//GEN-LAST:event_jLabel6MouseClicked
+
+    private void jLabel5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel5MouseClicked
+        ClientesInativosJD jd = new ClientesInativosJD(null, true);
+        jd.setVisible(true);
+        carregarUsuarios();
+        popularTabela();
+    }//GEN-LAST:event_jLabel5MouseClicked
+
+    private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
+        if (evt.getClickCount() == 2) {
+            visualizarCliente();
+        }
+    }//GEN-LAST:event_jTable1MouseClicked
 
     /**
      * @param args the command line arguments
@@ -243,6 +318,9 @@ public class ClienteJF extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
@@ -262,13 +340,73 @@ public class ClienteJF extends javax.swing.JFrame {
 
     private void popularTabela() {
         tb.setRowCount(0);
-        for (Cliente c:clientes){
-            Object[] dado = {c.getId(),c.getNome(),c.getEmail(),c.getTelefone(),c.getTelefone2()};
-            tb.addRow(dado);
+        for (Cliente c : clientes) {
+            if (c.isAtivo()) {
+                Object[] dado = {c.getId(), c.getNome(), c.getEmail(), c.getTelefone(), c.getTelefone2()};
+                tb.addRow(dado);
+            }
         }
     }
 
-    private void adicionarUsuario() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    private void adicionarCliente() {
+        NovoClienteJD jd = new NovoClienteJD(null, true, null);
+        jd.setVisible(true);
+        carregarUsuarios();
+        popularTabela();
+    }
+
+    private void editarCliente() {
+        if (jTable1.getSelectedRow() < 0) {
+            return;
+        }
+        Cliente temp = null;
+        for (Cliente c : clientes) {
+            if ((int) jTable1.getValueAt(jTable1.getSelectedRow(), 0) == c.getId()) {
+                temp = c;
+                break;
+            }
+        }
+        NovoClienteJD jd = new NovoClienteJD(null, true, temp);
+        jd.setVisible(true);
+        carregarUsuarios();
+        popularTabela();
+    }
+
+    private void inativarCliente() {
+        if (jTable1.getSelectedRow() < 0) {
+            return;
+        }
+        int op = -1;
+        op = JOptionPane.showOptionDialog(null, "Deseja inativar o cliente selecionado?", "Confirmação de Inativação", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, null, null);
+        if (op != 0) {
+            return;
+        }
+        Cliente temp = null;
+        for (Cliente c : clientes) {
+            if ((int) jTable1.getValueAt(jTable1.getSelectedRow(), 0) == c.getId()) {
+                temp = c;
+            }
+        }
+        if (!new ClienteDAO().inativarCliente(temp)) {
+            JOptionPane.showMessageDialog(null, "Erro ao tentar inativar cliente no bando de dados", "Erro", JOptionPane.ERROR_MESSAGE);
+        } else {
+            carregarUsuarios();
+            popularTabela();
+        }
+
+    }
+
+    private void visualizarCliente() {
+        if (jTable1.getSelectedRow()>=0){
+            Cliente temp=null;
+            for (Cliente c:clientes){
+                if ((int) jTable1.getValueAt(jTable1.getSelectedRow(), 0) == c.getId()){
+                    temp = c;
+                    break;
+                }
+            }
+            VisualizarCliente jd = new VisualizarCliente(null, true, temp);
+            jd.setVisible(true);
+        }
     }
 }

@@ -6,6 +6,7 @@
 package br.Teofilo.Menu;
 
 import br.Teofilo.Cliente.ClienteJF;
+import br.Teofilo.Documentos.DocumentoJF;
 import java.awt.Image;
 import java.awt.Menu;
 import java.awt.image.BufferedImage;
@@ -17,7 +18,10 @@ import javax.swing.ImageIcon;
  * @author User
  */
 public class MenuJF extends javax.swing.JFrame {
+
     ClienteJF clienteJF;
+    DocumentoJF documentoJF;
+
     /**
      * Creates new form MenuJF
      */
@@ -69,7 +73,12 @@ public class MenuJF extends javax.swing.JFrame {
         jLabel2.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(255, 255, 255));
         jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/Teofilo/IMG/1x/ic_format_list_bulleted_18px.png"))); // NOI18N
-        jLabel2.setText("Processos");
+        jLabel2.setText("Documentos");
+        jLabel2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel2MouseClicked(evt);
+            }
+        });
 
         jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/Teofilo/IMG/logo-2-teofilo-rocha-advocacia-balneario-camboriu-sc-advogado.png"))); // NOI18N
 
@@ -80,7 +89,7 @@ public class MenuJF extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 383, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 197, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 180, Short.MAX_VALUE)
                 .addComponent(jLabel1)
                 .addGap(71, 71, 71)
                 .addComponent(jLabel2)
@@ -139,6 +148,10 @@ public class MenuJF extends javax.swing.JFrame {
         fecharOutrosForms();
     }//GEN-LAST:event_formWindowGainedFocus
 
+    private void jLabel2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel2MouseClicked
+        documento();
+    }//GEN-LAST:event_jLabel2MouseClicked
+
     /**
      * @param args the command line arguments
      */
@@ -177,9 +190,8 @@ public class MenuJF extends javax.swing.JFrame {
     private void init() {
         this.setExtendedState(MenuJF.MAXIMIZED_BOTH);
         ImageIcon icon = (ImageIcon) back.getIcon();
-        icon.setImage(icon.getImage().getScaledInstance(back.getWidth(), back.getHeight(),1));
+        icon.setImage(icon.getImage().getScaledInstance(back.getWidth(), back.getHeight(), 1));
         back.setIcon(icon);
-        clienteJF = new ClienteJF();
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -192,12 +204,26 @@ public class MenuJF extends javax.swing.JFrame {
     // End of variables declaration//GEN-END:variables
 
     private void cliente() {
+        clienteJF = new ClienteJF();
         clienteJF.setVisible(true);
     }
 
     private void fecharOutrosForms() {
-        //if(clienteJF.isVisible()){
+        try {
             clienteJF.dispose();
-        //}
+        } catch (Exception ex) {
+            System.err.println(ex.getMessage() + " Menu>>clienteJF estava fechado");
+        }
+        try {
+            documentoJF.dispose();
+        } catch (Exception ex) {
+            System.err.println(ex.getMessage() + " Menu>>documentoJF estava fechado");
+        }
+
+    }
+
+    private void documento() {
+        documentoJF = new DocumentoJF();
+        documentoJF.setVisible(true);
     }
 }
