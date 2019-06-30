@@ -1,8 +1,8 @@
 package br.Teofilo.DAO;
 
-
 import JDBC.ConnectionFactoryMySQL;
 import br.Teofilo.Bean.InfoArquivo;
+import funcoes.CDate;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -39,14 +39,15 @@ public class DocumentoDAO {
         con = ConnectionFactoryMySQL.getConnection();
     }
 
-    public boolean addArquivo(File f,int idCliente) {
-        sql = "INSERT INTO documentos (documento,nome,id_cliente) values (?,?,?)";
+    public boolean addArquivo(File f, int idCliente) {
+        sql = "INSERT INTO documentos (documento,nome,id_cliente,modificacao) values (?,?,?,?)";
         try {
             InputStream is = new FileInputStream(f);
             stmt = con.prepareStatement(sql);
             stmt.setBlob(1, is);
             stmt.setString(2, f.getName());
             stmt.setInt(3, idCliente);
+            stmt.setString(4, CDate.DataPTBRtoDataMySQL(CDate.DataPTBRAtual()));
             stmt.execute();
             return true;
         } catch (SQLException | FileNotFoundException ex) {
@@ -57,7 +58,7 @@ public class DocumentoDAO {
         }
     }
 
-    public File getArquivo(int id,String local) {
+    public File getArquivo(int id, String local) {
         File f = null;
         sql = "SELECT * from documentos where id = ?";
         try {
@@ -65,12 +66,12 @@ public class DocumentoDAO {
             stmt.setInt(1, id);
             rs = stmt.executeQuery();
             rs.first();
-            f = new File(local+rs.getString("nome"));
+            f = new File(local + rs.getString("nome"));
             try (FileOutputStream fos = new FileOutputStream(f)) {
                 fos.write(rs.getBytes("documento"));
                 fos.close();
             }
-            
+
         } catch (SQLException | IOException ex) {
             Logger.getLogger(DocumentoDAO.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
@@ -78,26 +79,49 @@ public class DocumentoDAO {
         }
         return f;
     }
-    
-    public List<InfoArquivo> getInfoArquivos(int idCliente){
+
+    public List<InfoArquivo> getInfoArquivos(int idCliente) {
         List<InfoArquivo> arquivos = new ArrayList<>();
-        sql = "SELECT id,nome FROM documentos WHERE id_cliente = ?";
+        sql = "SELECT id,nome,modificacao,status FROM documentos WHERE id_cliente = ?";
         try {
-            stmt=con.prepareStatement(sql);
+            stmt = con.prepareStatement(sql);
             stmt.setInt(1, idCliente);
             rs = stmt.executeQuery();
-            while (rs.next()){
+            while (rs.next()) {
                 InfoArquivo i = new InfoArquivo();
                 i.setId(rs.getInt("id"));
                 i.setNome(rs.getString("nome"));
+                if (rs.getString("modificacao") != null) {
+                    i.setData_modificacao(CDate.DataMySQLtoDataStringPT(rs.getString("modificacao")));
+                }
+                i.setStatus(rs.getString("status"));
                 arquivos.add(i);
             }
         } catch (SQLException ex) {
             Logger.getLogger(DocumentoDAO.class.getName()).log(Level.SEVERE, null, ex);
-        }finally{
+        } finally {
             ConnectionFactoryMySQL.closeConnection(con, stmt, rs);
         }
         return arquivos;
+    }
+    
+    public boolean updateArquivo(File f, int idArquivo) {
+        sql = "UPDATE documentos SET documento = ?, nome = ?, modificacao = ? WHERE id = ?";
+        try {
+            InputStream is = new FileInputStream(f);
+            stmt = con.prepareStatement(sql);
+            stmt.setBlob(1, is);
+            stmt.setString(2, f.getName());
+            stmt.setString(3, CDate.DataPTBRtoDataMySQL(CDate.DataPTBRAtual()));
+            stmt.setInt(4, idArquivo);
+            stmt.executeUpdate();
+            return true;
+        } catch (SQLException | FileNotFoundException ex) {
+            Logger.getLogger(DocumentoDAO.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        } finally {
+            ConnectionFactoryMySQL.closeConnection(con, stmt);
+        }
     }
 
 }

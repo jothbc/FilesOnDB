@@ -12,6 +12,8 @@ package br.Teofilo.Bean;
 public class InfoArquivo {
     private int id;
     private String nome;
+    private String data_modificacao;
+    private String status;
 
     /**
      * @return the id
@@ -44,5 +46,33 @@ public class InfoArquivo {
     @Override
     public String toString(){
         return this.nome;
+    }
+
+    /**
+     * @return the data_modificacao
+     */
+    public String getData_modificacao() {
+        return data_modificacao;
+    }
+
+    /**
+     * @param data_modificacao the data_modificacao to set
+     */
+    public void setData_modificacao(String data_modificacao) {
+        this.data_modificacao = data_modificacao;
+    }
+
+    /**
+     * @return the status
+     */
+    public String getStatus() {
+        return status;
+    }
+
+    /**
+     * @param status the status to set
+     */
+    public void setStatus(String status) {
+        this.status = status;
     }
 }
