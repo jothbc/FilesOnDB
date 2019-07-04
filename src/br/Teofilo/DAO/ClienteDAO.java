@@ -7,6 +7,8 @@ package br.Teofilo.DAO;
 
 import JDBC.ConnectionFactoryMySQL;
 import br.Teofilo.Bean.Cliente;
+import br.Teofilo.Bean.DocumentoPessoal;
+import br.Teofilo.Bean.Processo;
 import funcoes.CDate;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -173,6 +175,49 @@ public class ClienteDAO {
         }
     }
 
-    
+    public List<Processo> getProcessos(int idCliente){
+        List<Processo> processos = new ArrayList<>();
+        sql = "SELECT * FROM processos WHERE ID_CLIENTE = ?";
+        try {
+            stmt = con.prepareStatement(sql);
+            stmt.setInt(1, idCliente);
+            rs = stmt.executeQuery();
+            while (rs.next()){
+                Processo p = new Processo();
+                p.setID_CLIENTE(rs.getInt("ID_CLIENTE"));
+                p.setId(rs.getInt("id"));
+                p.setN_processo(rs.getString("processo"));
+                p.setStatus(rs.getString("status"));
+                processos.add(p);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ClienteDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }finally{
+            ConnectionFactoryMySQL.closeConnection(con, stmt, rs);
+        }
+        return processos;
+    }
+
+    public List<DocumentoPessoal> getDocumentosPessoais(int id) {
+        List<DocumentoPessoal> pessoal = new ArrayList<>();
+        sql = "SELECT * FROM documentos_pessoais WHERE ID_CLIENTE = ?";
+        try {
+            stmt = con.prepareStatement(sql);
+            stmt.setInt(1, id);
+            rs = stmt.executeQuery();
+            while (rs.next()){
+                DocumentoPessoal p = new DocumentoPessoal();
+                p.setID_CLIENTE(rs.getInt("ID_CLIENTE"));
+                p.setId(rs.getInt("id"));
+                p.setNome(rs.getString("nome"));
+                pessoal.add(p);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ClienteDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }finally{
+            ConnectionFactoryMySQL.closeConnection(con, stmt, rs);
+        }
+        return pessoal;
+    }
 
 }

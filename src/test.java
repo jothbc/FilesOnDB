@@ -195,15 +195,15 @@ public class test extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        //pega o arquivo no banco de dados e mantem ele salvo no diretorio temporariamente
-        File arquivo = new DocumentoDAO().getArquivo(Integer.parseInt(idfile.getText()), destinotxt.getText());
-        //esse comando faz o arquivo ser deletado ao finalizar o programa
-        arquivo.deleteOnExit();
-        try {
-            Desktop.getDesktop().open(arquivo);
-        } catch (IOException ex) {
-            Logger.getLogger(test.class.getName()).log(Level.SEVERE, null, ex);
-        }
+//        //pega o arquivo no banco de dados e mantem ele salvo no diretorio temporariamente
+//        File arquivo = new DocumentoDAO().getArquivo(Integer.parseInt(idfile.getText()), destinotxt.getText());
+//        //esse comando faz o arquivo ser deletado ao finalizar o programa
+//        arquivo.deleteOnExit();
+//        try {
+//            Desktop.getDesktop().open(arquivo);
+//        } catch (IOException ex) {
+//            Logger.getLogger(test.class.getName()).log(Level.SEVERE, null, ex);
+//        }
 
     }//GEN-LAST:event_jButton2ActionPerformed
 
@@ -219,10 +219,10 @@ public class test extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        File f = new File(caminhotxt.getText());
-        if (!new DocumentoDAO().addArquivo(f,1)) {
-            System.out.println("nao salvou");
-        }
+//        File f = new File(caminhotxt.getText());
+//        if (!new DocumentoDAO().addArquivo(f,1)) {
+//            System.out.println("nao salvou");
+//        }
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed

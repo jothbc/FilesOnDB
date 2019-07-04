@@ -5,6 +5,8 @@
  */
 package br.Teofilo.Bean;
 
+import java.util.List;
+
 /**
  *
  * @author User
@@ -25,7 +27,7 @@ public class Cliente {
     private String complemento;
     private double valor;
     private boolean ativo;
-
+    private List<Processo> processos;
 
     public Cliente() {
     }
@@ -243,6 +245,20 @@ public class Cliente {
     }
     @Override
     public String toString(){
-        return this.nome;
+        return this.getNome();
+    }
+
+    /**
+     * @return the processos
+     */
+    public List<Processo> getProcessos() {
+        return processos;
+    }
+
+    /**
+     * @param processos the processos to set
+     */
+    public void setProcessos(List<Processo> processos) {
+        this.processos = processos;
     }
 }

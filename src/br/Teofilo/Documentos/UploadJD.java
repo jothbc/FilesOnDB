@@ -6,7 +6,10 @@
 package br.Teofilo.Documentos;
 
 import br.Teofilo.Bean.Cliente;
-import br.Teofilo.DAO.DocumentoDAO;
+import br.Teofilo.Bean.Documento;
+import br.Teofilo.Bean.DocumentoPessoal;
+import br.Teofilo.Bean.Processo;
+import br.Teofilo.Bean.TipoDoc;
 import java.awt.Desktop;
 import java.awt.Point;
 import java.io.File;
@@ -15,7 +18,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
 
 /**
  *
@@ -26,15 +28,21 @@ public class UploadJD extends javax.swing.JDialog {
     private static Point point = new Point();
     DefaultListModel arquivos;
     Cliente cliente;
+    DocumentoPessoal documentoPessoal;
+    Processo processo;
+    TipoDoc tipoDoc;
 
     /**
      * Creates new form UploadJD
      */
-    public UploadJD(java.awt.Frame parent, boolean modal, Cliente c) {
+    public UploadJD(java.awt.Frame parent, boolean modal, Cliente c, TipoDoc t,DocumentoPessoal dp, Processo p) {
         super(parent, modal);
         this.arquivos = new DefaultListModel<>();
         initComponents();
         cliente = c;
+        tipoDoc = t;
+        documentoPessoal = dp;
+        processo = p;
         init();
     }
 
@@ -60,6 +68,7 @@ public class UploadJD extends javax.swing.JDialog {
         jList1 = new javax.swing.JList<>();
         clientetxt = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
+        obs = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setUndecorated(true);
@@ -159,29 +168,30 @@ public class UploadJD extends javax.swing.JDialog {
             }
         });
 
+        obs.setText("obs");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jCheckBox1)
-                                .addGap(18, 18, 18)
-                                .addComponent(jCheckBox2)
-                                .addGap(0, 0, Short.MAX_VALUE))
-                            .addComponent(jScrollPane1)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jLabel1)
-                                .addGap(18, 18, 18)
-                                .addComponent(caminhotxt))
-                            .addComponent(clientetxt, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addComponent(jCheckBox1)
+                        .addGap(18, 18, 18)
+                        .addComponent(jCheckBox2)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addGap(18, 18, 18)
+                        .addComponent(caminhotxt))
+                    .addComponent(clientetxt, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addGap(0, 0, 0)
+                        .addComponent(obs, javax.swing.GroupLayout.PREFERRED_SIZE, 447, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jLabel2)))
                 .addContainerGap())
         );
@@ -202,7 +212,9 @@ public class UploadJD extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 238, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel2)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2)
+                    .addComponent(obs))
                 .addContainerGap(25, Short.MAX_VALUE))
         );
 
@@ -283,7 +295,7 @@ public class UploadJD extends javax.swing.JDialog {
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                UploadJD dialog = new UploadJD(new javax.swing.JFrame(), true, null);
+                UploadJD dialog = new UploadJD(new javax.swing.JFrame(), true, null, null, null, null);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {
@@ -309,6 +321,7 @@ public class UploadJD extends javax.swing.JDialog {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel obs;
     // End of variables declaration//GEN-END:variables
 
     private void init() {
@@ -317,6 +330,12 @@ public class UploadJD extends javax.swing.JDialog {
         bg.add(jCheckBox2);
         if (cliente != null) {
             clientetxt.setText(cliente.getNome());
+            if (processo != null) {
+                obs.setText(processo.getN_processo() + "  " + tipoDoc.getNome());
+            } else if (documentoPessoal != null) {
+                obs.setText("Documento pessoal");
+            }
+
         }
     }
 
@@ -349,17 +368,17 @@ public class UploadJD extends javax.swing.JDialog {
     }
 
     private void upload() {
-        new Thread(() -> {
-            while (arquivos.size() > 0) {
-                File f = (File) arquivos.getElementAt(arquivos.size() - 1);
-                if (!new DocumentoDAO().addArquivo(f, cliente.getId())) {
-                    JOptionPane.showMessageDialog(null, "Erro ao tentar salvar o arquivo " + f.getName() + " no Banco de dados", "Erro", JOptionPane.ERROR_MESSAGE);
-                    return;
-                } else {
-                    arquivos.remove(arquivos.getSize() - 1);
-                }
-            }
-        }).start();
+//        new Thread(() -> {
+//            while (arquivos.size() > 0) {
+//                File f = (File) arquivos.getElementAt(arquivos.size() - 1);
+//                if (!new DocumentoDAO().addArquivo(f, cliente.getId())) {
+//                    JOptionPane.showMessageDialog(null, "Erro ao tentar salvar o arquivo " + f.getName() + " no Banco de dados", "Erro", JOptionPane.ERROR_MESSAGE);
+//                    return;
+//                } else {
+//                    arquivos.remove(arquivos.getSize() - 1);
+//                }
+//            }
+//        }).start();
     }
 
     private void removerItem() {

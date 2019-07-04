@@ -9,12 +9,13 @@ package br.Teofilo.Bean;
  *
  * @author User
  */
-public class InfoArquivo {
+public class Documento {
     private int id;
     private String nome;
-    private String data_modificacao;
+    private int ID_CLIENTE;
+    private String modificacao;
     private String status;
-    private int id_tipo;
+    private int ID_TIPO;
     private String processo;
 
     /**
@@ -44,24 +45,33 @@ public class InfoArquivo {
     public void setNome(String nome) {
         this.nome = nome;
     }
-    
-    @Override
-    public String toString(){
-        return this.getNome();
+
+    /**
+     * @return the ID_CLIENTE
+     */
+    public int getID_CLIENTE() {
+        return ID_CLIENTE;
     }
 
     /**
-     * @return the data_modificacao
+     * @param ID_CLIENTE the ID_CLIENTE to set
      */
-    public String getData_modificacao() {
-        return data_modificacao;
+    public void setID_CLIENTE(int ID_CLIENTE) {
+        this.ID_CLIENTE = ID_CLIENTE;
     }
 
     /**
-     * @param data_modificacao the data_modificacao to set
+     * @return the modificacao
      */
-    public void setData_modificacao(String data_modificacao) {
-        this.data_modificacao = data_modificacao;
+    public String getModificacao() {
+        return modificacao;
+    }
+
+    /**
+     * @param modificacao the modificacao to set
+     */
+    public void setModificacao(String modificacao) {
+        this.modificacao = modificacao;
     }
 
     /**
@@ -79,17 +89,17 @@ public class InfoArquivo {
     }
 
     /**
-     * @return the id_tipo
+     * @return the ID_TIPO
      */
-    public int getId_tipo() {
-        return id_tipo;
+    public int getID_TIPO() {
+        return ID_TIPO;
     }
 
     /**
-     * @param id_tipo the id_tipo to set
+     * @param ID_TIPO the ID_TIPO to set
      */
-    public void setId_tipo(int id_tipo) {
-        this.id_tipo = id_tipo;
+    public void setID_TIPO(int ID_TIPO) {
+        this.ID_TIPO = ID_TIPO;
     }
 
     /**
@@ -105,4 +115,9 @@ public class InfoArquivo {
     public void setProcesso(String processo) {
         this.processo = processo;
     }
+    
+    public String toString(){
+        return this.nome;
+    }
+    
 }

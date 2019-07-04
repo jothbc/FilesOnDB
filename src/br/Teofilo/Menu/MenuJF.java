@@ -7,9 +7,15 @@ package br.Teofilo.Menu;
 
 import br.Teofilo.Cliente.ClienteJF;
 import br.Teofilo.Documentos.DocumentoJF;
+import java.awt.Desktop;
 import java.awt.Image;
 import java.awt.Menu;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
@@ -81,6 +87,11 @@ public class MenuJF extends javax.swing.JFrame {
         });
 
         jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/Teofilo/IMG/logo-2-teofilo-rocha-advocacia-balneario-camboriu-sc-advogado.png"))); // NOI18N
+        jLabel3.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel3MouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -88,8 +99,8 @@ public class MenuJF extends javax.swing.JFrame {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 383, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 180, Short.MAX_VALUE)
+                .addComponent(jLabel3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 269, Short.MAX_VALUE)
                 .addComponent(jLabel1)
                 .addGap(71, 71, 71)
                 .addComponent(jLabel2)
@@ -151,6 +162,16 @@ public class MenuJF extends javax.swing.JFrame {
     private void jLabel2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel2MouseClicked
         documento();
     }//GEN-LAST:event_jLabel2MouseClicked
+
+    private void jLabel3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel3MouseClicked
+        if (evt.getClickCount()==2){
+            try {
+                Desktop.getDesktop().browse(new URI("https://www.teofilorocha.adv.br/"));
+            } catch (URISyntaxException | IOException ex) {
+                Logger.getLogger(MenuJF.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }//GEN-LAST:event_jLabel3MouseClicked
 
     /**
      * @param args the command line arguments
