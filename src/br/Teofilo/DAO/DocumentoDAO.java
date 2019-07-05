@@ -3,7 +3,7 @@ package br.Teofilo.DAO;
 import JDBC.ConnectionFactoryMySQL;
 import br.Teofilo.Bean.Documento;
 import br.Teofilo.Bean.DocumentoPessoal;
-import br.Teofilo.Bean.InfoArquivo;
+import br.Teofilo.Bean.Processo;
 import funcoes.CDate;
 import java.io.File;
 import java.io.FileInputStream;
@@ -41,8 +41,8 @@ public class DocumentoDAO {
         con = ConnectionFactoryMySQL.getConnection();
     }
 
-    public boolean addDocumento(File f, int idCliente, int tipo, String processo) {
-        sql = "INSERT INTO documentos (documento,nome,id_cliente,modificacao,id_tipo,processo) values (?,?,?,?,?,?)";
+    public boolean addDocumento(File f, int idCliente, int tipo, int processo) {
+        sql = "INSERT INTO documentos (documento,nome,ID_CLIENTE,modificacao,ID_TIPO,ID_PROCESSO) values (?,?,?,?,?,?)";
         try {
             InputStream is = new FileInputStream(f);
             stmt = con.prepareStatement(sql);
@@ -51,7 +51,7 @@ public class DocumentoDAO {
             stmt.setInt(3, idCliente);
             stmt.setString(4, CDate.DataPTBRtoDataMySQL(CDate.DataPTBRAtual()));
             stmt.setInt(5, tipo);
-            stmt.setString(6, processo);
+            stmt.setInt(6, processo);
             stmt.execute();
             return true;
         } catch (SQLException | FileNotFoundException ex) {
@@ -82,10 +82,10 @@ public class DocumentoDAO {
             ConnectionFactoryMySQL.closeConnection(con, stmt);
         }
     }
-    
+
     public File getArquivo(int id, String local, String tabela) {
         File f = null;
-        sql = "SELECT id,nome,documento from "+tabela+" where id = ?";
+        sql = "SELECT id,nome,documento from " + tabela + " where id = ?";
         try {
             stmt = con.prepareStatement(sql);
             stmt.setInt(1, id);
@@ -106,14 +106,14 @@ public class DocumentoDAO {
         return f;
     }
 
-    public List<Documento> getDocumentosDeProcessoETipo(int idCliente, String processo, int tipo) {
+    public List<Documento> getDocumentosDeProcessoETipo(int idCliente, int processo, int tipo) {
         List<Documento> arquivos = new ArrayList<>();
-        sql = "SELECT id,nome,modificacao,status,processo,id_tipo FROM documentos WHERE id_cliente = ?"
-                + " and processo = ? and id_tipo = ?";
+        sql = "SELECT id,nome,modificacao,status,ID_PROCESSO,ID_TIPO FROM documentos WHERE ID_CLIENTE = ?"
+                + " and ID_PROCESSO = ? and ID_TIPO = ?";
         try {
             stmt = con.prepareStatement(sql);
             stmt.setInt(1, idCliente);
-            stmt.setString(2, processo);
+            stmt.setInt(2, processo);
             stmt.setInt(3, tipo);
             rs = stmt.executeQuery();
             while (rs.next()) {
@@ -124,8 +124,8 @@ public class DocumentoDAO {
                     d.setModificacao(CDate.DataMySQLtoDataStringPT(rs.getString("modificacao")));
                 }
                 d.setStatus(rs.getString("status"));
-                d.setProcesso(rs.getString("processo"));
-                d.setID_TIPO(rs.getInt("id_tipo"));
+                d.setID_PROCESSO(rs.getInt("ID_PROCESSO"));
+                d.setID_TIPO(rs.getInt("ID_TIPO"));
                 arquivos.add(d);
             }
         } catch (SQLException ex) {
@@ -136,7 +136,7 @@ public class DocumentoDAO {
         }
         return arquivos;
     }
-    
+
     public List<DocumentoPessoal> getDocumentosPessoais(int id) {
         List<DocumentoPessoal> pessoal = new ArrayList<>();
         sql = "SELECT * FROM documentos_pessoais WHERE ID_CLIENTE = ?";
@@ -162,8 +162,30 @@ public class DocumentoDAO {
         return pessoal;
     }
 
-    public boolean updateArquivo(File f, int idArquivo, int tipo, String processo) {
-        sql = "UPDATE documentos SET documento = ?, nome = ?, modificacao = ?, id_tipo = ?,processo = ? WHERE id = ?";
+    public boolean updateDocumento(File f, int idArquivo, int tipo, int processo) {
+        sql = "UPDATE documentos SET documento = ?, nome = ?, modificacao = ? WHERE ID_TIPO = ? and ID_PROCESSO = ? and id = ?";
+        try {
+            InputStream is = new FileInputStream(f);
+            stmt = con.prepareStatement(sql);
+            stmt.setBlob(1, is);
+            stmt.setString(2, f.getName());
+            stmt.setString(3, CDate.DataPTBRtoDataMySQL(CDate.DataPTBRAtual()));
+            stmt.setInt(4, tipo);
+            stmt.setInt(5, processo);
+            stmt.setInt(6, idArquivo);
+            stmt.executeUpdate();
+            return true;
+        } catch (SQLException | FileNotFoundException ex) {
+            Logger.getLogger(DocumentoDAO.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null, ex, "Informe o programador", JOptionPane.ERROR_MESSAGE);
+            return false;
+        } finally {
+            ConnectionFactoryMySQL.closeConnection(con, stmt);
+        }
+    }
+    
+    public boolean updateDocumentoPessoal(File f, int idArquivo) {
+        sql = "UPDATE documentos_pessoais SET documento = ?, nome = ?, alteracao = ? WHERE id = ?";
         try {
             InputStream is = new FileInputStream(f);
             stmt = con.prepareStatement(sql);
@@ -171,8 +193,6 @@ public class DocumentoDAO {
             stmt.setString(2, f.getName());
             stmt.setString(3, CDate.DataPTBRtoDataMySQL(CDate.DataPTBRAtual()));
             stmt.setInt(4, idArquivo);
-            stmt.setInt(5, tipo);
-            stmt.setString(6, processo);
             stmt.executeUpdate();
             return true;
         } catch (SQLException | FileNotFoundException ex) {

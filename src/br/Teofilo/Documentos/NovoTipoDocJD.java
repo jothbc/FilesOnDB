@@ -6,26 +6,37 @@
 package br.Teofilo.Documentos;
 
 import br.Teofilo.Bean.Cliente;
+import br.Teofilo.Bean.Processo;
 import br.Teofilo.DAO.ProcessoDAO;
+import br.Teofilo.DAO.TipoDocDAO;
 import java.awt.Point;
 import javax.swing.JOptionPane;
 
 /**
  *
- * @author Jonathan
+ * @author User
  */
-public class NovoProcessoJD extends javax.swing.JDialog {
+public class NovoTipoDocJD extends javax.swing.JDialog {
 
     private static Point point = new Point();
-    Cliente cliente = null;
+    Cliente cliente;
+    Processo processo;
 
     /**
-     * Creates new form NovoProcessoJD
+     * Creates new form NovoTipoDocJD
+     *
+     * @param parent
+     * @param modal
+     * @param c
+     * @param p
      */
-    public NovoProcessoJD(java.awt.Frame parent, boolean modal, Cliente c) {
+    public NovoTipoDocJD(java.awt.Frame parent, boolean modal, Cliente c, Processo p) {
         super(parent, modal);
-        initComponents();
         cliente = c;
+        processo = p;
+        initComponents();
+        clientelbl.setText(cliente.getNome());
+        processolbl.setText(processo.getN_processo());
     }
 
     /**
@@ -42,9 +53,10 @@ public class NovoProcessoJD extends javax.swing.JDialog {
         jLabel13 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
         clientelbl = new javax.swing.JLabel();
-        processotxt = new javax.swing.JTextField();
+        tipoDoctxt = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
         jButton2 = new javax.swing.JButton();
+        processolbl = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setUndecorated(true);
@@ -100,11 +112,11 @@ public class NovoProcessoJD extends javax.swing.JDialog {
         clientelbl.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         clientelbl.setText("Clientelbl");
 
-        processotxt.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        processotxt.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 0, new java.awt.Color(0, 0, 0)));
+        tipoDoctxt.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        tipoDoctxt.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 0, new java.awt.Color(0, 0, 0)));
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        jLabel1.setText("Processo");
+        jLabel1.setText("Tipo de Documento");
 
         jButton2.setBackground(new java.awt.Color(255, 255, 255));
         jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/Teofilo/IMG/1x/check-circle-07.png"))); // NOI18N
@@ -114,6 +126,8 @@ public class NovoProcessoJD extends javax.swing.JDialog {
                 jButton2ActionPerformed(evt);
             }
         });
+
+        processolbl.setText("processolbl");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -127,10 +141,11 @@ public class NovoProcessoJD extends javax.swing.JDialog {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel1)
                         .addGap(36, 36, 36)
-                        .addComponent(processotxt, javax.swing.GroupLayout.PREFERRED_SIZE, 335, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 26, Short.MAX_VALUE))
+                        .addComponent(tipoDoctxt, javax.swing.GroupLayout.PREFERRED_SIZE, 335, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(processolbl)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jButton2)))
                 .addContainerGap())
         );
@@ -142,10 +157,12 @@ public class NovoProcessoJD extends javax.swing.JDialog {
                 .addComponent(clientelbl)
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(processotxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(tipoDoctxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton2)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jButton2, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(processolbl, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addContainerGap())
         );
 
@@ -164,6 +181,10 @@ public class NovoProcessoJD extends javax.swing.JDialog {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        dispose();
+    }//GEN-LAST:event_jButton1ActionPerformed
+
     private void jPanel2MouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel2MouseDragged
         Point p = this.getLocation();
         this.setLocation(p.x + evt.getX() - point.x, p.y + evt.getY() - point.y);
@@ -174,12 +195,8 @@ public class NovoProcessoJD extends javax.swing.JDialog {
         point.y = evt.getY();
     }//GEN-LAST:event_jPanel2MousePressed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        dispose();
-    }//GEN-LAST:event_jButton1ActionPerformed
-
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        adicionarProcesso();
+        adicionarTipoDoc();
     }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
@@ -199,20 +216,20 @@ public class NovoProcessoJD extends javax.swing.JDialog {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(NovoProcessoJD.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(NovoTipoDocJD.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(NovoProcessoJD.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(NovoTipoDocJD.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(NovoProcessoJD.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(NovoTipoDocJD.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(NovoProcessoJD.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(NovoTipoDocJD.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                NovoProcessoJD dialog = new NovoProcessoJD(new javax.swing.JFrame(), true, null);
+                NovoTipoDocJD dialog = new NovoTipoDocJD(new javax.swing.JFrame(), true, null, null);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {
@@ -232,19 +249,20 @@ public class NovoProcessoJD extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel13;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JTextField processotxt;
+    private javax.swing.JLabel processolbl;
+    private javax.swing.JTextField tipoDoctxt;
     // End of variables declaration//GEN-END:variables
 
-    private void adicionarProcesso() {
-        String processo = processotxt.getText();
-        if (new ProcessoDAO().existe(cliente.getId(),processo)) {
-            if (!new ProcessoDAO().addProcesso(cliente.getId(), processo)) {
-                JOptionPane.showMessageDialog(null, "Erro ao tentar adicionar processo para cliente.", "Erro", JOptionPane.ERROR_MESSAGE);
+    private void adicionarTipoDoc() {
+        String tipodoc = tipoDoctxt.getText();
+        if (new TipoDocDAO().existe(tipodoc, processo.getId(), cliente.getId())) {
+            if (!new TipoDocDAO().addTipoDoc(tipodoc, processo.getId(), cliente.getId())) {
+                JOptionPane.showMessageDialog(null, "Erro ao tentar adicionar tipo de documento para cliente.", "Erro", JOptionPane.ERROR_MESSAGE);
             } else {
                 dispose();
             }
-        }else{
-            JOptionPane.showMessageDialog(null, "Esse processo já existe para esse cliente.","Processo Já Existente",JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(null, "Esse tipo de documento já existe para esse cliente.", "Processo Já Existente", JOptionPane.INFORMATION_MESSAGE);
         }
     }
 }

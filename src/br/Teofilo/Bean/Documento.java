@@ -16,7 +16,7 @@ public class Documento {
     private String modificacao;
     private String status;
     private int ID_TIPO;
-    private String processo;
+    private int ID_PROCESSO;
 
     /**
      * @return the id
@@ -102,22 +102,23 @@ public class Documento {
         this.ID_TIPO = ID_TIPO;
     }
 
-    /**
-     * @return the processo
-     */
-    public String getProcesso() {
-        return processo;
+    public String toString(){
+        return this.getNome();
     }
 
     /**
-     * @param processo the processo to set
+     * @return the ID_PROCESSO
      */
-    public void setProcesso(String processo) {
-        this.processo = processo;
+    public int getID_PROCESSO() {
+        return ID_PROCESSO;
     }
-    
-    public String toString(){
-        return this.nome;
+
+    /**
+     * @param ID_PROCESSO the ID_PROCESSO to set
+     */
+    public void setID_PROCESSO(int ID_PROCESSO) {
+        this.ID_PROCESSO = ID_PROCESSO;
     }
+
     
 }

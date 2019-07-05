@@ -67,5 +67,21 @@ public class ProcessoDAO {
         }
         return processos;
     }
+
+    public boolean existe(int idCliente,String processo) {
+        sql = "SELECT * FROM processos WHERE ID_CLIENTE = ? and processo = ?";
+        try {
+            stmt = con.prepareStatement(sql);
+            stmt.setInt(1, idCliente);
+            stmt.setString(2, processo);
+            rs = stmt.executeQuery();
+            return !rs.first();
+        } catch (SQLException ex) {
+            Logger.getLogger(ClienteDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            ConnectionFactoryMySQL.closeConnection(con, stmt, rs);
+        }
+        return false;
+    }
     
 }

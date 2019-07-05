@@ -7,8 +7,6 @@ package br.Teofilo.DAO;
 
 import JDBC.ConnectionFactoryMySQL;
 import br.Teofilo.Bean.Cliente;
-import br.Teofilo.Bean.DocumentoPessoal;
-import br.Teofilo.Bean.Processo;
 import funcoes.CDate;
 import java.sql.Connection;
 import java.sql.PreparedStatement;

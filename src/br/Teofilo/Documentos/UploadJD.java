@@ -377,7 +377,7 @@ public class UploadJD extends javax.swing.JDialog {
             while (arquivos.size() > 0) {
                 File f = (File) arquivos.getElementAt(arquivos.size() - 1);
                 if (processo != null) {
-                    if (!new DocumentoDAO().addDocumento(f, cliente.getId(), tipoDoc.getId(), processo.getN_processo())) {
+                    if (!new DocumentoDAO().addDocumento(f, cliente.getId(), tipoDoc.getId(), processo.getId())) {
                         JOptionPane.showMessageDialog(null, "Erro ao tentar salvar o arquivo " + f.getName() + " no Banco de dados", "Erro", JOptionPane.ERROR_MESSAGE);
                         return;
                     } else {

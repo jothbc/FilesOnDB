@@ -86,6 +86,7 @@ public class DocumentoJF extends javax.swing.JFrame {
         jButton4 = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
         jButton6 = new javax.swing.JButton();
+        jButton7 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setUndecorated(true);
@@ -246,41 +247,42 @@ public class DocumentoJF extends javax.swing.JFrame {
             }
         });
 
+        jButton7.setBackground(new java.awt.Color(255, 255, 255));
+        jButton7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/Teofilo/IMG/1x/ic_playlist_add_24px.png"))); // NOI18N
+        jButton7.setBorder(null);
+        jButton7.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton7ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(0, 0, 0))
+            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(64, 64, 64)
-                        .addComponent(jLabel1)
-                        .addGap(158, 158, 158)
-                        .addComponent(jLabel9)
-                        .addGap(67, 67, 67)
-                        .addComponent(jLabel2))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 225, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(41, 41, 41)
-                                .addComponent(jLabel10))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(36, 36, 36)
-                                .addComponent(jLabel11))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGap(18, 18, 18)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addGap(23, 23, 23)
+                                        .addComponent(jLabel10))
                                     .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButton1)))
+                                    .addComponent(jButton1)
+                                    .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jButton7))
+                                .addGap(0, 9, Short.MAX_VALUE))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jLabel11)
+                                .addGap(45, 45, 45)))
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGap(28, 28, 28)
@@ -294,68 +296,78 @@ public class DocumentoJF extends javax.swing.JFrame {
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                         .addComponent(modiftxt, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE))))
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(18, 18, 18)
                                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 656, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(jButton4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(jButton5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))))))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                    .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(63, 63, 63)
+                        .addComponent(jLabel1)
+                        .addGap(168, 168, 168)
+                        .addComponent(jLabel9)
+                        .addGap(96, 96, 96)
+                        .addComponent(jLabel2)))
+                .addContainerGap(19, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel9, javax.swing.GroupLayout.Alignment.TRAILING))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel2)
+                        .addComponent(jLabel9)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 298, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                                .addComponent(jButton3)
-                                                .addGap(42, 42, 42))
-                                            .addComponent(jButton4))
-                                        .addGap(51, 51, 51))
-                                    .addComponent(jButton5))
-                                .addGap(18, 18, 18)
-                                .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(11, 11, 11)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel6)
-                            .addComponent(statustxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(4, 4, 4)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel7)
-                            .addComponent(modiftxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 0, Short.MAX_VALUE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
                                 .addComponent(jLabel10)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jButton1)
-                                .addGap(1, 1, 1)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 9, Short.MAX_VALUE)
                                 .addComponent(jLabel11)
                                 .addGap(11, 11, 11)
-                                .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 356, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addGap(17, 17, 17))
+                                .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                                        .addComponent(jButton3)
+                                                        .addGap(42, 42, 42))
+                                                    .addComponent(jButton4))
+                                                .addGap(51, 51, 51))
+                                            .addComponent(jButton5))
+                                        .addGap(18, 18, 18)
+                                        .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 322, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel6)
+                                    .addComponent(statustxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(4, 4, 4)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(jLabel7)
+                                    .addComponent(modiftxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jButton7))))
+                    .addComponent(jScrollPane1))
+                .addGap(6, 6, 6))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -366,7 +378,7 @@ public class DocumentoJF extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 482, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
@@ -424,7 +436,12 @@ public class DocumentoJF extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton6ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        addProcesso();
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
+        addTipoDocumento();
+    }//GEN-LAST:event_jButton7ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -468,6 +485,7 @@ public class DocumentoJF extends javax.swing.JFrame {
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
+    private javax.swing.JButton jButton7;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -536,6 +554,7 @@ public class DocumentoJF extends javax.swing.JFrame {
     }
 
     private void carregarDadosPessoaisDoClienteSelecionado(Cliente c) {
+        listDocumentos.removeAllElements();
         List<DocumentoPessoal> docuemnto_pessoal = new DocumentoDAO().getDocumentosPessoais(c.getId());
         for (DocumentoPessoal d : docuemnto_pessoal) {
             listDocumentos.addElement(d);
@@ -627,69 +646,109 @@ public class DocumentoJF extends javax.swing.JFrame {
     }
 
     private void download() {
-        InfoArquivo i = null;
+        Documento d = null;
+        DocumentoPessoal dp = null;
         try {
-            i = (InfoArquivo) listProcessoPessoal.getElementAt(jListDocumento.getSelectedIndex());
+            d = (Documento) listDocumentos.getElementAt(jListDocumento.getSelectedIndex());
         } catch (Exception ex) {
-            System.err.println(ex);
         }
-        if (i != null) {
+        try {
+            dp = (DocumentoPessoal) listDocumentos.getElementAt(jListDocumento.getSelectedIndex());
+        } catch (Exception ex) {
+        }
+        if (d != null || dp != null) {
             JFileChooser fl = new JFileChooser();
             fl.setDialogTitle("Selecionar diretório");
             fl.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
             int op = fl.showOpenDialog(null);
             if (op == JFileChooser.APPROVE_OPTION) {
-                File f = new DocumentoDAO().getArquivo(i.getId(), fl.getSelectedFile().getPath() + "\\", ""); //arrumar ultimo parametro
+                File f = null;
+                if (d != null) { //documento de processo (Documento)
+                    f = new DocumentoDAO().getArquivo(d.getId(), fl.getSelectedFile().getPath() + "\\", "documentos");
+                } else if (dp != null) { //documento pessoal (DocumentoPessoal)
+                    f = new DocumentoDAO().getArquivo(dp.getId(), fl.getSelectedFile().getPath() + "\\", "documentos_pessoais");
+                }
                 try {
                     Desktop.getDesktop().open(f);
                 } catch (IOException ex) {
                     Logger.getLogger(DocumentoJF.class.getName()).log(Level.SEVERE, null, ex);
                 }
-
             }
         }
     }
 
     private void atualizarInfos() {
-
+        Documento d = null;
+        DocumentoPessoal dp = null;
         try {
-            Documento info = (Documento) listDocumentos.getElementAt(jListDocumento.getSelectedIndex());
-            statustxt.setText(info.getStatus());
-            modiftxt.setText(info.getModificacao());
+            d = (Documento) listDocumentos.getElementAt(jListDocumento.getSelectedIndex());
         } catch (Exception ex) {
-            try {
-                DocumentoPessoal info = (DocumentoPessoal) listDocumentos.getElementAt(jListDocumento.getSelectedIndex());
-                statustxt.setText("");
-                modiftxt.setText(info.getAlteracao());
-            } catch (Exception e) {
-            }
         }
-
+        try {
+            dp = (DocumentoPessoal) listDocumentos.getElementAt(jListDocumento.getSelectedIndex());
+        } catch (Exception ex) {
+        }
+        if (d != null) {
+            statustxt.setText(d.getStatus());
+            modiftxt.setText(d.getModificacao());
+        } else if (dp != null) {
+            statustxt.setText("");
+            modiftxt.setText(dp.getAlteracao());
+        }
     }
 
     private void editar() {
-//        if (jListDocumento.getSelectedIndex() < 0) {
-//            return;
-//        }
-//        InfoArquivo info = (InfoArquivo) listProcessoPessoal.getElementAt(jListDocumento.getSelectedIndex());
-//        JFileChooser fl = new JFileChooser();
-//        fl.setDialogTitle("Selecionar arquivo");
-//        fl.setFileSelectionMode(JFileChooser.FILES_ONLY);
-//        int op = fl.showOpenDialog(null);
-//        if (op == JFileChooser.APPROVE_OPTION) {
-//            File f = fl.getSelectedFile();
-//            if (!new DocumentoDAO().updateArquivo(f, info.getId())) {
-//                JOptionPane.showMessageDialog(null, "Erro ao tentar atualizar o arquivo no bando de dados.", "Erro", JOptionPane.ERROR_MESSAGE);
-//            } else {
-//                carregaArquivosDoClienteSelecionado();
-//            }
-//        }
+        if (jListDocumento.getSelectedIndex() < 0) {
+            JOptionPane.showMessageDialog(null, "Selecione um documento para editar.");
+            return;
+        }
+        Documento d = null;
+        DocumentoPessoal dp = null;
+        TipoDoc tp = null;
+        Processo p = null;
+        Cliente c = null;
+        try {
+            d = (Documento) listDocumentos.getElementAt(jListDocumento.getSelectedIndex());
+            tp = (TipoDoc) listTipo.getElementAt(jListTipos.getSelectedIndex());
+            p = (Processo) listProcessos.getElementAt(jListProcessos.getSelectedIndex());
+        } catch (Exception ex) {
+        }
+        try {
+            dp = (DocumentoPessoal) listDocumentos.getElementAt(jListDocumento.getSelectedIndex());
+            c = (Cliente) listClientes.getElementAt(jListCliente.getSelectedIndex());
+        } catch (Exception ex) {
+        }
+        if (d != null || dp != null) {
+            JFileChooser fl = new JFileChooser();
+            fl.setDialogTitle("Selecionar arquivo");
+            fl.setFileSelectionMode(JFileChooser.FILES_ONLY);
+            int op = fl.showOpenDialog(null);
+            if (op == JFileChooser.APPROVE_OPTION) {
+                File f = fl.getSelectedFile();
+                if (d != null && tp != null && p != null) {
+                    if (!new DocumentoDAO().updateDocumento(f, d.getId(), tp.getId(), p.getId())) {
+                        JOptionPane.showMessageDialog(null, "Erro ao tentar atualizar o arquivo no bando de dados.", "Erro", JOptionPane.ERROR_MESSAGE);
+                    } else {
+                        carregarDocumentosDoTipoEProcessoSelecionado();
+                    }
+                } else if (dp != null && c != null) {
+                    if (!new DocumentoDAO().updateDocumentoPessoal(f, dp.getId())) {
+                        JOptionPane.showMessageDialog(null, "Erro ao tentar atualizar o arquivo no bando de dados.", "Erro", JOptionPane.ERROR_MESSAGE);
+                    } else {
+                        carregarDadosPessoaisDoClienteSelecionado(c);
+                    }
+                }
+            }
+        }
     }
 
     private void carregarDocumentosDoProcessoSelecionado() {
+        Cliente c = (Cliente) listClientes.getElementAt(jListCliente.getSelectedIndex());
+        Processo p = (Processo) listProcessos.getElementAt(jListProcessos.getSelectedIndex());
         listTipo.removeAllElements();
+        listDocumentos.removeAllElements();
         if (listProcessos.size() > 0) {
-            List<TipoDoc> tiposDeDocumentos = new TipoDocDAO().findAll();
+            List<TipoDoc> tiposDeDocumentos = new TipoDocDAO().findAllByClienteEProcesso(c,p);
             for (TipoDoc t : tiposDeDocumentos) {
                 listTipo.addElement(t);
             }
@@ -705,7 +764,7 @@ public class DocumentoJF extends javax.swing.JFrame {
             Cliente c = (Cliente) listClientes.getElementAt(jListCliente.getSelectedIndex());
             Processo p = (Processo) listProcessos.getElementAt(jListProcessos.getSelectedIndex());
             TipoDoc t = (TipoDoc) listTipo.getElementAt(jListTipos.getSelectedIndex());
-            List<Documento> documentos = new DocumentoDAO().getDocumentosDeProcessoETipo(c.getId(), p.getN_processo(), t.getId());
+            List<Documento> documentos = new DocumentoDAO().getDocumentosDeProcessoETipo(c.getId(), p.getId(), t.getId());
             for (Documento d : documentos) {
                 listDocumentos.addElement(d);
             }
@@ -715,7 +774,27 @@ public class DocumentoJF extends javax.swing.JFrame {
     }
 
     private void addProcesso() {
-        
+        try {
+            Cliente c = (Cliente) listClientes.getElementAt(jListCliente.getSelectedIndex());
+            NovoProcessoJD jd = new NovoProcessoJD(null, true, c);
+            jd.setVisible(true);
+            jListProcessoDadosPessoais.setSelectedIndex(0);
+            verificarJListProcessoPessoal();
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, "Sem cliente selecionado.\n" + ex, "Erro", JOptionPane.INFORMATION_MESSAGE);
+        }
+    }
+
+    private void addTipoDocumento() {
+        try {
+            Cliente c = (Cliente) listClientes.getElementAt(jListCliente.getSelectedIndex());
+            Processo p = (Processo) listProcessos.getElementAt(jListProcessos.getSelectedIndex());
+            NovoTipoDocJD jd = new NovoTipoDocJD(null, true,c,p);
+            jd.setVisible(true);
+            carregarDocumentosDoProcessoSelecionado();
+        }catch(Exception ex){
+            System.out.println(ex);
+        }
     }
 
 }
