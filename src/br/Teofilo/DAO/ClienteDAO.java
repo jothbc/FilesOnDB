@@ -24,16 +24,16 @@ import java.util.logging.Logger;
  * @author User
  */
 public class ClienteDAO {
-
+    
     Connection con = null;
     PreparedStatement stmt;
     ResultSet rs;
     String sql;
-
+    
     public ClienteDAO() {
         con = ConnectionFactoryMySQL.getConnection();
     }
-
+    
     public boolean insertCliente(Cliente c) {
         sql = "INSERT INTO clientes(nome,email,telefone,telefone2,sexo,cpf,rg,nascimento,data_cadastro,endereco,n_casa,complemento,ativo)"
                 + " VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)";
@@ -68,9 +68,9 @@ public class ClienteDAO {
         } finally {
             ConnectionFactoryMySQL.closeConnection(con, stmt);
         }
-
+        
     }
-
+    
     public List<Cliente> getClintes() {
         List<Cliente> clientes = new ArrayList<>();
         sql = "SELECT * FROM clientes";
@@ -107,7 +107,7 @@ public class ClienteDAO {
         }
         return clientes;
     }
-
+    
     public boolean updateCliente(Cliente c) {
         sql = "UPDATE clientes SET nome = ?, cpf = ?, rg = ?, email =?, telefone =?, "
                 + "telefone2 = ?, sexo = ?, nascimento = ?, data_cadastro = ?, "
@@ -144,7 +144,7 @@ public class ClienteDAO {
             ConnectionFactoryMySQL.closeConnection(con, stmt);
         }
     }
-
+    
     public boolean inativarCliente(Cliente c) {
         sql = "UPDATE clientes SET ativo = 0 WHERE id = ?";
         try {
@@ -159,7 +159,7 @@ public class ClienteDAO {
             ConnectionFactoryMySQL.closeConnection(con, stmt);
         }
     }
-
+    
     public boolean reativarCliente(Cliente c) {
         sql = "UPDATE clientes SET ativo = 1 WHERE id = ?";
         try {
@@ -174,50 +174,5 @@ public class ClienteDAO {
             ConnectionFactoryMySQL.closeConnection(con, stmt);
         }
     }
-
-    public List<Processo> getProcessos(int idCliente){
-        List<Processo> processos = new ArrayList<>();
-        sql = "SELECT * FROM processos WHERE ID_CLIENTE = ?";
-        try {
-            stmt = con.prepareStatement(sql);
-            stmt.setInt(1, idCliente);
-            rs = stmt.executeQuery();
-            while (rs.next()){
-                Processo p = new Processo();
-                p.setID_CLIENTE(rs.getInt("ID_CLIENTE"));
-                p.setId(rs.getInt("id"));
-                p.setN_processo(rs.getString("processo"));
-                p.setStatus(rs.getString("status"));
-                processos.add(p);
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(ClienteDAO.class.getName()).log(Level.SEVERE, null, ex);
-        }finally{
-            ConnectionFactoryMySQL.closeConnection(con, stmt, rs);
-        }
-        return processos;
-    }
-
-    public List<DocumentoPessoal> getDocumentosPessoais(int id) {
-        List<DocumentoPessoal> pessoal = new ArrayList<>();
-        sql = "SELECT * FROM documentos_pessoais WHERE ID_CLIENTE = ?";
-        try {
-            stmt = con.prepareStatement(sql);
-            stmt.setInt(1, id);
-            rs = stmt.executeQuery();
-            while (rs.next()){
-                DocumentoPessoal p = new DocumentoPessoal();
-                p.setID_CLIENTE(rs.getInt("ID_CLIENTE"));
-                p.setId(rs.getInt("id"));
-                p.setNome(rs.getString("nome"));
-                pessoal.add(p);
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(ClienteDAO.class.getName()).log(Level.SEVERE, null, ex);
-        }finally{
-            ConnectionFactoryMySQL.closeConnection(con, stmt, rs);
-        }
-        return pessoal;
-    }
-
+    
 }

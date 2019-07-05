@@ -2,6 +2,7 @@ package br.Teofilo.DAO;
 
 import JDBC.ConnectionFactoryMySQL;
 import br.Teofilo.Bean.Documento;
+import br.Teofilo.Bean.DocumentoPessoal;
 import br.Teofilo.Bean.InfoArquivo;
 import funcoes.CDate;
 import java.io.File;
@@ -40,7 +41,7 @@ public class DocumentoDAO {
         con = ConnectionFactoryMySQL.getConnection();
     }
 
-    public boolean addArquivo(File f, int idCliente, int tipo, String processo) {
+    public boolean addDocumento(File f, int idCliente, int tipo, String processo) {
         sql = "INSERT INTO documentos (documento,nome,id_cliente,modificacao,id_tipo,processo) values (?,?,?,?,?,?)";
         try {
             InputStream is = new FileInputStream(f);
@@ -62,6 +63,26 @@ public class DocumentoDAO {
         }
     }
 
+    public boolean addDocumentoPessoal(File f, int idCliente) {
+        sql = "INSERT INTO documentos_pessoais (documento,nome,ID_CLIENTE,alteracao) values (?,?,?,?)";
+        try {
+            InputStream is = new FileInputStream(f);
+            stmt = con.prepareStatement(sql);
+            stmt.setBlob(1, is);
+            stmt.setString(2, f.getName());
+            stmt.setInt(3, idCliente);
+            stmt.setString(4, CDate.DataPTBRtoDataMySQL(CDate.DataPTBRAtual()));
+            stmt.execute();
+            return true;
+        } catch (SQLException | FileNotFoundException ex) {
+            Logger.getLogger(DocumentoDAO.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null, ex, "Informe o programador", JOptionPane.ERROR_MESSAGE);
+            return false;
+        } finally {
+            ConnectionFactoryMySQL.closeConnection(con, stmt);
+        }
+    }
+    
     public File getArquivo(int id, String local, String tabela) {
         File f = null;
         sql = "SELECT id,nome,documento from "+tabela+" where id = ?";
@@ -114,6 +135,31 @@ public class DocumentoDAO {
             ConnectionFactoryMySQL.closeConnection(con, stmt, rs);
         }
         return arquivos;
+    }
+    
+    public List<DocumentoPessoal> getDocumentosPessoais(int id) {
+        List<DocumentoPessoal> pessoal = new ArrayList<>();
+        sql = "SELECT * FROM documentos_pessoais WHERE ID_CLIENTE = ?";
+        try {
+            stmt = con.prepareStatement(sql);
+            stmt.setInt(1, id);
+            rs = stmt.executeQuery();
+            while (rs.next()) {
+                DocumentoPessoal p = new DocumentoPessoal();
+                p.setID_CLIENTE(rs.getInt("ID_CLIENTE"));
+                p.setId(rs.getInt("id"));
+                p.setNome(rs.getString("nome"));
+                if (rs.getString("alteracao") != null) {
+                    p.setAlteracao(CDate.DataMySQLtoDataStringPT(rs.getString("alteracao")));
+                }
+                pessoal.add(p);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ClienteDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            ConnectionFactoryMySQL.closeConnection(con, stmt, rs);
+        }
+        return pessoal;
     }
 
     public boolean updateArquivo(File f, int idArquivo, int tipo, String processo) {

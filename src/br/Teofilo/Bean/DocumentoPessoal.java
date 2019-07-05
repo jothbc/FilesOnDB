@@ -13,7 +13,8 @@ public class DocumentoPessoal {
     private int id;
     private String nome;
     private int ID_CLIENTE;
-
+    private String alteracao;
+    
     public DocumentoPessoal() {
     }
 
@@ -61,5 +62,19 @@ public class DocumentoPessoal {
     }
     public String toString(){
         return this.nome;
+    }
+
+    /**
+     * @return the alteracao
+     */
+    public String getAlteracao() {
+        return alteracao;
+    }
+
+    /**
+     * @param alteracao the alteracao to set
+     */
+    public void setAlteracao(String alteracao) {
+        this.alteracao = alteracao;
     }
 }
