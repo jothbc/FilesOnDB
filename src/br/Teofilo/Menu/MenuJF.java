@@ -164,7 +164,7 @@ public class MenuJF extends javax.swing.JFrame {
     }//GEN-LAST:event_jLabel2MouseClicked
 
     private void jLabel3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel3MouseClicked
-        if (evt.getClickCount()==2){
+        if (evt.getClickCount() == 2) {
             try {
                 Desktop.getDesktop().browse(new URI("https://www.teofilorocha.adv.br/"));
             } catch (URISyntaxException | IOException ex) {
@@ -230,15 +230,11 @@ public class MenuJF extends javax.swing.JFrame {
     }
 
     private void fecharOutrosForms() {
-        try {
+        if (clienteJF != null) {
             clienteJF.dispose();
-        } catch (Exception ex) {
-            System.err.println(ex.getMessage() + " Menu>>clienteJF estava fechado");
         }
-        try {
+        if (documentoJF != null) {
             documentoJF.dispose();
-        } catch (Exception ex) {
-            System.err.println(ex.getMessage() + " Menu>>documentoJF estava fechado");
         }
 
     }
