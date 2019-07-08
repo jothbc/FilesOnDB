@@ -87,6 +87,7 @@ public class DocumentoJF extends javax.swing.JFrame {
         jButton5 = new javax.swing.JButton();
         jButton6 = new javax.swing.JButton();
         jButton7 = new javax.swing.JButton();
+        jButton8 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setUndecorated(true);
@@ -256,6 +257,15 @@ public class DocumentoJF extends javax.swing.JFrame {
             }
         });
 
+        jButton8.setBackground(new java.awt.Color(255, 255, 255));
+        jButton8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/Teofilo/IMG/1x/bookmark-2.png"))); // NOI18N
+        jButton8.setBorder(null);
+        jButton8.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton8ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -275,7 +285,10 @@ public class DocumentoJF extends javax.swing.JFrame {
                                         .addComponent(jLabel10))
                                     .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jButton1)
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addComponent(jButton1)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jButton8, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(jButton7))
                                 .addGap(0, 9, Short.MAX_VALUE))
@@ -333,7 +346,9 @@ public class DocumentoJF extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButton1)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jButton8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 9, Short.MAX_VALUE)
                                 .addComponent(jLabel11)
                                 .addGap(11, 11, 11)
@@ -396,6 +411,8 @@ public class DocumentoJF extends javax.swing.JFrame {
     }//GEN-LAST:event_jPanel2MousePressed
 
     private void jListClienteMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jListClienteMouseClicked
+        statustxt.setText("");
+        modiftxt.setText("");
         popularListProcessoPessoal();
     }//GEN-LAST:event_jListClienteMouseClicked
 
@@ -404,14 +421,19 @@ public class DocumentoJF extends javax.swing.JFrame {
     }//GEN-LAST:event_jListDocumentoMouseClicked
 
     private void jListProcessoDadosPessoaisMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jListProcessoDadosPessoaisMouseClicked
+        statustxt.setText("");
+        modiftxt.setText("");
         verificarJListProcessoPessoal();
     }//GEN-LAST:event_jListProcessoDadosPessoaisMouseClicked
 
     private void jListProcessosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jListProcessosMouseClicked
+        statusDoProcesso();
         carregarDocumentosDoProcessoSelecionado();
     }//GEN-LAST:event_jListProcessosMouseClicked
 
     private void jListTiposMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jListTiposMouseClicked
+        statustxt.setText("");
+        modiftxt.setText("");
         carregarDocumentosDoTipoEProcessoSelecionado();
     }//GEN-LAST:event_jListTiposMouseClicked
 
@@ -442,6 +464,10 @@ public class DocumentoJF extends javax.swing.JFrame {
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
         addTipoDocumento();
     }//GEN-LAST:event_jButton7ActionPerformed
+
+    private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
+        editarStatusDeProcesso();
+    }//GEN-LAST:event_jButton8ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -486,6 +512,7 @@ public class DocumentoJF extends javax.swing.JFrame {
     private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
     private javax.swing.JButton jButton7;
+    private javax.swing.JButton jButton8;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -547,6 +574,7 @@ public class DocumentoJF extends javax.swing.JFrame {
     }
 
     private void carregarProcessosDoClienteSelecionado(Cliente c) {
+        listProcessos.removeAllElements();
         List<Processo> processos = new ProcessoDAO().getProcessos(c.getId());
         for (Processo p : processos) {
             listProcessos.addElement(p);
@@ -712,11 +740,13 @@ public class DocumentoJF extends javax.swing.JFrame {
             tp = (TipoDoc) listTipo.getElementAt(jListTipos.getSelectedIndex());
             p = (Processo) listProcessos.getElementAt(jListProcessos.getSelectedIndex());
         } catch (Exception ex) {
+            System.err.println("Editar>> Tentou ver se é documento, mas documento, tipoDoc ou Processo retornaram erro..Então tentando analisar para ver se é Documento Pessoal..");
         }
         try {
             dp = (DocumentoPessoal) listDocumentos.getElementAt(jListDocumento.getSelectedIndex());
             c = (Cliente) listClientes.getElementAt(jListCliente.getSelectedIndex());
         } catch (Exception ex) {
+            System.err.println("Editar>> Tentou ver se é Documento pessoal, porem DocumentoPessoal ou Cliente retornaram erro..");
         }
         if (d != null || dp != null) {
             JFileChooser fl = new JFileChooser();
@@ -743,12 +773,24 @@ public class DocumentoJF extends javax.swing.JFrame {
     }
 
     private void carregarDocumentosDoProcessoSelecionado() {
-        Cliente c = (Cliente) listClientes.getElementAt(jListCliente.getSelectedIndex());
-        Processo p = (Processo) listProcessos.getElementAt(jListProcessos.getSelectedIndex());
+        Cliente c;
+        try {
+            c = (Cliente) listClientes.getElementAt(jListCliente.getSelectedIndex());
+        } catch (Exception e) {
+            System.err.println("carregarDocumentosDoProcessoSelecionado>>Sem cliente selecionado.");
+            return;
+        }
+        Processo p;
+        try {
+            p = (Processo) listProcessos.getElementAt(jListProcessos.getSelectedIndex());
+        } catch (Exception e) {
+            System.err.println("carregarDocumentosDoProcessoSelecionado>>Sem processo selecionado.");
+            return;
+        }
         listTipo.removeAllElements();
         listDocumentos.removeAllElements();
-        if (listProcessos.size() > 0) {
-            List<TipoDoc> tiposDeDocumentos = new TipoDocDAO().findAllByClienteEProcesso(c,p);
+        if (!listProcessos.isEmpty()) {
+            List<TipoDoc> tiposDeDocumentos = new TipoDocDAO().findAllByClienteEProcesso(c, p);
             for (TipoDoc t : tiposDeDocumentos) {
                 listTipo.addElement(t);
             }
@@ -789,11 +831,35 @@ public class DocumentoJF extends javax.swing.JFrame {
         try {
             Cliente c = (Cliente) listClientes.getElementAt(jListCliente.getSelectedIndex());
             Processo p = (Processo) listProcessos.getElementAt(jListProcessos.getSelectedIndex());
-            NovoTipoDocJD jd = new NovoTipoDocJD(null, true,c,p);
+            NovoTipoDocJD jd = new NovoTipoDocJD(null, true, c, p);
             jd.setVisible(true);
             carregarDocumentosDoProcessoSelecionado();
-        }catch(Exception ex){
-            System.out.println(ex);
+        } catch (Exception ex) {
+            System.out.println("Sem processo selecionado." + ex);
+        }
+    }
+
+    private void statusDoProcesso() {
+        if (!listProcessos.isEmpty()) {
+            Processo p = (Processo) listProcessos.getElementAt(jListProcessos.getSelectedIndex());
+            statustxt.setText(p.getStatus());
+            modiftxt.setText("");
+        }
+    }
+
+    private void editarStatusDeProcesso() {
+        if (!listProcessos.isEmpty()) {
+            Processo p;
+            try{
+                p = (Processo) listProcessos.getElementAt(jListProcessos.getSelectedIndex());
+                StatusProcessoJD jd = new StatusProcessoJD(null, true, p);
+                jd.setVisible(true);
+                statustxt.setText("");
+                Cliente c = (Cliente) listClientes.getElementAt(jListCliente.getSelectedIndex());
+                carregarProcessosDoClienteSelecionado(c);
+            }catch(Exception e){
+                JOptionPane.showMessageDialog(null, "Sem processo selecionado.","Status Processo",JOptionPane.INFORMATION_MESSAGE);
+            }
         }
     }
 

@@ -45,6 +45,7 @@ public class ProcessoDAO {
             ConnectionFactoryMySQL.closeConnection(con, stmt);
         }
     }
+    
     public List<Processo> getProcessos(int idCliente) {
         List<Processo> processos = new ArrayList<>();
         sql = "SELECT * FROM processos WHERE ID_CLIENTE = ?";
@@ -84,4 +85,19 @@ public class ProcessoDAO {
         return false;
     }
     
+    public boolean editarStatus(String status, int id){
+        sql = "UPDATE processos SET status = ? WHERE id = ?";
+        try {
+            stmt = con.prepareStatement(sql);
+            stmt.setString(1, status);
+            stmt.setInt(2, id);
+            stmt.executeUpdate();
+            return true;
+        } catch (SQLException ex) {
+            Logger.getLogger(ProcessoDAO.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        }finally{
+            ConnectionFactoryMySQL.closeConnection(con, stmt);
+        }
+    }
 }

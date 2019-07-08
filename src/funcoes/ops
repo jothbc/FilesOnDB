@@ -38,3 +38,7 @@
     lista.addElement(umObjeto ou classe);
     // se for usar classe lembrar de criar o metodo toString pra retornar a informação que vai aparecer na lista
     lista.getElementAt(jList1.getSelectedIndex()) //é só fazer Cast pra classe pra pegar ela de novo...
+
+## remove caracteres não numéricos
+    .replaceAll("[^0-9]", "");
+
