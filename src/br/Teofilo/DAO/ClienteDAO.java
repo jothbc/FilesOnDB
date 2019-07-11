@@ -22,16 +22,16 @@ import java.util.logging.Logger;
  * @author User
  */
 public class ClienteDAO {
-    
+
     Connection con = null;
     PreparedStatement stmt;
     ResultSet rs;
     String sql;
-    
+
     public ClienteDAO() {
         con = ConnectionFactoryMySQL.getConnection();
     }
-    
+
     public boolean insertCliente(Cliente c) {
         sql = "INSERT INTO clientes(nome,email,telefone,telefone2,sexo,cpf,rg,nascimento,data_cadastro,endereco,n_casa,complemento,ativo)"
                 + " VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)";
@@ -66,9 +66,9 @@ public class ClienteDAO {
         } finally {
             ConnectionFactoryMySQL.closeConnection(con, stmt);
         }
-        
+
     }
-    
+
     public List<Cliente> getClintes() {
         List<Cliente> clientes = new ArrayList<>();
         sql = "SELECT * FROM clientes";
@@ -105,7 +105,7 @@ public class ClienteDAO {
         }
         return clientes;
     }
-    
+
     public boolean updateCliente(Cliente c) {
         sql = "UPDATE clientes SET nome = ?, cpf = ?, rg = ?, email =?, telefone =?, "
                 + "telefone2 = ?, sexo = ?, nascimento = ?, data_cadastro = ?, "
@@ -142,7 +142,7 @@ public class ClienteDAO {
             ConnectionFactoryMySQL.closeConnection(con, stmt);
         }
     }
-    
+
     public boolean inativarCliente(Cliente c) {
         sql = "UPDATE clientes SET ativo = 0 WHERE id = ?";
         try {
@@ -157,7 +157,7 @@ public class ClienteDAO {
             ConnectionFactoryMySQL.closeConnection(con, stmt);
         }
     }
-    
+
     public boolean reativarCliente(Cliente c) {
         sql = "UPDATE clientes SET ativo = 1 WHERE id = ?";
         try {
@@ -172,5 +172,41 @@ public class ClienteDAO {
             ConnectionFactoryMySQL.closeConnection(con, stmt);
         }
     }
-    
+
+    public Cliente getClinte(int id) {
+        sql = "SELECT * FROM clientes WHERE id = ?";
+        try {
+            stmt = con.prepareStatement(sql);
+            stmt.setInt(1, id);
+            rs = stmt.executeQuery();
+            rs.first();
+            Cliente c = new Cliente();
+            c.setId(rs.getInt("id"));
+            c.setNome(rs.getString("nome"));
+            c.setEmail(rs.getString("email"));
+            c.setTelefone(rs.getString("telefone"));
+            c.setTelefone2(rs.getString("telefone2"));
+            c.setCpf(rs.getString("cpf"));
+            c.setRg(rs.getString("rg"));
+            c.setSexo(rs.getString("sexo"));
+            if (rs.getString("nascimento") != null) {
+                c.setNascimento(CDate.DataMySQLtoDataStringPT(rs.getString("nascimento")));
+            }
+            if (rs.getString("data_cadastro") != null) {
+                c.setData_cadastro(CDate.DataMySQLtoDataStringPT(rs.getString("data_cadastro")));
+            }
+            c.setEndereco(rs.getString("endereco"));
+            c.setN_casa(rs.getString("n_casa"));
+            c.setComplemento(rs.getString("complemento"));
+            c.setValor(rs.getDouble("valor"));
+            c.setAtivo(rs.getBoolean("ativo"));
+            return c;
+        } catch (SQLException ex) {
+            Logger.getLogger(ClienteDAO.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        } finally {
+            ConnectionFactoryMySQL.closeConnection(con, stmt, rs);
+        }
+    }
+
 }

@@ -5,6 +5,7 @@ import br.Teofilo.Bean.Documento;
 import br.Teofilo.Bean.DocumentoPessoal;
 import br.Teofilo.Bean.Processo;
 import funcoes.CDate;
+import funcoes.RSA;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -45,6 +46,7 @@ public class DocumentoDAO {
         sql = "INSERT INTO documentos (documento,nome,ID_CLIENTE,modificacao,ID_TIPO,ID_PROCESSO) values (?,?,?,?,?,?)";
         try {
             InputStream is = new FileInputStream(f);
+            //InputStream is_c = new FileInputStream(RSA.criptografa(f, RSA.));
             stmt = con.prepareStatement(sql);
             stmt.setBlob(1, is);
             stmt.setString(2, f.getName());
@@ -82,7 +84,8 @@ public class DocumentoDAO {
             ConnectionFactoryMySQL.closeConnection(con, stmt);
         }
     }
-
+    
+    //retorna o file em si
     public File getArquivo(int id, String local, String tabela) {
         File f = null;
         sql = "SELECT id,nome,documento from " + tabela + " where id = ?";
@@ -106,6 +109,7 @@ public class DocumentoDAO {
         return f;
     }
 
+    //nao retorna o file em si
     public List<Documento> getDocumentosDeProcessoETipo(int idCliente, int processo, int tipo) {
         List<Documento> arquivos = new ArrayList<>();
         sql = "SELECT id,nome,modificacao,status,ID_PROCESSO,ID_TIPO FROM documentos WHERE ID_CLIENTE = ?"
@@ -137,6 +141,7 @@ public class DocumentoDAO {
         return arquivos;
     }
 
+    //nao retorna o file em si
     public List<DocumentoPessoal> getDocumentosPessoais(int id) {
         List<DocumentoPessoal> pessoal = new ArrayList<>();
         sql = "SELECT * FROM documentos_pessoais WHERE ID_CLIENTE = ?";

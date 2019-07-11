@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -68,9 +69,9 @@ public class ValorClienteDAO {
         }
     }
 
-    public List<ValorCliente> getValoresDoCLiente_EmAberto(Cliente c){
+    public List<ValorCliente> getValoresDoCLiente(Cliente c){
         List<ValorCliente> valores= new ArrayList<>();
-        sql = "SELECT * FROM valorcliente WHERE ID_CLIENTE = ? AND data_pago is null";
+        sql = "SELECT * FROM valorcliente WHERE ID_CLIENTE = ?";
         try {
             stmt= con.prepareStatement(sql);
             stmt.setInt(1, c.getId());
@@ -84,6 +85,9 @@ public class ValorClienteDAO {
                 v.setTotal(rs.getDouble("total"));
                 v.setN_parcelas(rs.getInt("parcelas"));
                 v.setJapago(rs.getDouble("jaPago"));
+                if (rs.getString("data_pago")!=null){
+                    v.setData_pago(CDate.DataMySQLtoDataStringPT(rs.getString("data_pago")));
+                }
                 valores.add(v);
             }
         } catch (SQLException ex) {
@@ -153,4 +157,25 @@ public class ValorClienteDAO {
         }
     }
     
+    public void verificarTotalPagoComValorTotal(int id){
+        sql = "SELECT * FROM valorcliente WHERE id = ?";
+        try {
+            stmt = con.prepareStatement(sql);
+            stmt.setInt(1, id);
+            rs= stmt.executeQuery();
+            rs.first();
+            if (rs.getDouble("total") == rs.getDouble("jaPago")){
+                sql = "UPDATE valorcliente SET data_pago = ? WHERE id = ?";
+                stmt = con.prepareStatement(sql);
+                stmt.setString(1, CDate.DataPTBRtoDataMySQL(CDate.DataPTBRAtual()));
+                stmt.setInt(2, id);
+                stmt.executeUpdate();
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ValorClienteDAO.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null, "Erro ao tentar verificar valor total e valor pago no banco de dados.","ERRO",JOptionPane.ERROR_MESSAGE);
+        }finally{
+            ConnectionFactoryMySQL.closeConnection(con, stmt, rs);
+        }
+    }
 }
