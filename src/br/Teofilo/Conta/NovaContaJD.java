@@ -6,18 +6,10 @@
 package br.Teofilo.Conta;
 
 import br.Teofilo.Bean.Cliente;
-import br.Teofilo.Bean.ValorCliente;
-import br.Teofilo.DAO.ValorClienteDAO;
 import funcoes.CDate;
 import funcoes.Conv;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 /**
@@ -318,7 +310,6 @@ public class NovaContaJD extends javax.swing.JDialog {
             try {
                 totaltxt.setText(Conv.validarValue(Double.parseDouble(totaltxt.getText().replaceAll(",", "\\."))));
                 emissaotxt.requestFocus();
-                emissaotxt.setText(CDate.DataPTBRAtual());
             } catch (NumberFormatException e) {
                 JOptionPane.showMessageDialog(null, "Valor provavelmente incorreto.");
             }
@@ -328,7 +319,6 @@ public class NovaContaJD extends javax.swing.JDialog {
     private void emissaotxtKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_emissaotxtKeyPressed
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             vencimentotxt.requestFocus();
-            vencimentotxt.setText(CDate.DataPTBRAtual());
         }
     }//GEN-LAST:event_emissaotxtKeyPressed
 
@@ -407,8 +397,10 @@ public class NovaContaJD extends javax.swing.JDialog {
     // End of variables declaration//GEN-END:variables
 
     private void init() {
-        //clientelbl.setText(cliente.getNome());
+        clientelbl.setText(cliente.getNome());
         jSpinner1.setEnabled(false);
+        vencimentotxt.setText(CDate.DataPTBRAtual());
+        emissaotxt.setText(CDate.DataPTBRAtual());
     }
 
     private void parceladoBtn() {
@@ -431,24 +423,24 @@ public class NovaContaJD extends javax.swing.JDialog {
     }
 
     private void concluir() {
-        ValorCliente vc = new ValorCliente();
-        vc.setTotal(Double.parseDouble(totaltxt.getText().replaceAll(",", "\\.")));
-        vc.setID_CLIENTE(cliente.getId());
-        vc.setN_parcelas(1);
-        vc.setEmissao(emissaotxt.getText());
-        vc.setData_vencimento(vencimentotxt.getText());
-        vc.setReferente(referentetxt.getText());
-        if (isParcelado.isSelected()) {
-            vc.setN_parcelas((int) jSpinner1.getValue());
-            for (int i = 0; i < (int) jSpinner1.getValue(); i++) {
-                vc.addParcela(i + 1, CDate.SomarData_MES(i, vc.getData_vencimento()), Double.parseDouble(valorParcelatxt.getText().replaceAll(",", "\\.")));
-            }
-        }
-        if (!new ValorClienteDAO().addConta(vc)){
-            JOptionPane.showMessageDialog(null, "Erro ao tentar adicionar conta.","Erro",JOptionPane.ERROR_MESSAGE);
-        }else{
-            dispose();
-        }
+//        ValorCliente vc = new ValorCliente();
+//        vc.setTotal(Double.parseDouble(totaltxt.getText().replaceAll(",", "\\.")));
+//        vc.setID_CLIENTE(cliente.getId());
+//        vc.setN_parcelas(1);
+//        vc.setEmissao(emissaotxt.getText());
+//        vc.setData_vencimento(vencimentotxt.getText());
+//        vc.setReferente(referentetxt.getText());
+//        if (isParcelado.isSelected()) {
+//            vc.setN_parcelas((int) jSpinner1.getValue());
+//            for (int i = 0; i < (int) jSpinner1.getValue(); i++) {
+//                vc.addParcela(i + 1, CDate.SomarData_MES(i, vc.getData_vencimento()), Double.parseDouble(valorParcelatxt.getText().replaceAll(",", "\\.")));
+//            }
+//        }
+//        if (!new ValorClienteDAO().addConta(vc)){
+//            JOptionPane.showMessageDialog(null, "Erro ao tentar adicionar conta.","Erro",JOptionPane.ERROR_MESSAGE);
+//        }else{
+//            dispose();
+//        }
         
     }
 }

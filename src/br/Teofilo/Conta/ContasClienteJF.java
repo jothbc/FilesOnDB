@@ -6,18 +6,9 @@
 package br.Teofilo.Conta;
 
 import br.Teofilo.Bean.Cliente;
-import br.Teofilo.Bean.Parcela;
-import br.Teofilo.Bean.ValorCliente;
 import br.Teofilo.DAO.ClienteDAO;
-import br.Teofilo.DAO.ValorClienteDAO;
-import funcoes.Conv;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
@@ -60,11 +51,9 @@ public class ContasClienteJF extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         jButton2 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
-        valorManualtxt = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
         totalEmAbertotxt = new javax.swing.JTextField();
-        jLabel2 = new javax.swing.JLabel();
+        pagobox = new javax.swing.JCheckBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setUndecorated(true);
@@ -100,7 +89,7 @@ public class ContasClienteJF extends javax.swing.JFrame {
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap(24, Short.MAX_VALUE)
                 .addComponent(jLabel13, javax.swing.GroupLayout.PREFERRED_SIZE, 782, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jButton3)
@@ -137,14 +126,14 @@ public class ContasClienteJF extends javax.swing.JFrame {
 
             },
             new String [] {
-                "id", "Data Compra", "Data Vencimento", "Nº Parcela", "Total da Fatura", "Data Pago", "Valor Pago"
+                "ID", "Descrição", "Valor", "Emissão", "Valor Já Pago"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Integer.class, java.util.Date.class, java.util.Date.class, java.lang.Integer.class, java.lang.Double.class, java.util.Date.class, java.lang.Double.class
+                java.lang.Integer.class, java.lang.String.class, java.lang.Double.class, java.lang.String.class, java.lang.Double.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false
+                false, false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -164,6 +153,14 @@ public class ContasClienteJF extends javax.swing.JFrame {
         jScrollPane1.setViewportView(jTable1);
         jTable1.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         if (jTable1.getColumnModel().getColumnCount() > 0) {
+            jTable1.getColumnModel().getColumn(0).setMinWidth(20);
+            jTable1.getColumnModel().getColumn(0).setMaxWidth(50);
+            jTable1.getColumnModel().getColumn(2).setMinWidth(100);
+            jTable1.getColumnModel().getColumn(2).setMaxWidth(100);
+            jTable1.getColumnModel().getColumn(4).setMinWidth(100);
+            jTable1.getColumnModel().getColumn(4).setMaxWidth(100);
+        }
+        if (jTable1.getColumnModel().getColumnCount()>0){
             jTable1.getColumnModel().getColumn(0).setMinWidth(0);
             jTable1.getColumnModel().getColumn(0).setMaxWidth(0);
         }
@@ -176,17 +173,15 @@ public class ContasClienteJF extends javax.swing.JFrame {
             }
         });
 
-        jButton4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/Teofilo/IMG/1x/ic_check_24px.png"))); // NOI18N
-        jButton4.setBorder(null);
-        jButton4.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton4ActionPerformed(evt);
-            }
-        });
-
         jLabel1.setText("Total em Aberto");
 
-        jLabel2.setText("Referente à");
+        pagobox.setBackground(new java.awt.Color(255, 255, 255));
+        pagobox.setText("Exibir Pagos");
+        pagobox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                pagoboxActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -196,16 +191,6 @@ public class ContasClienteJF extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 833, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
-                                .addComponent(jButton2)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(valorManualtxt, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButton4)))
-                        .addContainerGap(20, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addComponent(ID_CLIENTEtxt, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -218,8 +203,13 @@ public class ContasClienteJF extends javax.swing.JFrame {
                         .addComponent(totalEmAbertotxt, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(69, 69, 69))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel2)
-                        .addGap(0, 0, Short.MAX_VALUE))))
+                        .addComponent(jButton2)
+                        .addGap(51, 51, 51)
+                        .addComponent(pagobox)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jScrollPane1)
+                        .addContainerGap())))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -234,16 +224,12 @@ public class ContasClienteJF extends javax.swing.JFrame {
                         .addComponent(Clientelbl, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addComponent(totalEmAbertotxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jButton2)
-                        .addComponent(jButton4))
-                    .addComponent(valorManualtxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jButton2)
+                    .addComponent(pagobox))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 325, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jLabel2)
-                .addContainerGap(24, Short.MAX_VALUE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 373, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -285,15 +271,9 @@ public class ContasClienteJF extends javax.swing.JFrame {
         novaConta();
     }//GEN-LAST:event_jButton2ActionPerformed
 
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        if (jTable1.getSelectedRow() >= 0) {
-            baixarSelecionado();
-        }
-    }//GEN-LAST:event_jButton4ActionPerformed
-
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
         if (jTable1.getSelectedRow() >= 0) {
-            verificaContaSemParcela();
+            setarValorManual();
         }
     }//GEN-LAST:event_jTable1MouseClicked
 
@@ -310,6 +290,12 @@ public class ContasClienteJF extends javax.swing.JFrame {
             }
         }
     }//GEN-LAST:event_ID_CLIENTEtxtKeyPressed
+
+    private void pagoboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pagoboxActionPerformed
+        if (cliente!=null){
+            exibirPagos();
+        }
+    }//GEN-LAST:event_pagoboxActionPerformed
 
     /**
      * @param args the command line arguments
@@ -352,16 +338,14 @@ public class ContasClienteJF extends javax.swing.JFrame {
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel13;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
+    private javax.swing.JCheckBox pagobox;
     private javax.swing.JTextField totalEmAbertotxt;
-    private javax.swing.JTextField valorManualtxt;
     // End of variables declaration//GEN-END:variables
 
     private void buscarCliente() {
@@ -385,136 +369,20 @@ public class ContasClienteJF extends javax.swing.JFrame {
 
     private void carregarContasDoCliente() {
         tb.setRowCount(0);
-        List<ValorCliente> valores = new ValorClienteDAO().getValoresDoCLiente(cliente);
-        double aberto= 0;
-        for (ValorCliente v : valores) {
-            if (v.getN_parcelas() > 1) {    //se a conta possuir parcelas
-                carregarParcelasNaTabela(v);
-            }else {                         // é uma conta sem parcela
-                carregarValorClienteNaTabela(v);
-            }
-        }
-        for (int x=0;x<jTable1.getRowCount();x++){
-            if (jTable1.getValueAt(x, 5) == null){ //conta em aberto sem data de pagamento
-                if (jTable1.getValueAt(x, 3)!=null){ //é uma parcela
-                    aberto+= (double) jTable1.getValueAt(x, 4);
-                }else{ //é uma conta sem parcela
-                    aberto+= (double)jTable1.getValueAt(x, 4) - (double)jTable1.getValueAt(x, 6);
-                }
-            }
-        }
-        totalEmAbertotxt.setText(Conv.validarValue(aberto));
-
+        
     }
 
     private void baixarSelecionado() {
-        int index = jTable1.getSelectedRow();
-        int id = (int) jTable1.getValueAt(index, 0);
-        if (jTable1.getValueAt(index, 3) == null) { //é valorCliente
-            try {
-                double valor = Double.parseDouble(valorManualtxt.getText().replaceAll(",", "\\."));
-                if (!new ValorClienteDAO().baixarValorCliente(id, valor)) {
-                    JOptionPane.showMessageDialog(null, "Algo deu errado e não foi possivel baixar valor no banco de dados..", "Erro", JOptionPane.ERROR_MESSAGE);
-                } else {
-                    new ValorClienteDAO().verificarTotalPagoComValorTotal(id);
-                    valorManualtxt.setText("");
-                    atualizar();
-                }
-            } catch (NumberFormatException e) {
-                JOptionPane.showMessageDialog(null, "Informe um valor válido para realizar o pagamento da conta.", "Valor inválido", JOptionPane.INFORMATION_MESSAGE);
-            }
-        } else {  //é parcela
-            if (!new ValorClienteDAO().baixarParcelaValorCliente(id)) {
-                JOptionPane.showMessageDialog(null, "Algo deu errado e não foi possivel baixar valor no banco de dados..", "Erro", JOptionPane.ERROR_MESSAGE);
-            } else {
-                atualizar();
-            }
-        }
+        
     }
 
-    private void verificaContaSemParcela() {
-        int index = jTable1.getSelectedRow();
-        //se o campo relacionado a parcelas estiver null significa que é uma conta sem parcela
-        if (jTable1.getValueAt(index, 3) == null) {
-            valorManualtxt.setText(Double.toString((double) jTable1.getValueAt(index, 4) - (double) jTable1.getValueAt(index, 6)));
-        } else {
-            valorManualtxt.setText("");
-        }
+    private void setarValorManual() {
+      
     }
 
-    private void atualizar() {
-        carregarContasDoCliente();
+    private void exibirPagos() {
+    
     }
 
-    private void carregarParcelasNaTabela(ValorCliente v) {
-        //obtem as parcelas
-        v.setParcelas(new ValorClienteDAO().getParcelasDoValorCliente(v));
-        for (Parcela p : v.getParcelas()) {
-            //se a parcela ja estiver paga (precisa do if para fazer os parse nas datas, se não da erro)
-            if (p.getData_pago() != null) {
-                try {
-                    Object[] dado = {p.getId(),
-                        new SimpleDateFormat("dd/MM/yyyy").parse(v.getEmissao()),
-                        new SimpleDateFormat("dd/MM/yyyy").parse(p.getData_vencimento()),
-                        p.getN_parcela(),
-                        Conv.CDblDuasCasas(p.getValor()),
-                        new SimpleDateFormat("dd/MM/yyyy").parse(p.getData_pago()),
-                        p.getValor()};
-                    tb.addRow(dado);
-                } catch (ParseException ex) {
-                    Logger.getLogger(ContasClienteJF.class.getName()).log(Level.SEVERE, null, ex);
-                    JOptionPane.showMessageDialog(null, "Um objeto não pode ser exibido na lista devido a um erro.\n" + ex, "Erro", JOptionPane.ERROR_MESSAGE);
-                }
-            } //a parcela nao esta paga
-            else {
-                try {
-                    Object[] dado = {p.getId(),
-                        new SimpleDateFormat("dd/MM/yyyy").parse(v.getEmissao()),
-                        new SimpleDateFormat("dd/MM/yyyy").parse(p.getData_vencimento()),
-                        p.getN_parcela(),
-                        Conv.CDblDuasCasas(p.getValor()),
-                        null,
-                        null};
-                    tb.addRow(dado);
-                } catch (ParseException ex) {
-                    Logger.getLogger(ContasClienteJF.class.getName()).log(Level.SEVERE, null, ex);
-                    JOptionPane.showMessageDialog(null, "Um objeto não pode ser exibido na lista devido a um erro.\n" + ex, "Erro", JOptionPane.ERROR_MESSAGE);
-                }
-            }
-        }
-    }
-
-    private void carregarValorClienteNaTabela(ValorCliente v) {
-        //se a conta ja estiver paga
-        if (v.getData_pago() != null) {
-            try {
-                Object[] dado = {v.getId(),
-                    new SimpleDateFormat("dd/MM/yyyy").parse(v.getEmissao()),
-                    new SimpleDateFormat("dd/MM/yyyy").parse(v.getData_vencimento()),
-                    null,
-                    Conv.CDblDuasCasas(v.getTotal()),
-                    new SimpleDateFormat("dd/MM/yyyy").parse(v.getData_pago()),
-                    v.getJapago()};
-                tb.addRow(dado);
-            } catch (ParseException ex) {
-                Logger.getLogger(ContasClienteJF.class.getName()).log(Level.SEVERE, null, ex);
-                JOptionPane.showMessageDialog(null, "Um objeto não pode ser exibido na lista devido a um erro.\n" + ex, "Erro", JOptionPane.ERROR_MESSAGE);
-            }
-        } // a conta não esta paga
-        else {
-            try {
-                Object[] dado = {v.getId(),
-                    new SimpleDateFormat("dd/MM/yyyy").parse(v.getEmissao()),
-                    new SimpleDateFormat("dd/MM/yyyy").parse(v.getData_vencimento()),
-                    null,
-                    Conv.CDblDuasCasas(v.getTotal()),
-                    null,
-                    v.getJapago()};
-                tb.addRow(dado);
-            } catch (ParseException ex) {
-                Logger.getLogger(ContasClienteJF.class.getName()).log(Level.SEVERE, null, ex);
-                JOptionPane.showMessageDialog(null, "Um objeto não pode ser exibido na lista devido a um erro.\n" + ex, "Erro", JOptionPane.ERROR_MESSAGE);
-            }
-        }
-    }
+    
 }

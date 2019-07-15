@@ -9,15 +9,11 @@ import br.Teofilo.Cliente.ClienteJF;
 import br.Teofilo.Conta.ContasClienteJF;
 import br.Teofilo.Documentos.DocumentoJF;
 import java.awt.Desktop;
-import java.awt.Image;
-import java.awt.Menu;
-import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
 /**
@@ -256,6 +252,9 @@ public class MenuJF extends javax.swing.JFrame {
         }
         if (documentoJF != null) {
             documentoJF.dispose();
+        }
+        if (contasClientesJF!=null){
+            contasClientesJF.dispose();
         }
 
     }
