@@ -11,8 +11,8 @@ package br.Teofilo.Bean;
  */
 public class ContaSub {
     private int CONTA_ID;
-    private String vencimento;
     private double valor;
+    private String vencimento;
     private String data_pago;
 
     /**

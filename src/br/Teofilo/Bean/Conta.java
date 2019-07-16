@@ -5,6 +5,9 @@
  */
 package br.Teofilo.Bean;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  *
  * @author User
@@ -12,13 +15,21 @@ package br.Teofilo.Bean;
 public class Conta {
     private int id;
     private int ID_CLIENTE;
-    private String descricao;
     private double valor;
-    private String emissao;
     private double valor_ja_pago;
+    private String descricao;
+    private String emissao;
     private String data_pagamento_final;
+    private String vencimento;
+    private List<ContaSub> conta_sub;
     private boolean ativo;
+    private boolean parcelado;
 
+    public Conta() {
+        conta_sub = new ArrayList<>();
+    }
+
+    
     /**
      * @return the id
      */
@@ -129,5 +140,52 @@ public class Conta {
      */
     public void setID_CLIENTE(int ID_CLIENTE) {
         this.ID_CLIENTE = ID_CLIENTE;
+    }
+
+    /**
+     * @return the vencimento
+     */
+    public String getVencimento() {
+        return vencimento;
+    }
+
+    /**
+     * @param vencimento the vencimento to set
+     */
+    public void setVencimento(String vencimento) {
+        this.vencimento = vencimento;
+    }
+
+    
+    /**
+     * @return the parcelado
+     */
+    public boolean isParcelado() {
+        return parcelado;
+    }
+
+    /**
+     * @param parcelado the parcelado to set
+     */
+    public void setParcelado(boolean parcelado) {
+        this.parcelado = parcelado;
+    }
+
+    /**
+     * @return the conta_sub
+     */
+    public List<ContaSub> getConta_sub() {
+        return conta_sub;
+    }
+
+    /**
+     * @param conta_sub the conta_sub to set
+     */
+    public void setConta_sub(List<ContaSub> conta_sub) {
+        this.conta_sub = conta_sub;
+    }
+    
+    public void addConta_sub(ContaSub c){
+        this.conta_sub.add(c);
     }
 }

@@ -6,6 +6,9 @@
 package br.Teofilo.Conta;
 
 import br.Teofilo.Bean.Cliente;
+import br.Teofilo.Bean.Conta;
+import br.Teofilo.Bean.ContaSub;
+import br.Teofilo.DAO.ContaDAO;
 import funcoes.CDate;
 import funcoes.Conv;
 import java.awt.Point;
@@ -423,24 +426,33 @@ public class NovaContaJD extends javax.swing.JDialog {
     }
 
     private void concluir() {
-//        ValorCliente vc = new ValorCliente();
-//        vc.setTotal(Double.parseDouble(totaltxt.getText().replaceAll(",", "\\.")));
-//        vc.setID_CLIENTE(cliente.getId());
-//        vc.setN_parcelas(1);
-//        vc.setEmissao(emissaotxt.getText());
-//        vc.setData_vencimento(vencimentotxt.getText());
-//        vc.setReferente(referentetxt.getText());
-//        if (isParcelado.isSelected()) {
-//            vc.setN_parcelas((int) jSpinner1.getValue());
-//            for (int i = 0; i < (int) jSpinner1.getValue(); i++) {
-//                vc.addParcela(i + 1, CDate.SomarData_MES(i, vc.getData_vencimento()), Double.parseDouble(valorParcelatxt.getText().replaceAll(",", "\\.")));
-//            }
-//        }
-//        if (!new ValorClienteDAO().addConta(vc)){
-//            JOptionPane.showMessageDialog(null, "Erro ao tentar adicionar conta.","Erro",JOptionPane.ERROR_MESSAGE);
-//        }else{
-//            dispose();
-//        }
-        
+        try {
+            Conta conta = new Conta();
+            conta.setID_CLIENTE(cliente.getId());
+            conta.setAtivo(true);
+            conta.setVencimento(vencimentotxt.getText());
+            conta.setEmissao(emissaotxt.getText());
+            conta.setValor(Double.parseDouble(totaltxt.getText().replaceAll(",", "\\.")));
+            conta.setDescricao(referentetxt.getText());
+            conta.setParcelado(isParcelado.isSelected());
+            if (isParcelado.isSelected()) {
+                int n_parcelas = (int) jSpinner1.getValue();
+                //conta_sub.setCONTA_ID(WIDTH); (o id precisa ser retornado pelo banco de dados)
+                for (int x = 0; x < n_parcelas; x++) {
+                    ContaSub conta_sub = new ContaSub();
+                    conta_sub.setVencimento(CDate.SomarData_MES(x, vencimentotxt.getText()));
+                    conta_sub.setValor(Double.parseDouble(valorParcelatxt.getText().replaceAll(",", "\\.")));
+                    conta.addConta_sub(conta_sub);
+                }
+            }
+            if (new ContaDAO().addConta(conta)) {
+                dispose();
+            } else {
+                JOptionPane.showMessageDialog(null, "Não foi possível registrar a conta no banco de dados.", "Algo deu errado", JOptionPane.ERROR_MESSAGE);
+            }
+        } catch (Exception e) {
+
+        }
+
     }
 }
