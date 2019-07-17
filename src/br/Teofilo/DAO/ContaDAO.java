@@ -89,6 +89,24 @@ public class ContaDAO {
                 }
                 contas.add(c);
             }
+            for (Conta c:contas){
+                if (c.isParcelado()){
+                    sql = "SELECT * FROM conta_sub WHERE ID_CONTA = ?";
+                    stmt = con.prepareStatement(sql);
+                    stmt.setInt(1, c.getId());
+                    rs = stmt.executeQuery();
+                    while (rs.next()){
+                        ContaSub s = new ContaSub();
+                        s.setCONTA_ID(rs.getInt("id"));
+                        s.setValor(rs.getDouble("valor"));
+                        s.setVencimento(CDate.DataMySQLtoDataStringPT(rs.getString("vencimento")));
+                        if (rs.getString("data_pago")!=null){
+                            s.setData_pago(CDate.DataMySQLtoDataStringPT(rs.getString("data_pago")));
+                        }
+                        c.addConta_sub(s);
+                    }
+                }
+            }
         } catch (SQLException ex) {
             Logger.getLogger(ContaDAO.class.getName()).log(Level.SEVERE, null, ex);
         }

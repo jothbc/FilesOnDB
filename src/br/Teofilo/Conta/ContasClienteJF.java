@@ -6,9 +6,12 @@
 package br.Teofilo.Conta;
 
 import br.Teofilo.Bean.Cliente;
+import br.Teofilo.Bean.Conta;
 import br.Teofilo.DAO.ClienteDAO;
+import br.Teofilo.DAO.ContaDAO;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
+import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
@@ -126,14 +129,14 @@ public class ContasClienteJF extends javax.swing.JFrame {
 
             },
             new String [] {
-                "ID", "Descrição", "Valor", "Emissão", "Valor Já Pago"
+                "ID", "Descrição", "Valor", "Valor Já Pago", "Emissão", "Vencimento", "Quitação"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Integer.class, java.lang.String.class, java.lang.Double.class, java.lang.String.class, java.lang.Double.class
+                java.lang.Integer.class, java.lang.String.class, java.lang.Double.class, java.lang.Double.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false
+                false, false, false, false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -157,8 +160,8 @@ public class ContasClienteJF extends javax.swing.JFrame {
             jTable1.getColumnModel().getColumn(0).setMaxWidth(50);
             jTable1.getColumnModel().getColumn(2).setMinWidth(100);
             jTable1.getColumnModel().getColumn(2).setMaxWidth(100);
-            jTable1.getColumnModel().getColumn(4).setMinWidth(100);
-            jTable1.getColumnModel().getColumn(4).setMaxWidth(100);
+            jTable1.getColumnModel().getColumn(3).setMinWidth(100);
+            jTable1.getColumnModel().getColumn(3).setMaxWidth(100);
         }
         if (jTable1.getColumnModel().getColumnCount()>0){
             jTable1.getColumnModel().getColumn(0).setMinWidth(0);
@@ -275,6 +278,9 @@ public class ContasClienteJF extends javax.swing.JFrame {
         if (jTable1.getSelectedRow() >= 0) {
             setarValorManual();
         }
+        if (evt.getClickCount()==2){
+            verParcelas();
+        }
     }//GEN-LAST:event_jTable1MouseClicked
 
     private void ID_CLIENTEtxtKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_ID_CLIENTEtxtKeyPressed
@@ -369,6 +375,15 @@ public class ContasClienteJF extends javax.swing.JFrame {
 
     private void carregarContasDoCliente() {
         tb.setRowCount(0);
+        //id, desc, valor,valorPago,emissao,vencimento,quitacao
+        List<Conta> contas = new ContaDAO().findAllByClienteID(cliente.getId());
+        if (!contas.isEmpty()){
+            for (Conta c:contas){
+                Object[] dado = {c.getId(),c.getDescricao(),c.getValor(),c.getValor_ja_pago(),c.getEmissao(),c.getVencimento(),c.getData_pagamento_final()};
+                tb.addRow(dado);
+            }
+        }
+                
         
     }
 
@@ -382,6 +397,10 @@ public class ContasClienteJF extends javax.swing.JFrame {
 
     private void exibirPagos() {
     
+    }
+
+    private void verParcelas() {
+        
     }
 
     
