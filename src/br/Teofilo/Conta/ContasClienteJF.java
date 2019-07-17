@@ -7,8 +7,10 @@ package br.Teofilo.Conta;
 
 import br.Teofilo.Bean.Cliente;
 import br.Teofilo.Bean.Conta;
+import br.Teofilo.Bean.ContaSub;
 import br.Teofilo.DAO.ClienteDAO;
 import br.Teofilo.DAO.ContaDAO;
+import funcoes.Conv;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.util.List;
@@ -31,6 +33,7 @@ public class ContasClienteJF extends javax.swing.JFrame {
      */
     public ContasClienteJF() {
         initComponents();
+        jTable1.setDefaultRenderer(Object.class, new CellRenderConta());
         tb = (DefaultTableModel) jTable1.getModel();
         jTable1.setRowSorter(new TableRowSorter<>(tb));
     }
@@ -129,14 +132,14 @@ public class ContasClienteJF extends javax.swing.JFrame {
 
             },
             new String [] {
-                "ID", "Descrição", "Valor", "Valor Já Pago", "Emissão", "Vencimento", "Quitação"
+                "ID", "Descrição", "Valor", "Valor Já Pago", "Emissão", "Vencimento", "Quitação", "Parcelado"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Integer.class, java.lang.String.class, java.lang.Double.class, java.lang.Double.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+                java.lang.Integer.class, java.lang.String.class, java.lang.Double.class, java.lang.Double.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false
+                false, false, false, false, false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -162,6 +165,7 @@ public class ContasClienteJF extends javax.swing.JFrame {
             jTable1.getColumnModel().getColumn(2).setMaxWidth(100);
             jTable1.getColumnModel().getColumn(3).setMinWidth(100);
             jTable1.getColumnModel().getColumn(3).setMaxWidth(100);
+            jTable1.getColumnModel().getColumn(7).setMaxWidth(70);
         }
         if (jTable1.getColumnModel().getColumnCount()>0){
             jTable1.getColumnModel().getColumn(0).setMinWidth(0);
@@ -278,8 +282,10 @@ public class ContasClienteJF extends javax.swing.JFrame {
         if (jTable1.getSelectedRow() >= 0) {
             setarValorManual();
         }
-        if (evt.getClickCount()==2){
-            verParcelas();
+        if (evt.getClickCount() == 2) {
+            if (jTable1.getSelectedRow() >= 0) {
+                verParcelas();
+            }
         }
     }//GEN-LAST:event_jTable1MouseClicked
 
@@ -298,7 +304,7 @@ public class ContasClienteJF extends javax.swing.JFrame {
     }//GEN-LAST:event_ID_CLIENTEtxtKeyPressed
 
     private void pagoboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pagoboxActionPerformed
-        if (cliente!=null){
+        if (cliente != null) {
             exibirPagos();
         }
     }//GEN-LAST:event_pagoboxActionPerformed
@@ -375,33 +381,58 @@ public class ContasClienteJF extends javax.swing.JFrame {
 
     private void carregarContasDoCliente() {
         tb.setRowCount(0);
-        //id, desc, valor,valorPago,emissao,vencimento,quitacao
+        //id, desc, valor,valorPago,emissao,vencimento,quitacao, parcelado
         List<Conta> contas = new ContaDAO().findAllByClienteID(cliente.getId());
-        if (!contas.isEmpty()){
-            for (Conta c:contas){
-                Object[] dado = {c.getId(),c.getDescricao(),c.getValor(),c.getValor_ja_pago(),c.getEmissao(),c.getVencimento(),c.getData_pagamento_final()};
-                tb.addRow(dado);
+        if (!contas.isEmpty()) {
+            for (Conta c : contas) {
+                if (!c.isParcelado()) {
+                    Object[] dado = {c.getId(), c.getDescricao(), c.getValor(), c.getValor_ja_pago(), c.getEmissao(), c.getVencimento(), c.getData_pagamento_final(), "Não"};
+                    tb.addRow(dado);
+                } else {
+                    double pago = 0;
+                    for (ContaSub s : c.getConta_sub()) {
+                        if (s.getData_pago() != null) {
+                            pago += s.getValor();
+                        }
+                    }
+                    Object[] dado = {c.getId(), c.getDescricao(), c.getValor(), pago, c.getEmissao(), c.getVencimento(), c.getData_pagamento_final(), "Sim"};
+                    tb.addRow(dado);
+                }
             }
         }
-                
-        
+
     }
 
     private void baixarSelecionado() {
-        
+
     }
 
     private void setarValorManual() {
-      
+        double total = (double) jTable1.getValueAt(jTable1.getSelectedRow(), 2);
+        double pago = (double) jTable1.getValueAt(jTable1.getSelectedRow(), 3);
+        double restante = total - pago;
+        String valorEntrada = JOptionPane.showInputDialog("Informe o valor a ser debitado da conta: ", Conv.validarValue(restante));
+        try {
+            if (valorEntrada!=null) {
+                double entrada = Double.parseDouble(valorEntrada.replaceAll(",", "\\."));
+                System.out.println(entrada);
+            }
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(null, "Formato inválido.", "Erro", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     private void exibirPagos() {
-    
+
     }
 
     private void verParcelas() {
-        
+        Conta c = new ContaDAO().getContaSubByIDCONTA((int) jTable1.getValueAt(jTable1.getSelectedRow(), 0));
+        if (!c.getConta_sub().isEmpty()) {
+            ParcelasJD jd = new ParcelasJD(null, true, c);
+            jd.setVisible(true);
+            carregarContasDoCliente();
+        }
     }
 
-    
 }

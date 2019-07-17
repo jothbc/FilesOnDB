@@ -10,6 +10,7 @@ package br.Teofilo.Bean;
  * @author User
  */
 public class ContaSub {
+    private int id;
     private int CONTA_ID;
     private double valor;
     private String vencimento;
@@ -69,6 +70,20 @@ public class ContaSub {
      */
     public void setData_pago(String data_pago) {
         this.data_pago = data_pago;
+    }
+
+    /**
+     * @return the id
+     */
+    public int getId() {
+        return id;
+    }
+
+    /**
+     * @param id the id to set
+     */
+    public void setId(int id) {
+        this.id = id;
     }
     
 }

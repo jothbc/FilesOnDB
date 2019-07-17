@@ -66,14 +66,14 @@ public class ContaDAO {
         }
     }
 
-    public List<Conta> findAllByClienteID(int id){
+    public List<Conta> findAllByClienteID(int id) {
         List<Conta> contas = new ArrayList<>();
         sql = "SELECT * FROM conta WHERE ID_CLIENTE = ?";
         try {
             stmt = con.prepareStatement(sql);
             stmt.setInt(1, id);
             rs = stmt.executeQuery();
-            while (rs.next()){
+            while (rs.next()) {
                 Conta c = new Conta();
                 c.setID_CLIENTE(id);
                 c.setId(rs.getInt("id"));
@@ -84,23 +84,24 @@ public class ContaDAO {
                 c.setVencimento(CDate.DataMySQLtoDataStringPT(rs.getString("vencimento")));
                 c.setDescricao(rs.getString("descricao"));
                 c.setValor_ja_pago(rs.getDouble("valor_ja_pago"));
-                if (rs.getString("data_pagamento_final")!=null){
+                if (rs.getString("data_pagamento_final") != null) {
                     c.setData_pagamento_final(CDate.DataMySQLtoDataStringPT(rs.getString("data_pagamento_final")));
                 }
                 contas.add(c);
             }
-            for (Conta c:contas){
-                if (c.isParcelado()){
+            for (Conta c : contas) {
+                if (c.isParcelado()) {
                     sql = "SELECT * FROM conta_sub WHERE ID_CONTA = ?";
                     stmt = con.prepareStatement(sql);
                     stmt.setInt(1, c.getId());
                     rs = stmt.executeQuery();
-                    while (rs.next()){
+                    while (rs.next()) {
                         ContaSub s = new ContaSub();
-                        s.setCONTA_ID(rs.getInt("id"));
+                        s.setCONTA_ID(rs.getInt("ID_CONTA"));
+                        s.setId(rs.getInt("id"));
                         s.setValor(rs.getDouble("valor"));
                         s.setVencimento(CDate.DataMySQLtoDataStringPT(rs.getString("vencimento")));
-                        if (rs.getString("data_pago")!=null){
+                        if (rs.getString("data_pago") != null) {
                             s.setData_pago(CDate.DataMySQLtoDataStringPT(rs.getString("data_pago")));
                         }
                         c.addConta_sub(s);
@@ -111,5 +112,48 @@ public class ContaDAO {
             Logger.getLogger(ContaDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return contas;
+    }
+
+    public Conta getContaSubByIDCONTA(int id) {
+        sql = "SELECT * FROM conta_sub WHERE ID_CONTA = ?";
+        Conta c = new Conta();
+        c.setId(id);
+        try {
+            stmt = con.prepareStatement(sql);
+            stmt.setInt(1, id);
+            rs = stmt.executeQuery();
+            while (rs.next()) {
+                ContaSub s = new ContaSub();
+                s.setCONTA_ID(id);
+                s.setId(rs.getInt("id"));
+                s.setValor(rs.getDouble("valor"));
+                s.setVencimento(CDate.DataMySQLtoDataStringPT(rs.getString("vencimento")));
+                if (rs.getString("data_pago") != null) {
+                    s.setData_pago(CDate.DataMySQLtoDataStringPT(rs.getString("data_pago")));
+                }
+                c.addConta_sub(s);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ContaDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }finally{
+            ConnectionFactoryMySQL.closeConnection(con, stmt, rs);
+        }
+        return c;
+    }
+
+    public boolean pagarParcela(int id) {
+        sql = "UPDATE conta_sub SET data_pago = ? WHERE id = ?";
+        try {
+            stmt = con.prepareStatement(sql);
+            stmt.setString(1, CDate.DataPTBRtoDataMySQL(CDate.DataPTBRAtual()));
+            stmt.setInt(2, id);
+            stmt.executeUpdate();
+            return true;
+        } catch (SQLException ex) {
+            Logger.getLogger(ContaDAO.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        }finally{
+            ConnectionFactoryMySQL.closeConnection(con, stmt);
+        }
     }
 }
