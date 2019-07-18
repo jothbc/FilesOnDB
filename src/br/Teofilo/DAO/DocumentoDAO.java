@@ -3,6 +3,7 @@ package br.Teofilo.DAO;
 import JDBC.ConnectionFactoryMySQL;
 import br.Teofilo.Bean.Documento;
 import br.Teofilo.Bean.DocumentoPessoal;
+import br.Teofilo.Bean.GerarLogErro;
 import br.Teofilo.Bean.Processo;
 import funcoes.CDate;
 import funcoes.RSA;
@@ -59,6 +60,7 @@ public class DocumentoDAO {
         } catch (SQLException | FileNotFoundException ex) {
             Logger.getLogger(DocumentoDAO.class.getName()).log(Level.SEVERE, null, ex);
             JOptionPane.showMessageDialog(null, ex, "Informe o programador", JOptionPane.ERROR_MESSAGE);
+            GerarLogErro.gerar(ex.getMessage());
             return false;
         } finally {
             ConnectionFactoryMySQL.closeConnection(con, stmt);
@@ -79,6 +81,7 @@ public class DocumentoDAO {
         } catch (SQLException | FileNotFoundException ex) {
             Logger.getLogger(DocumentoDAO.class.getName()).log(Level.SEVERE, null, ex);
             JOptionPane.showMessageDialog(null, ex, "Informe o programador", JOptionPane.ERROR_MESSAGE);
+            GerarLogErro.gerar(ex.getMessage());
             return false;
         } finally {
             ConnectionFactoryMySQL.closeConnection(con, stmt);
@@ -99,10 +102,10 @@ public class DocumentoDAO {
                 fos.write(rs.getBytes("documento"));
                 fos.close();
             }
-
         } catch (SQLException | IOException ex) {
             Logger.getLogger(DocumentoDAO.class.getName()).log(Level.SEVERE, null, ex);
             JOptionPane.showMessageDialog(null, ex, "Informe o programador", JOptionPane.ERROR_MESSAGE);
+            GerarLogErro.gerar(ex.getMessage());
         } finally {
             ConnectionFactoryMySQL.closeConnection(con, stmt);
         }
@@ -135,6 +138,7 @@ public class DocumentoDAO {
         } catch (SQLException ex) {
             Logger.getLogger(DocumentoDAO.class.getName()).log(Level.SEVERE, null, ex);
             JOptionPane.showMessageDialog(null, ex, "Informe o programador", JOptionPane.ERROR_MESSAGE);
+            GerarLogErro.gerar(ex.getMessage());
         } finally {
             ConnectionFactoryMySQL.closeConnection(con, stmt, rs);
         }
@@ -161,6 +165,7 @@ public class DocumentoDAO {
             }
         } catch (SQLException ex) {
             Logger.getLogger(ClienteDAO.class.getName()).log(Level.SEVERE, null, ex);
+            GerarLogErro.gerar(ex.getMessage());
         } finally {
             ConnectionFactoryMySQL.closeConnection(con, stmt, rs);
         }
@@ -183,6 +188,7 @@ public class DocumentoDAO {
         } catch (SQLException | FileNotFoundException ex) {
             Logger.getLogger(DocumentoDAO.class.getName()).log(Level.SEVERE, null, ex);
             JOptionPane.showMessageDialog(null, ex, "Informe o programador", JOptionPane.ERROR_MESSAGE);
+            GerarLogErro.gerar(ex.getMessage());
             return false;
         } finally {
             ConnectionFactoryMySQL.closeConnection(con, stmt);
@@ -203,6 +209,7 @@ public class DocumentoDAO {
         } catch (SQLException | FileNotFoundException ex) {
             Logger.getLogger(DocumentoDAO.class.getName()).log(Level.SEVERE, null, ex);
             JOptionPane.showMessageDialog(null, ex, "Informe o programador", JOptionPane.ERROR_MESSAGE);
+            GerarLogErro.gerar(ex.getMessage());
             return false;
         } finally {
             ConnectionFactoryMySQL.closeConnection(con, stmt);

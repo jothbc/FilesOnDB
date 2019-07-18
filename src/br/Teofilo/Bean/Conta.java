@@ -24,6 +24,7 @@ public class Conta {
     private List<ContaSub> conta_sub;
     private boolean ativo;
     private boolean parcelado;
+    private boolean cartao;
 
     public Conta() {
         conta_sub = new ArrayList<>();
@@ -186,7 +187,21 @@ public class Conta {
     }
     
     public void addConta_sub(ContaSub c){
-        this.conta_sub.add(c);
+        this.getConta_sub().add(c);
+    }
+
+    /**
+     * @return the cartao
+     */
+    public boolean isCartao() {
+        return cartao;
+    }
+
+    /**
+     * @param cartao the cartao to set
+     */
+    public void setCartao(boolean cartao) {
+        this.cartao = cartao;
     }
     
     

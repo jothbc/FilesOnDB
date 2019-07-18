@@ -62,6 +62,7 @@ public class NovaContaJD extends javax.swing.JDialog {
         jLabel6 = new javax.swing.JLabel();
         clientelbl = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
+        isCartao = new javax.swing.JCheckBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setUndecorated(true);
@@ -193,6 +194,14 @@ public class NovaContaJD extends javax.swing.JDialog {
             }
         });
 
+        isCartao.setBackground(new java.awt.Color(255, 255, 255));
+        isCartao.setText("Cartão");
+        isCartao.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                isCartaoActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -223,7 +232,10 @@ public class NovaContaJD extends javax.swing.JDialog {
                                     .addComponent(emissaotxt))
                                 .addGap(53, 53, 53)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(isParcelado)
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addComponent(isParcelado)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(isCartao))
                                     .addGroup(jPanel1Layout.createSequentialGroup()
                                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                             .addComponent(jLabel6)
@@ -245,7 +257,8 @@ public class NovaContaJD extends javax.swing.JDialog {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(totaltxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(isParcelado))
+                    .addComponent(isParcelado)
+                    .addComponent(isCartao))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
@@ -335,6 +348,10 @@ public class NovaContaJD extends javax.swing.JDialog {
         concluir();
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    private void isCartaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_isCartaoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_isCartaoActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -380,6 +397,7 @@ public class NovaContaJD extends javax.swing.JDialog {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel clientelbl;
     private javax.swing.JFormattedTextField emissaotxt;
+    private javax.swing.JCheckBox isCartao;
     private javax.swing.JCheckBox isParcelado;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton3;
@@ -402,6 +420,7 @@ public class NovaContaJD extends javax.swing.JDialog {
     private void init() {
         clientelbl.setText(cliente.getNome());
         jSpinner1.setEnabled(false);
+        isCartao.setEnabled(false);
         vencimentotxt.setText(CDate.DataPTBRAtual());
         emissaotxt.setText(CDate.DataPTBRAtual());
     }
@@ -409,8 +428,10 @@ public class NovaContaJD extends javax.swing.JDialog {
     private void parceladoBtn() {
         if (isParcelado.isSelected()) {
             jSpinner1.setEnabled(true);
+            isCartao.setEnabled(true);
         } else {
             jSpinner1.setEnabled(false);
+            isCartao.setEnabled(false);
         }
     }
 
@@ -435,6 +456,7 @@ public class NovaContaJD extends javax.swing.JDialog {
             conta.setValor(Double.parseDouble(totaltxt.getText().replaceAll(",", "\\.")));
             conta.setDescricao(referentetxt.getText());
             conta.setParcelado(isParcelado.isSelected());
+            conta.setCartao(false);  //inicializa valor para cartao
             if (isParcelado.isSelected()) {
                 int n_parcelas = (int) jSpinner1.getValue();
                 //conta_sub.setCONTA_ID(WIDTH); (o id precisa ser retornado pelo banco de dados)
@@ -444,6 +466,7 @@ public class NovaContaJD extends javax.swing.JDialog {
                     conta_sub.setValor(Double.parseDouble(valorParcelatxt.getText().replaceAll(",", "\\.")));
                     conta.addConta_sub(conta_sub);
                 }
+                conta.setCartao(isCartao.isSelected());
             }
             if (new ContaDAO().addConta(conta)) {
                 dispose();

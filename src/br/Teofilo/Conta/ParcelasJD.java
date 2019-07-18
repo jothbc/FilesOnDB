@@ -20,6 +20,7 @@ public class ParcelasJD extends javax.swing.JDialog {
 
     private final Point point = new Point();
     Conta conta = null;
+    boolean pagar = true;
     DefaultTableModel tb;
 
     /**
@@ -32,6 +33,9 @@ public class ParcelasJD extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
         conta = c;
+        if (c.isCartao()){
+            pagar = false;
+        }
         tb = (DefaultTableModel) jTable1.getModel();
         init();
     }
@@ -267,6 +271,10 @@ public class ParcelasJD extends javax.swing.JDialog {
     }
 
     private void baixarSelecionado() {
+        if (!pagar){
+            JOptionPane.showMessageDialog(null, "O parcelamento dessa conta foi feito em um cartão, e ele será automaticamente baixado no dia do seu vencimento.","Cartão",JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
         int id = (int) jTable1.getValueAt(jTable1.getSelectedRow(), 0);
         if (!new ContaDAO().pagarParcela(id)){
             JOptionPane.showMessageDialog(null, "Erro ao tentar pagar parcela.","Erro",JOptionPane.ERROR_MESSAGE);

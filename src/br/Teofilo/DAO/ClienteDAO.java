@@ -7,6 +7,7 @@ package br.Teofilo.DAO;
 
 import JDBC.ConnectionFactoryMySQL;
 import br.Teofilo.Bean.Cliente;
+import br.Teofilo.Bean.GerarLogErro;
 import funcoes.CDate;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -62,6 +63,7 @@ public class ClienteDAO {
             return true;
         } catch (SQLException ex) {
             Logger.getLogger(ClienteDAO.class.getName()).log(Level.SEVERE, null, ex);
+            GerarLogErro.gerar(ex.getMessage());
             return false;
         } finally {
             ConnectionFactoryMySQL.closeConnection(con, stmt);
@@ -100,6 +102,7 @@ public class ClienteDAO {
             }
         } catch (SQLException ex) {
             Logger.getLogger(ClienteDAO.class.getName()).log(Level.SEVERE, null, ex);
+            GerarLogErro.gerar(ex.getMessage());
         } finally {
             ConnectionFactoryMySQL.closeConnection(con, stmt, rs);
         }
@@ -137,6 +140,7 @@ public class ClienteDAO {
             return true;
         } catch (SQLException ex) {
             Logger.getLogger(ClienteDAO.class.getName()).log(Level.SEVERE, null, ex);
+            GerarLogErro.gerar(ex.getMessage());
             return false;
         } finally {
             ConnectionFactoryMySQL.closeConnection(con, stmt);
@@ -152,6 +156,7 @@ public class ClienteDAO {
             return true;
         } catch (SQLException ex) {
             Logger.getLogger(ClienteDAO.class.getName()).log(Level.SEVERE, null, ex);
+            GerarLogErro.gerar(ex.getMessage());
             return false;
         } finally {
             ConnectionFactoryMySQL.closeConnection(con, stmt);
@@ -167,6 +172,7 @@ public class ClienteDAO {
             return true;
         } catch (SQLException ex) {
             Logger.getLogger(ClienteDAO.class.getName()).log(Level.SEVERE, null, ex);
+            GerarLogErro.gerar(ex.getMessage());
             return false;
         } finally {
             ConnectionFactoryMySQL.closeConnection(con, stmt);
@@ -180,6 +186,9 @@ public class ClienteDAO {
             stmt.setInt(1, id);
             rs = stmt.executeQuery();
             rs.first();
+            if (!rs.first()){
+                return null;
+            }
             Cliente c = new Cliente();
             c.setId(rs.getInt("id"));
             c.setNome(rs.getString("nome"));
@@ -203,6 +212,7 @@ public class ClienteDAO {
             return c;
         } catch (SQLException ex) {
             Logger.getLogger(ClienteDAO.class.getName()).log(Level.SEVERE, null, ex);
+            GerarLogErro.gerar(ex.getMessage());
             return null;
         } finally {
             ConnectionFactoryMySQL.closeConnection(con, stmt, rs);

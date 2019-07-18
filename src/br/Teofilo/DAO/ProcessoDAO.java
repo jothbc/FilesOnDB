@@ -6,6 +6,7 @@
 package br.Teofilo.DAO;
 
 import JDBC.ConnectionFactoryMySQL;
+import br.Teofilo.Bean.GerarLogErro;
 import br.Teofilo.Bean.Processo;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -40,6 +41,7 @@ public class ProcessoDAO {
             return true;
         } catch (SQLException ex) {
             Logger.getLogger(ProcessoDAO.class.getName()).log(Level.SEVERE, null, ex);
+            GerarLogErro.gerar(ex.getMessage());
             return false;
         }finally{
             ConnectionFactoryMySQL.closeConnection(con, stmt);
@@ -63,6 +65,7 @@ public class ProcessoDAO {
             }
         } catch (SQLException ex) {
             Logger.getLogger(ClienteDAO.class.getName()).log(Level.SEVERE, null, ex);
+            GerarLogErro.gerar(ex.getMessage());
         } finally {
             ConnectionFactoryMySQL.closeConnection(con, stmt, rs);
         }
@@ -79,6 +82,7 @@ public class ProcessoDAO {
             return !rs.first();
         } catch (SQLException ex) {
             Logger.getLogger(ClienteDAO.class.getName()).log(Level.SEVERE, null, ex);
+            GerarLogErro.gerar(ex.getMessage());
         } finally {
             ConnectionFactoryMySQL.closeConnection(con, stmt, rs);
         }
@@ -95,6 +99,7 @@ public class ProcessoDAO {
             return true;
         } catch (SQLException ex) {
             Logger.getLogger(ProcessoDAO.class.getName()).log(Level.SEVERE, null, ex);
+            GerarLogErro.gerar(ex.getMessage());
             return false;
         }finally{
             ConnectionFactoryMySQL.closeConnection(con, stmt);

@@ -7,6 +7,7 @@ package br.Teofilo.Menu;
 
 import br.Teofilo.Cliente.ClienteJF;
 import br.Teofilo.Conta.ContasClienteJF;
+import br.Teofilo.DAO.ContaDAO;
 import br.Teofilo.Documentos.DocumentoJF;
 import java.awt.Desktop;
 import java.io.IOException;
@@ -15,6 +16,7 @@ import java.net.URISyntaxException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -72,7 +74,7 @@ public class MenuJF extends javax.swing.JFrame {
             }
         });
 
-        jButton1.setBackground(new java.awt.Color(0, 0, 0));
+        jButton1.setBackground(new java.awt.Color(255, 255, 255));
         jButton1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/Teofilo/IMG/1x/ic_account_circle_24px.png"))); // NOI18N
         jButton1.setBorder(null);
@@ -82,7 +84,7 @@ public class MenuJF extends javax.swing.JFrame {
             }
         });
 
-        jButton2.setBackground(new java.awt.Color(0, 0, 0));
+        jButton2.setBackground(new java.awt.Color(255, 255, 255));
         jButton2.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/Teofilo/IMG/1x/archive-2.png"))); // NOI18N
         jButton2.setBorder(null);
@@ -92,7 +94,7 @@ public class MenuJF extends javax.swing.JFrame {
             }
         });
 
-        jButton3.setBackground(new java.awt.Color(0, 0, 0));
+        jButton3.setBackground(new java.awt.Color(255, 255, 255));
         jButton3.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jButton3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/Teofilo/IMG/1x/ic_insert_invitation_24px.png"))); // NOI18N
         jButton3.setBorder(null);
@@ -200,7 +202,7 @@ public class MenuJF extends javax.swing.JFrame {
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Windows".equals(info.getName())) {
+                if ("Nimbus".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
                 }
@@ -229,6 +231,7 @@ public class MenuJF extends javax.swing.JFrame {
         ImageIcon icon = (ImageIcon) back.getIcon();
         icon.setImage(icon.getImage().getScaledInstance(back.getWidth(), back.getHeight(), 1));
         back.setIcon(icon);
+        verificar_cartao();
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -268,4 +271,19 @@ public class MenuJF extends javax.swing.JFrame {
         contasClientesJF = new ContasClienteJF();
         contasClientesJF.setVisible(true);
     }
+
+    private void verificar_cartao() {
+        new Thread(() -> {
+            if (new ContaDAO().controleCartao()){
+                if (new ContaDAO().baixarCartoesHoje()){
+                    if (!new ContaDAO().CartaoHojeConcluido()){
+                        JOptionPane.showMessageDialog(null, "Erro ao informar o banco de dados que hoje ja foi feita a verificação dos cartões.","Erro",JOptionPane.INFORMATION_MESSAGE);
+                    }
+                }else{
+                    JOptionPane.showMessageDialog(null, "Problema ao tentar dar baixa nos cartões que vencem hoje!","Erro",JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        }).start();
+    }
+    
 }

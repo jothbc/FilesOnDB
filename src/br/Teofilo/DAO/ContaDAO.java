@@ -8,6 +8,7 @@ package br.Teofilo.DAO;
 import JDBC.ConnectionFactoryMySQL;
 import br.Teofilo.Bean.Conta;
 import br.Teofilo.Bean.ContaSub;
+import br.Teofilo.Bean.GerarLogErro;
 import funcoes.CDate;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -34,7 +35,7 @@ public class ContaDAO {
     }
 
     public boolean addConta(Conta c) {
-        sql = "INSERT INTO conta (ID_CLIENTE,descricao,valor,emissao,vencimento,ativo,parcelado) VALUES (?,?,?,?,?,?,?)";
+        sql = "INSERT INTO conta (ID_CLIENTE,descricao,valor,emissao,vencimento,ativo,parcelado,cartao) VALUES (?,?,?,?,?,?,?,?)";
         try {
             stmt = con.prepareStatement(sql);
             stmt.setInt(1, c.getID_CLIENTE());
@@ -44,6 +45,7 @@ public class ContaDAO {
             stmt.setString(5, CDate.DataPTBRtoDataMySQL(c.getVencimento()));
             stmt.setBoolean(6, true);
             stmt.setBoolean(7, c.isParcelado());
+            stmt.setBoolean(8, c.isCartao());
             stmt.execute();
             if (c.isParcelado()) {
                 sql = "SELECT LAST_INSERT_ID() INTO @id";
@@ -60,6 +62,7 @@ public class ContaDAO {
             return true;
         } catch (SQLException ex) {
             Logger.getLogger(ContaDAO.class.getName()).log(Level.SEVERE, null, ex);
+            GerarLogErro.gerar(ex.getMessage());
             return false;
         } finally {
             ConnectionFactoryMySQL.closeConnection(con, stmt);
@@ -79,6 +82,7 @@ public class ContaDAO {
                 c.setId(rs.getInt("id"));
                 c.setAtivo(rs.getBoolean("ativo"));
                 c.setParcelado(rs.getBoolean("parcelado"));
+                c.setCartao(rs.getBoolean("cartao"));
                 c.setValor(rs.getDouble("valor"));
                 c.setEmissao(CDate.DataMySQLtoDataStringPT(rs.getString("emissao")));
                 c.setVencimento(CDate.DataMySQLtoDataStringPT(rs.getString("vencimento")));
@@ -110,6 +114,7 @@ public class ContaDAO {
             }
         } catch (SQLException ex) {
             Logger.getLogger(ContaDAO.class.getName()).log(Level.SEVERE, null, ex);
+            GerarLogErro.gerar(ex.getMessage());
         }
         return contas;
     }
@@ -135,7 +140,8 @@ public class ContaDAO {
             }
         } catch (SQLException ex) {
             Logger.getLogger(ContaDAO.class.getName()).log(Level.SEVERE, null, ex);
-        }finally{
+            GerarLogErro.gerar(ex.getMessage());
+        } finally {
             ConnectionFactoryMySQL.closeConnection(con, stmt, rs);
         }
         return c;
@@ -144,16 +150,182 @@ public class ContaDAO {
     public boolean pagarParcela(int id) {
         sql = "UPDATE conta_sub SET data_pago = ? WHERE id = ?";
         try {
+            //seta a conta passada por "id" como pago no dia atual
             stmt = con.prepareStatement(sql);
             stmt.setString(1, CDate.DataPTBRtoDataMySQL(CDate.DataPTBRAtual()));
             stmt.setInt(2, id);
             stmt.executeUpdate();
+            //busca se todas as parcelas ja foram pagas
+            sql = "SELECT * FROM conta_sub WHERE id = ?";
+            stmt = con.prepareStatement(sql);
+            stmt.setInt(1, id);
+            rs = stmt.executeQuery();
+            rs.first();
+            int id_conta = rs.getInt("ID_CONTA");
+            sql = "SELECT * FROM conta_sub WHERE ID_CONTA = ?";
+            stmt = con.prepareStatement(sql);
+            stmt.setInt(1, id_conta);
+            rs = stmt.executeQuery();
+            boolean todos = true;
+            while (rs.next()) {
+                if (rs.getString("data_pago") == null) {
+                    todos = false;
+                }
+            }
+            //caso todas as parcelas ja tenham sido pagas faz a verificação pra definir o dia final desse pagamento
+            if (todos) {
+                sql = "SELECT * FROM conta WHERE id = ?";
+                stmt = con.prepareStatement(sql);
+                stmt.setInt(1, id_conta);
+                rs = stmt.executeQuery();
+                rs.first();
+                if (rs.getString("data_pagamento_final") == null) {
+                    sql = "UPDATE conta SET data_pagamento_final = ? WHERE id = ?";
+                    stmt = con.prepareStatement(sql);
+                    stmt.setString(1, CDate.DataPTBRtoDataMySQL(CDate.DataPTBRAtual()));
+                    stmt.setInt(2, id_conta);
+                    stmt.executeUpdate();
+                }
+            }
             return true;
         } catch (SQLException ex) {
             Logger.getLogger(ContaDAO.class.getName()).log(Level.SEVERE, null, ex);
+            GerarLogErro.gerar(ex.getMessage());
             return false;
-        }finally{
+        } finally {
+            ConnectionFactoryMySQL.closeConnection(con, stmt, rs);
+        }
+    }
+
+    public boolean debitarValor(double valor, int id) {
+        sql = "UPDATE conta SET valor_ja_pago = valor_ja_pago + ? WHERE id = ?";
+        try {
+            stmt = con.prepareStatement(sql);
+            stmt.setDouble(1, valor);
+            stmt.setInt(2, id);
+            stmt.executeUpdate();
+            sql = "SELECT * FROM conta WHERE id = ?";
+            stmt = con.prepareStatement(sql);
+            stmt.setInt(1, id);
+            rs = stmt.executeQuery();
+            rs.first();
+            if (rs.getString("data_pagamento_final") == null) {
+                if (rs.getDouble("valor_ja_pago") >= rs.getDouble("valor")) {
+                    sql = "UPDATE conta SET data_pagamento_final = ? WHERE id = ?";
+                    stmt = con.prepareStatement(sql);
+                    stmt.setString(1, CDate.DataPTBRtoDataMySQL(CDate.DataPTBRAtual()));
+                    stmt.setInt(2, id);
+                    stmt.executeUpdate();
+                }
+            }
+            return true;
+        } catch (SQLException ex) {
+            Logger.getLogger(ContaDAO.class.getName()).log(Level.SEVERE, null, ex);
+            GerarLogErro.gerar(ex.getMessage());
+            return false;
+        } finally {
+            ConnectionFactoryMySQL.closeConnection(con, stmt, rs);
+        }
+    }
+
+    public boolean controleCartao() {
+        sql = "SELECT * FROM controle_cartao WHERE data = ?";
+        try {
+            stmt = con.prepareStatement(sql);
+            stmt.setString(1, CDate.DataPTBRtoDataMySQL(CDate.DataPTBRAtual()));
+            rs = stmt.executeQuery();
+            return !rs.first();
+        } catch (SQLException ex) {
+            Logger.getLogger(ContaDAO.class.getName()).log(Level.SEVERE, null, ex);
+            GerarLogErro.gerar(ex.getMessage());
+        } finally {
+            ConnectionFactoryMySQL.closeConnection(con, stmt, rs);
+        }
+        return false;
+    }
+
+    public boolean CartaoHojeConcluido() {
+        sql = "INSERT INTO controle_cartao (data) VALUES (?)";
+        try {
+            stmt = con.prepareStatement(sql);
+            stmt.setString(1, CDate.DataPTBRtoDataMySQL(CDate.DataPTBRAtual()));
+            stmt.execute();
+            return true;
+        } catch (SQLException ex) {
+            Logger.getLogger(ContaDAO.class.getName()).log(Level.SEVERE, null, ex);
+            GerarLogErro.gerar(ex.getMessage());
+            return false;
+        } finally {
             ConnectionFactoryMySQL.closeConnection(con, stmt);
+        }
+    }
+
+    public boolean baixarCartoesHoje() {
+        sql = "SELECT * FROM conta WHERE cartao = ? and data_pagamento_final is null";
+        try {
+            stmt = con.prepareStatement(sql);
+            stmt.setBoolean(1, true);
+            rs = stmt.executeQuery();
+            int[] id = new int[9999];
+            int count = 0;
+            while (rs.next()) { //todas as contas que possuem cartao = true e sem pagamento final
+                id[count] = rs.getInt("id"); //obtem todos os ids das constas que possuem cartao
+                //System.out.println("ID da conta que tem Cartao: " + id[count]);
+                count++;
+            }
+            for (int x = 0; x < count; x++) {
+                //pega as parcelas que ainda nao foram pagas do dia atual para menos
+                sql = "SELECT * FROM conta_sub WHERE ID_CONTA = ? and data_pago is null and vencimento <= now()";
+                stmt = con.prepareStatement(sql);
+                stmt.setInt(1, id[x]);
+                rs = stmt.executeQuery();
+                while (rs.next()) {
+                    //seta elas como pagas no dia do seu próprio vencimento.
+                    sql = "UPDATE conta_sub SET data_pago = vencimento WHERE id = ?";
+                    stmt = con.prepareStatement(sql);
+                    stmt.setInt(1, rs.getInt("id"));
+                    stmt.executeUpdate();
+                    //captura valor dessa parcela paga
+                    int id_ = rs.getInt("id");
+                    sql = "SELECT * FROM conta_sub WHERE id = ?";
+                    stmt = con.prepareStatement(sql);
+                    stmt.setInt(1, id_);
+                    double valor;
+                    try (ResultSet rs2 = stmt.executeQuery()) {
+                        rs2.first();
+                        valor = rs2.getDouble("valor");
+                        //System.out.println("pegou valor: " + valor);
+                        sql = "UPDATE conta SET valor_ja_pago = valor_ja_pago + ? WHERE id = ?";
+                        stmt = con.prepareStatement(sql);
+                        stmt.setDouble(1, valor);
+                        stmt.setInt(2, id[x]);
+                        stmt.executeUpdate();
+                    }
+                    //System.out.println("contas_sub que foram pagas ID: " + rs.getInt("id"));
+                }
+            }
+            //repetidor para verificar se pagou a ultima parcela
+            for (int x = 0; x < count; x++) {
+                sql = "SELECT * FROM conta_sub WHERE ID_CONTA = ? and data_pago is null";
+                stmt = con.prepareStatement(sql);
+                stmt.setInt(1, id[x]);
+                rs = stmt.executeQuery();
+                if (!rs.first()) {
+                    //System.out.println("sem contas sub, entao setar pagamento final");
+                    sql = "UPDATE conta SET data_pagamento_final = ? WHERE id =?";
+                    stmt = con.prepareStatement(sql);
+                    stmt.setString(1, CDate.DataPTBRtoDataMySQL(CDate.DataPTBRAtual()));
+                    stmt.setInt(2, id[x]);
+                    stmt.executeUpdate();
+                }
+            }
+            return true;
+        } catch (SQLException ex) {
+            Logger.getLogger(ContaDAO.class.getName()).log(Level.SEVERE, null, ex);
+            GerarLogErro.gerar(ex.getMessage());
+            return false;
+        } finally {
+            ConnectionFactoryMySQL.closeConnection(con, stmt, rs);
         }
     }
 }

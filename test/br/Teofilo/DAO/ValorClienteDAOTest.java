@@ -5,6 +5,7 @@
  */
 package br.Teofilo.DAO;
 
+import br.Teofilo.Bean.GerarLogErro;
 import funcoes.CDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +24,7 @@ public class ValorClienteDAOTest {
 
     @Test
     public void testSomeMethod() {
+        GerarLogErro.gerar("um teste ja q ainda nao foi nada");
     }
     
 }

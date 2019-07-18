@@ -7,6 +7,7 @@ package br.Teofilo.DAO;
 
 import JDBC.ConnectionFactoryMySQL;
 import br.Teofilo.Bean.Cliente;
+import br.Teofilo.Bean.GerarLogErro;
 import br.Teofilo.Bean.Processo;
 import br.Teofilo.Bean.TipoDoc;
 import java.sql.Connection;
@@ -47,6 +48,7 @@ public class TipoDocDAO {
             }
         } catch (SQLException ex) {
             Logger.getLogger(TipoDocDAO.class.getName()).log(Level.SEVERE, null, ex);
+            GerarLogErro.gerar(ex.getMessage());
         } finally {
             ConnectionFactoryMySQL.closeConnection(con, stmt, rs);
         }
@@ -62,6 +64,7 @@ public class TipoDocDAO {
             return true;
         } catch (SQLException ex) {
             Logger.getLogger(TipoDocDAO.class.getName()).log(Level.SEVERE, null, ex);
+            GerarLogErro.gerar(ex.getMessage());
             return false;
         } finally {
             ConnectionFactoryMySQL.closeConnection(con, stmt);
@@ -77,6 +80,7 @@ public class TipoDocDAO {
             return true;
         } catch (SQLException ex) {
             Logger.getLogger(TipoDocDAO.class.getName()).log(Level.SEVERE, null, ex);
+            GerarLogErro.gerar(ex.getMessage());
             return false;
         } finally {
             ConnectionFactoryMySQL.closeConnection(con, stmt);
@@ -94,6 +98,7 @@ public class TipoDocDAO {
             return !rs.first();
         } catch (SQLException ex) {
             Logger.getLogger(TipoDocDAO.class.getName()).log(Level.SEVERE, null, ex);
+            GerarLogErro.gerar(ex.getMessage());
         } finally {
             ConnectionFactoryMySQL.closeConnection(con, stmt, rs);
         }
@@ -111,6 +116,7 @@ public class TipoDocDAO {
             return true;
         } catch (SQLException ex) {
             Logger.getLogger(TipoDocDAO.class.getName()).log(Level.SEVERE, null, ex);
+            GerarLogErro.gerar(ex.getMessage());
             return false;
         } finally {
             ConnectionFactoryMySQL.closeConnection(con, stmt);
@@ -133,6 +139,7 @@ public class TipoDocDAO {
             }
         } catch (SQLException ex) {
             Logger.getLogger(TipoDocDAO.class.getName()).log(Level.SEVERE, null, ex);
+            GerarLogErro.gerar(ex.getMessage());
         } finally {
             ConnectionFactoryMySQL.closeConnection(con, stmt, rs);
         }

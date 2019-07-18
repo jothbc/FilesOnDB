@@ -180,9 +180,14 @@ public class ContasClienteJF extends javax.swing.JFrame {
             }
         });
 
+        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel1.setText("Total em Aberto");
 
+        totalEmAbertotxt.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        totalEmAbertotxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+
         pagobox.setBackground(new java.awt.Color(255, 255, 255));
+        pagobox.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         pagobox.setText("Exibir Pagos");
         pagobox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -197,8 +202,16 @@ public class ContasClienteJF extends javax.swing.JFrame {
             .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
+                        .addComponent(jButton2)
+                        .addGap(18, 18, 18)
+                        .addComponent(pagobox)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
+                        .addComponent(jScrollPane1)
+                        .addContainerGap())
+                    .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(ID_CLIENTEtxt, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButton1)
@@ -208,15 +221,7 @@ public class ContasClienteJF extends javax.swing.JFrame {
                         .addComponent(jLabel1)
                         .addGap(18, 18, 18)
                         .addComponent(totalEmAbertotxt, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(69, 69, 69))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jButton2)
-                        .addGap(51, 51, 51)
-                        .addComponent(pagobox)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jScrollPane1)
-                        .addContainerGap())))
+                        .addGap(18, 18, 18))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -224,14 +229,15 @@ public class ContasClienteJF extends javax.swing.JFrame {
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE, false)
                         .addComponent(ID_CLIENTEtxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(Clientelbl, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addComponent(totalEmAbertotxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(totalEmAbertotxt, javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jButton2)
                     .addComponent(pagobox))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -279,27 +285,20 @@ public class ContasClienteJF extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
-        if (jTable1.getSelectedRow() >= 0) {
-            setarValorManual();
-        }
         if (evt.getClickCount() == 2) {
             if (jTable1.getSelectedRow() >= 0) {
-                verParcelas();
+                if ("Sim".equals(jTable1.getValueAt(jTable1.getSelectedRow(), 7))) {
+                    verParcelas();
+                } else {
+                    baixarSelecionado();
+                }
             }
         }
     }//GEN-LAST:event_jTable1MouseClicked
 
     private void ID_CLIENTEtxtKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_ID_CLIENTEtxtKeyPressed
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-            try {
-                cliente = new ClienteDAO().getClinte(Integer.parseInt(ID_CLIENTEtxt.getText()));
-                ID_CLIENTEtxt.setText(Integer.toString(cliente.getId()));
-                Clientelbl.setText(cliente.getNome());
-                carregarContasDoCliente();
-            } catch (NumberFormatException e) {
-                cliente = null;
-                JOptionPane.showMessageDialog(null, "Cliente inexistente.");
-            }
+            carregarCliente();
         }
     }//GEN-LAST:event_ID_CLIENTEtxtKeyPressed
 
@@ -387,7 +386,11 @@ public class ContasClienteJF extends javax.swing.JFrame {
             for (Conta c : contas) {
                 if (!c.isParcelado()) {
                     Object[] dado = {c.getId(), c.getDescricao(), c.getValor(), c.getValor_ja_pago(), c.getEmissao(), c.getVencimento(), c.getData_pagamento_final(), "Não"};
-                    tb.addRow(dado);
+                    if (pagobox.isSelected()) {
+                        tb.addRow(dado);
+                    } else if (c.getData_pagamento_final() == null) {
+                        tb.addRow(dado);
+                    }
                 } else {
                     double pago = 0;
                     for (ContaSub s : c.getConta_sub()) {
@@ -396,26 +399,34 @@ public class ContasClienteJF extends javax.swing.JFrame {
                         }
                     }
                     Object[] dado = {c.getId(), c.getDescricao(), c.getValor(), pago, c.getEmissao(), c.getVencimento(), c.getData_pagamento_final(), "Sim"};
-                    tb.addRow(dado);
+                    if (pagobox.isSelected()) {
+                        tb.addRow(dado);
+                    } else if (c.getData_pagamento_final() == null) {
+                        tb.addRow(dado);
+                    }
                 }
             }
         }
-
+        emAberto();
     }
 
     private void baixarSelecionado() {
-
-    }
-
-    private void setarValorManual() {
         double total = (double) jTable1.getValueAt(jTable1.getSelectedRow(), 2);
         double pago = (double) jTable1.getValueAt(jTable1.getSelectedRow(), 3);
         double restante = total - pago;
         String valorEntrada = JOptionPane.showInputDialog("Informe o valor a ser debitado da conta: ", Conv.validarValue(restante));
         try {
-            if (valorEntrada!=null) {
+            if (valorEntrada != null) {
                 double entrada = Double.parseDouble(valorEntrada.replaceAll(",", "\\."));
-                System.out.println(entrada);
+                if (entrada > restante) {
+                    JOptionPane.showConfirmDialog(null, "Foi informado um valor maior do que o devido.", "Valor superior", JOptionPane.INFORMATION_MESSAGE);
+                }
+                int id = (int) jTable1.getValueAt(jTable1.getSelectedRow(), 0);
+                if (!new ContaDAO().debitarValor(entrada, id)) {
+                    JOptionPane.showMessageDialog(null, "Erro ao tentar dar baixa do valor no banco de dados.", "Erro", JOptionPane.ERROR_MESSAGE);
+                } else {
+                    carregarContasDoCliente();
+                }
             }
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(null, "Formato inválido.", "Erro", JOptionPane.ERROR_MESSAGE);
@@ -423,16 +434,57 @@ public class ContasClienteJF extends javax.swing.JFrame {
     }
 
     private void exibirPagos() {
-
+        carregarContasDoCliente();
     }
 
     private void verParcelas() {
-        Conta c = new ContaDAO().getContaSubByIDCONTA((int) jTable1.getValueAt(jTable1.getSelectedRow(), 0));
-        if (!c.getConta_sub().isEmpty()) {
-            ParcelasJD jd = new ParcelasJD(null, true, c);
-            jd.setVisible(true);
-            carregarContasDoCliente();
+        int idConta = (int) jTable1.getValueAt(jTable1.getSelectedRow(), 0);
+        int idCliente = cliente.getId();
+        List<Conta> contas = new ContaDAO().findAllByClienteID(idCliente);
+        for (Conta c : contas) {
+            if (c.getId() == idConta) {
+                if (!c.getConta_sub().isEmpty()) {
+                    ParcelasJD jd = new ParcelasJD(null, true, c);
+                    jd.setVisible(true);
+                    carregarContasDoCliente();
+                }
+            }
         }
+        //Conta c = new ContaDAO().getContaSubByIDCONTA(idConta);
+
+    }
+
+    private void carregarCliente() {
+        try {
+            cliente = new ClienteDAO().getClinte(Integer.parseInt(ID_CLIENTEtxt.getText()));
+            if (cliente == null) {
+                tb.setRowCount(0);
+                Clientelbl.setText("");
+                JOptionPane.showMessageDialog(null, "Cliente inexistente.");
+                return;
+            }
+            ID_CLIENTEtxt.setText(Integer.toString(cliente.getId()));
+            Clientelbl.setText(cliente.getNome());
+            carregarContasDoCliente();
+        } catch (NumberFormatException e) {
+            cliente = null;
+            tb.setRowCount(0);
+            Clientelbl.setText("");
+            JOptionPane.showMessageDialog(null, "Cliente inexistente.");
+        }
+    }
+
+    private void emAberto() {
+        double aberto = 0;
+        for (int x = 0; x < jTable1.getRowCount(); x++) {
+            double valor, pago;
+            valor = (double) jTable1.getValueAt(x, 2);
+            pago = (double) jTable1.getValueAt(x, 3);
+            if (pago < valor) {
+                aberto += valor - pago;
+            }
+        }
+        totalEmAbertotxt.setText(Conv.validarValue(aberto));
     }
 
 }
