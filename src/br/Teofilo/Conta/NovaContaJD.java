@@ -474,7 +474,8 @@ public class NovaContaJD extends javax.swing.JDialog {
                 JOptionPane.showMessageDialog(null, "Não foi possível registrar a conta no banco de dados.", "Algo deu errado", JOptionPane.ERROR_MESSAGE);
             }
         } catch (Exception e) {
-
+            System.err.println(e);
+            JOptionPane.showMessageDialog(null, e);
         }
 
     }

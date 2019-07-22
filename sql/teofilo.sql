@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: 18-Jul-2019 às 21:15
+-- Generation Time: 22-Jul-2019 às 21:44
 -- Versão do servidor: 10.1.36-MariaDB
 -- versão do PHP: 7.2.11
 
@@ -47,6 +47,35 @@ CREATE TABLE `clientes` (
   `valor` double DEFAULT '0',
   `ativo` tinyint(1) DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura da tabela `comentarios`
+--
+
+CREATE TABLE `comentarios` (
+  `id` int(11) NOT NULL,
+  `data` date DEFAULT NULL,
+  `hora` time DEFAULT NULL,
+  `ID_USER` int(11) DEFAULT NULL,
+  `comentario` varchar(200) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Stand-in structure for view `coments_vw`
+-- (See below for the actual view)
+--
+CREATE TABLE `coments_vw` (
+`id` int(11)
+,`data` date
+,`hora` time
+,`ID_USER` int(11)
+,`comentario` varchar(200)
+,`nome` varchar(50)
+);
 
 -- --------------------------------------------------------
 
@@ -150,6 +179,27 @@ CREATE TABLE `tipo` (
   `ID_PROCESSO` int(4) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+-- --------------------------------------------------------
+
+--
+-- Estrutura da tabela `users`
+--
+
+CREATE TABLE `users` (
+  `id` int(11) NOT NULL,
+  `ip` varchar(50) DEFAULT NULL,
+  `nome` varchar(50) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Structure for view `coments_vw`
+--
+DROP TABLE IF EXISTS `coments_vw`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `coments_vw`  AS  select `c`.`id` AS `id`,`c`.`data` AS `data`,`c`.`hora` AS `hora`,`c`.`ID_USER` AS `ID_USER`,`c`.`comentario` AS `comentario`,`u`.`nome` AS `nome` from (`comentarios` `c` join `users` `u` on((`c`.`ID_USER` = `u`.`id`))) ;
+
 --
 -- Indexes for dumped tables
 --
@@ -158,6 +208,12 @@ CREATE TABLE `tipo` (
 -- Indexes for table `clientes`
 --
 ALTER TABLE `clientes`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `comentarios`
+--
+ALTER TABLE `comentarios`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -210,6 +266,12 @@ ALTER TABLE `tipo`
   ADD KEY `fk_tipo_processo` (`ID_PROCESSO`);
 
 --
+-- Indexes for table `users`
+--
+ALTER TABLE `users`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- AUTO_INCREMENT for dumped tables
 --
 
@@ -217,6 +279,12 @@ ALTER TABLE `tipo`
 -- AUTO_INCREMENT for table `clientes`
 --
 ALTER TABLE `clientes`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `comentarios`
+--
+ALTER TABLE `comentarios`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
@@ -259,6 +327,12 @@ ALTER TABLE `processos`
 -- AUTO_INCREMENT for table `tipo`
 --
 ALTER TABLE `tipo`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `users`
+--
+ALTER TABLE `users`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --

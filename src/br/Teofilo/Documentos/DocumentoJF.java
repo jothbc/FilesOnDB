@@ -8,7 +8,7 @@ package br.Teofilo.Documentos;
 import br.Teofilo.Bean.Cliente;
 import br.Teofilo.Bean.Documento;
 import br.Teofilo.Bean.DocumentoPessoal;
-import br.Teofilo.Bean.InfoArquivo;
+import br.Teofilo.Bean.GerarLogErro;
 import br.Teofilo.Bean.Processo;
 import br.Teofilo.Bean.TipoDoc;
 import br.Teofilo.DAO.ClienteDAO;
@@ -171,6 +171,7 @@ public class DocumentoJF extends javax.swing.JFrame {
         jLabel7.setText("Ult. Modificação");
 
         statustxt.setFont(new java.awt.Font("Tahoma", 3, 12)); // NOI18N
+        statustxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         statustxt.setBorder(null);
 
         modiftxt.setBorder(null);
@@ -326,21 +327,19 @@ public class DocumentoJF extends javax.swing.JFrame {
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(jButton1)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButton8, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(jButton8, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(statustxt, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 306, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(statustxt, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(modiftxt, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(modiftxt, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(jButton7))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -365,7 +364,6 @@ public class DocumentoJF extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane2)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
@@ -376,12 +374,9 @@ public class DocumentoJF extends javax.swing.JFrame {
                                 .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
                                 .addComponent(jButton9, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 0, Short.MAX_VALUE)))
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addComponent(jScrollPane2))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel6)
-                            .addComponent(statustxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(4, 4, 4)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel7)
                             .addComponent(modiftxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -392,9 +387,11 @@ public class DocumentoJF extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jButton8, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton1))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jButton8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(statustxt))
                         .addGap(18, 18, 18)
                         .addComponent(jLabel11)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -621,16 +618,15 @@ public class DocumentoJF extends javax.swing.JFrame {
     }
 
     private void visualizarArquivo() {
+        if (listDocumentos.isEmpty()) {
+            return;
+        }
         Documento d = null;
         DocumentoPessoal dp = null;
-        try {
-            if (listProcessoPessoal.getElementAt(jListProcessoDadosPessoais.getSelectedIndex()) == "Processos") {
-                d = (Documento) listDocumentos.getElementAt(jListDocumento.getSelectedIndex());
-            } else if (listProcessoPessoal.getElementAt(jListProcessoDadosPessoais.getSelectedIndex()) == "Dados Pessoais") {
-                dp = (DocumentoPessoal) listDocumentos.getElementAt(jListDocumento.getSelectedIndex());
-            }
-        } catch (Exception ex) {
-            System.err.println(ex);
+        if (listDocumentos.getElementAt(jListDocumento.getSelectedIndex()) instanceof Documento) {
+            d = (Documento) listDocumentos.getElementAt(jListDocumento.getSelectedIndex());
+        } else if (listDocumentos.getElementAt(jListDocumento.getSelectedIndex()) instanceof DocumentoPessoal) {
+            dp = (DocumentoPessoal) listDocumentos.getElementAt(jListDocumento.getSelectedIndex());
         }
         if (d != null || dp != null) {
             File f = null;
@@ -645,13 +641,14 @@ public class DocumentoJF extends javax.swing.JFrame {
                 Desktop.getDesktop().open(f);
             } catch (IOException ex) {
                 Logger.getLogger(DocumentoJF.class.getName()).log(Level.SEVERE, null, ex);
-                JOptionPane.showMessageDialog(null, "Erro ao tentar abrir o arquivo, informe o programador.", "Erro", JOptionPane.ERROR_MESSAGE);
+                GerarLogErro.gerar("Tentando visualizar um arquivo." + ex.getMessage());
+                JOptionPane.showMessageDialog(null, "Não há aplicativos associados ao arquivo especificado para esta operação..", "Erro", JOptionPane.ERROR_MESSAGE);
             }
         }
     }
 
     private void upload() {
-        Cliente c = null;
+        Cliente c;
         TipoDoc t = null;
         DocumentoPessoal dp = null;
         Processo p = null;
@@ -690,6 +687,7 @@ public class DocumentoJF extends javax.swing.JFrame {
             String erro = "Sem cliente selecionado para upload.";
             System.err.println(erro);
             JOptionPane.showMessageDialog(this, erro, "Cliente", JOptionPane.INFORMATION_MESSAGE);
+            return;
         }
         if (c != null) {
             UploadJD jd = new UploadJD(null, true, c, t, dp, p);
@@ -698,15 +696,15 @@ public class DocumentoJF extends javax.swing.JFrame {
     }
 
     private void download() {
+        if (listDocumentos.isEmpty()) {
+            return;
+        }
         Documento d = null;
         DocumentoPessoal dp = null;
-        try {
+        if (listDocumentos.getElementAt(jListDocumento.getSelectedIndex()) instanceof Documento) {
             d = (Documento) listDocumentos.getElementAt(jListDocumento.getSelectedIndex());
-        } catch (Exception ex) {
-        }
-        try {
+        } else if (listDocumentos.getElementAt(jListDocumento.getSelectedIndex()) instanceof DocumentoPessoal) {
             dp = (DocumentoPessoal) listDocumentos.getElementAt(jListDocumento.getSelectedIndex());
-        } catch (Exception ex) {
         }
         if (d != null || dp != null) {
             JFileChooser fl = new JFileChooser();
@@ -724,26 +722,23 @@ public class DocumentoJF extends javax.swing.JFrame {
                     Desktop.getDesktop().open(f);
                 } catch (IOException ex) {
                     Logger.getLogger(DocumentoJF.class.getName()).log(Level.SEVERE, null, ex);
+                    GerarLogErro.gerar("Tentando visualizar um arquivo." + ex.getMessage());
+                    JOptionPane.showMessageDialog(null, "Arquivo baixado, porém não há aplicativos associados ao arquivo especificado para abri-lo..", "Erro", JOptionPane.ERROR_MESSAGE);
                 }
             }
         }
     }
 
     private void atualizarInfos() {
-        Documento d = null;
-        DocumentoPessoal dp = null;
-        try {
-            d = (Documento) listDocumentos.getElementAt(jListDocumento.getSelectedIndex());
-        } catch (Exception ex) {
+        if (listDocumentos.isEmpty()) {
+            return;
         }
-        try {
-            dp = (DocumentoPessoal) listDocumentos.getElementAt(jListDocumento.getSelectedIndex());
-        } catch (Exception ex) {
-        }
-        if (d != null) {
+        if (listDocumentos.getElementAt(jListDocumento.getSelectedIndex()) instanceof Documento) {
+            Documento d = (Documento) listDocumentos.getElementAt(jListDocumento.getSelectedIndex());
             statustxt.setText(d.getStatus());
             modiftxt.setText(d.getModificacao());
-        } else if (dp != null) {
+        } else if (listDocumentos.getElementAt(jListDocumento.getSelectedIndex()) instanceof DocumentoPessoal) {
+            DocumentoPessoal dp = (DocumentoPessoal) listDocumentos.getElementAt(jListDocumento.getSelectedIndex());
             statustxt.setText("");
             modiftxt.setText(dp.getAlteracao());
         }
@@ -759,18 +754,21 @@ public class DocumentoJF extends javax.swing.JFrame {
         TipoDoc tp = null;
         Processo p = null;
         Cliente c = null;
-        try {
-            d = (Documento) listDocumentos.getElementAt(jListDocumento.getSelectedIndex());
-            tp = (TipoDoc) listTipo.getElementAt(jListTipos.getSelectedIndex());
-            p = (Processo) listProcessos.getElementAt(jListProcessos.getSelectedIndex());
-        } catch (Exception ex) {
-            System.err.println("Editar>> Tentou ver se é documento, mas documento, tipoDoc ou Processo retornaram erro..Então tentando analisar para ver se é Documento Pessoal..");
-        }
-        try {
-            dp = (DocumentoPessoal) listDocumentos.getElementAt(jListDocumento.getSelectedIndex());
-            c = (Cliente) listClientes.getElementAt(jListCliente.getSelectedIndex());
-        } catch (Exception ex) {
-            System.err.println("Editar>> Tentou ver se é Documento pessoal, porem DocumentoPessoal ou Cliente retornaram erro..");
+        if (listDocumentos.getElementAt(jListDocumento.getSelectedIndex()) instanceof Documento) {
+            try {
+                d = (Documento) listDocumentos.getElementAt(jListDocumento.getSelectedIndex());
+                tp = (TipoDoc) listTipo.getElementAt(jListTipos.getSelectedIndex());
+                p = (Processo) listProcessos.getElementAt(jListProcessos.getSelectedIndex());
+            } catch (Exception ex) {
+                System.err.println("Editar>> Documento, tipoDoc ou Processo retornaram erro.." + ex);
+            }
+        } else if (listDocumentos.getElementAt(jListDocumento.getSelectedIndex()) instanceof DocumentoPessoal) {
+            try {
+                dp = (DocumentoPessoal) listDocumentos.getElementAt(jListDocumento.getSelectedIndex());
+                c = (Cliente) listClientes.getElementAt(jListCliente.getSelectedIndex());
+            } catch (Exception ex) {
+                System.err.println("Editar>>DocumentoPessoal ou Cliente retornaram erro.." + ex);
+            }
         }
         if (d != null || dp != null) {
             JFileChooser fl = new JFileChooser();
@@ -802,6 +800,7 @@ public class DocumentoJF extends javax.swing.JFrame {
             c = (Cliente) listClientes.getElementAt(jListCliente.getSelectedIndex());
         } catch (Exception e) {
             System.err.println("carregarDocumentosDoProcessoSelecionado>>Sem cliente selecionado.");
+            GerarLogErro.gerar("carregarDocumentosDoProcessoSelecionado>>Sem cliente selecionado.\n" + e.getMessage());
             return;
         }
         Processo p;
@@ -809,6 +808,7 @@ public class DocumentoJF extends javax.swing.JFrame {
             p = (Processo) listProcessos.getElementAt(jListProcessos.getSelectedIndex());
         } catch (Exception e) {
             System.err.println("carregarDocumentosDoProcessoSelecionado>>Sem processo selecionado.");
+            GerarLogErro.gerar("carregarDocumentosDoProcessoSelecionado>>Sem processo selecionado.\n" + e.getMessage());
             return;
         }
         listTipo.removeAllElements();
@@ -874,22 +874,35 @@ public class DocumentoJF extends javax.swing.JFrame {
     private void editarStatusDeProcesso() {
         if (!listProcessos.isEmpty()) {
             Processo p;
-            try{
+            try {
                 p = (Processo) listProcessos.getElementAt(jListProcessos.getSelectedIndex());
                 StatusProcessoJD jd = new StatusProcessoJD(null, true, p);
                 jd.setVisible(true);
                 statustxt.setText("");
                 Cliente c = (Cliente) listClientes.getElementAt(jListCliente.getSelectedIndex());
                 carregarProcessosDoClienteSelecionado(c);
-            }catch(Exception e){
-                JOptionPane.showMessageDialog(null, "Sem processo selecionado.","Status Processo",JOptionPane.INFORMATION_MESSAGE);
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null, "Sem processo selecionado.", "Status Processo", JOptionPane.INFORMATION_MESSAGE);
             }
         }
     }
 
     private void deletarDocumento() {
-        
-        //if (!new DocumentoDAO().removerDocumento())
+        if (listDocumentos.getElementAt(jListDocumento.getSelectedIndex()) instanceof Documento) {
+            Documento d = (Documento) listDocumentos.getElementAt(jListDocumento.getSelectedIndex());
+            if (!new DocumentoDAO().removeDocumento(d)) {
+                JOptionPane.showMessageDialog(null, "Erro ao tentar remover o documento do Bando de Dados.", "Erro", JOptionPane.ERROR_MESSAGE);
+            } else {
+                carregarDocumentosDoTipoEProcessoSelecionado();
+            }
+        } else if (listDocumentos.getElementAt(jListDocumento.getSelectedIndex()) instanceof DocumentoPessoal) {
+            DocumentoPessoal dp = (DocumentoPessoal) listDocumentos.getElementAt(jListDocumento.getSelectedIndex());
+            if (!new DocumentoDAO().removeDocumentoPessoal(dp)) {
+                JOptionPane.showMessageDialog(null, "Erro ao tentar remover o documento pessoal do Bando de Dados.", "Erro", JOptionPane.ERROR_MESSAGE);
+            } else {
+                carregarDadosPessoaisDoClienteSelecionado((Cliente) listClientes.getElementAt(jListCliente.getSelectedIndex()));
+            }
+        }
     }
 
 }

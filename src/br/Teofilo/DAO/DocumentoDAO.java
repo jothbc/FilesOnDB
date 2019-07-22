@@ -216,4 +216,36 @@ public class DocumentoDAO {
         }
     }
 
+    public boolean removeDocumento(Documento d) {
+        sql = "DELETE FROM documentos WHERE id = ?";
+        try {
+            stmt= con.prepareStatement(sql);
+            stmt.setInt(1, d.getId());
+            stmt.execute();
+            return true;
+        } catch (SQLException ex) {
+            Logger.getLogger(DocumentoDAO.class.getName()).log(Level.SEVERE, null, ex);
+            GerarLogErro.gerar(ex.getMessage());
+            return false;
+        }finally{
+            ConnectionFactoryMySQL.closeConnection(con, stmt);
+        }
+    }
+
+    public boolean removeDocumentoPessoal(DocumentoPessoal dp) {
+        sql = "DELETE FROM documentos_pessoais WHERE id = ?";
+        try {
+            stmt= con.prepareStatement(sql);
+            stmt.setInt(1, dp.getId());
+            stmt.execute();
+            return true;
+        } catch (SQLException ex) {
+            Logger.getLogger(DocumentoDAO.class.getName()).log(Level.SEVERE, null, ex);
+            GerarLogErro.gerar(ex.getMessage());
+            return false;
+        }finally{
+            ConnectionFactoryMySQL.closeConnection(con, stmt);
+        }
+    }
+
 }

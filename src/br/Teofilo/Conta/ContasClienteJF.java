@@ -323,7 +323,7 @@ public class ContasClienteJF extends javax.swing.JFrame {
     }//GEN-LAST:event_pagoboxActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        // TODO add your handling code here:
+        relatorio();
     }//GEN-LAST:event_jButton4ActionPerformed
 
     /**
@@ -469,8 +469,6 @@ public class ContasClienteJF extends javax.swing.JFrame {
                 }
             }
         }
-        //Conta c = new ContaDAO().getContaSubByIDCONTA(idConta);
-
     }
 
     private void carregarCliente() {
@@ -504,6 +502,11 @@ public class ContasClienteJF extends javax.swing.JFrame {
             }
         }
         totalEmAbertotxt.setText(Conv.validarValue(aberto));
+    }
+
+    private void relatorio() {
+        RelatorioContaJD jd = new RelatorioContaJD(null, true);
+        jd.setVisible(true);
     }
 
 }

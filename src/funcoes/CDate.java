@@ -81,6 +81,7 @@ public class CDate {
             return dataInicial_;
         }
     }
+    
     public static String SomarData_MES(int mes, String dataInicial_) {
         try {
             Date dataInicial =  new SimpleDateFormat("dd/MM/yyyy").parse(dataInicial_);
@@ -153,10 +154,10 @@ public class CDate {
         return "07/10/1997";
     }
     
-    public String getHoraAtualPTBR(){
+    public static String getHoraAtualPTBR(){
         Calendar calendario = Calendar.getInstance();
         int hora,minuto,segundo;
-        hora = calendario.get(Calendar.HOUR);
+        hora = calendario.get(Calendar.HOUR_OF_DAY);
         minuto = calendario.get(Calendar.MINUTE);
         segundo = calendario.get(Calendar.SECOND);
         String h,m,s;

@@ -5,10 +5,13 @@
  */
 package br.Teofilo.Menu;
 
+import br.Teofilo.Bean.User;
 import br.Teofilo.Cliente.ClienteJF;
 import br.Teofilo.Conta.ContasClienteJF;
 import br.Teofilo.DAO.ContaDAO;
+import br.Teofilo.DAO.UserDAO;
 import br.Teofilo.Documentos.DocumentoJF;
+import br.Teofilo.Utilidades.CadastrarUsuarioJD;
 import java.awt.Desktop;
 import java.io.IOException;
 import java.net.URI;
@@ -23,7 +26,7 @@ import javax.swing.JOptionPane;
  * @author User
  */
 public class MenuJF extends javax.swing.JFrame {
-
+    User user;
     ClienteJF clienteJF;
     DocumentoJF documentoJF;
     ContasClienteJF contasClientesJF;
@@ -235,6 +238,7 @@ public class MenuJF extends javax.swing.JFrame {
         icon.setImage(icon.getImage().getScaledInstance(back.getWidth(), back.getHeight(), 1));
         back.setIcon(icon);
         verificar_cartao();
+        verificar_user();
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -287,6 +291,26 @@ public class MenuJF extends javax.swing.JFrame {
                 }
             }
         }).start();
+    }
+
+    private void verificar_user() {
+        user = new UserDAO().getUser();
+        if (user ==null){
+            cadastrar_Usuario();
+            user = new UserDAO().getUser();
+            if (user==null){
+                System.exit(0);
+            }else{
+                this.setTitle(this.getTitle()+" |"+user.getNome()+"|");
+            }
+        }else{
+            this.setTitle(this.getTitle()+" |"+user.getNome()+"|");
+        }
+    }
+
+    private void cadastrar_Usuario() {
+        CadastrarUsuarioJD jd = new CadastrarUsuarioJD(null, true);
+        jd.setVisible(true);
     }
     
 }
