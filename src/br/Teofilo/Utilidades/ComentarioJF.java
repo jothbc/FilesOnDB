@@ -9,10 +9,23 @@ import br.Teofilo.Bean.Comentario;
 import br.Teofilo.Bean.User;
 import br.Teofilo.DAO.ComentarioDAO;
 import br.Teofilo.DAO.UserDAO;
+import funcoes.CDate;
+import java.awt.Color;
+import java.awt.HeadlessException;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Calendar;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JTextPane;
+import javax.swing.SwingUtilities;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DefaultStyledDocument;
+import javax.swing.text.Style;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyleContext;
 
 /**
  *
@@ -25,6 +38,13 @@ public class ComentarioJF extends javax.swing.JFrame {
     private final int h;
     private final int hp;
     User usuario;
+    Thread thread;
+    int count = 0;
+    boolean isRunning = true;
+    StyleContext sc = new StyleContext();
+    final DefaultStyledDocument doc = new DefaultStyledDocument(sc);
+    final Style blueStyle = sc.addStyle("BLUE", null);
+    final Style blackStyle = sc.addStyle("BLACK", null);
 
     /**
      * Creates new form ComentarioJF
@@ -35,7 +55,12 @@ public class ComentarioJF extends javax.swing.JFrame {
         h = this.getHeight();
         hp = jPanel3.getHeight();
         usuario = new UserDAO().getUser();
-        atualizarComentarios();
+        blueStyle.addAttribute(StyleConstants.Background, Color.WHITE);
+        blueStyle.addAttribute(StyleConstants.Foreground, Color.BLUE);
+        blackStyle.addAttribute(StyleConstants.Background, Color.WHITE);
+        blackStyle.addAttribute(StyleConstants.Foreground, Color.BLACK);
+        jTextPane1.setDocument(doc);
+        iniciar();
     }
 
     /**
@@ -57,6 +82,11 @@ public class ComentarioJF extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setUndecorated(true);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         jPanel1.setBackground(new java.awt.Color(204, 204, 204));
         jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
@@ -67,7 +97,6 @@ public class ComentarioJF extends javax.swing.JFrame {
             }
         });
 
-        jTextPane1.setEditable(false);
         jScrollPane2.setViewportView(jTextPane1);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -78,15 +107,14 @@ public class ComentarioJF extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(coment)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 323, Short.MAX_VALUE))
+                    .addComponent(jScrollPane2))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 188, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 192, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addComponent(coment, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -124,7 +152,7 @@ public class ComentarioJF extends javax.swing.JFrame {
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap(301, Short.MAX_VALUE)
                 .addComponent(jButton4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton3)
@@ -144,10 +172,8 @@ public class ComentarioJF extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
             .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -161,6 +187,7 @@ public class ComentarioJF extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        stop();
         dispose();
     }//GEN-LAST:event_jButton3ActionPerformed
 
@@ -183,6 +210,10 @@ public class ComentarioJF extends javax.swing.JFrame {
             inserir();
         }
     }//GEN-LAST:event_comentKeyPressed
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+
+    }//GEN-LAST:event_formWindowClosing
 
     /**
      * @param args the command line arguments
@@ -210,7 +241,6 @@ public class ComentarioJF extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(ComentarioJF.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
-
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
@@ -241,66 +271,158 @@ public class ComentarioJF extends javax.swing.JFrame {
     private void inserir() {
         String comentario = coment.getText();
         if (new ComentarioDAO().addComentario(comentario, usuario.getId())) {
-            atualizarComentarios();
+//            inserirLinha(coment.getText());
             coment.setText("");
         }
     }
 
-    private void atualizarComentarios() {
-        jTextPane1.setText("");
-        List<Comentario> comentarios = new ComentarioDAO().getComentarios();
-        Calendar h1 = Calendar.getInstance();
-        Calendar h2 = Calendar.getInstance();
-        String usuario = null;
+    private void iniciar() {
+//        area.setText("");
+//        comentarios = new ComentarioDAO().getAllComentarios();
+//        Calendar data_hora1 = Calendar.getInstance();
+//        Calendar data_hora2 = Calendar.getInstance();
+//        String _usuario = null;
+//        for (Comentario c : comentarios) {
+//            String[] hora = c.getHora().split(":");
+//            String[] dia = c.getData().split("/");
+//            //primeira vez no laço de repetição
+//            //então já escreve as informações de data,hora e quem publicou além claro do comentário
+//            if (_usuario == null) {
+//                _usuario = c.getNome();
+//                data_hora1.set(Calendar.HOUR_OF_DAY, Integer.parseInt(hora[0]));
+//                data_hora1.set(Calendar.MINUTE, Integer.parseInt(hora[1]));
+//                data_hora1.set(Calendar.SECOND, Integer.parseInt(hora[2]));
+//                data_hora1.set(Calendar.YEAR, Integer.parseInt(dia[2]));
+//                data_hora1.set(Calendar.MONTH, Integer.parseInt(dia[1]) - 1);
+//                data_hora1.set(Calendar.DAY_OF_MONTH, Integer.parseInt(dia[0]));
+//                area.append(
+//                        "\n"
+//                        + "[" + c.getData()
+//                        + " " + c.getHora()
+//                        + " " + c.getNome() + "]"
+//                        + "\n\t"
+//                        + c.getComentario()
+//                );
+//            } //verifica se ainda se trata do mesmo usuario
+//            //se for o mesmo usuario entra nesse else if
+//            else if (_usuario.equals(c.getNome())) {
+//                data_hora2.set(Calendar.HOUR_OF_DAY, Integer.parseInt(hora[0]));
+//                data_hora2.set(Calendar.MINUTE, Integer.parseInt(hora[1]));
+//                data_hora2.set(Calendar.SECOND, Integer.parseInt(hora[2]));
+//                data_hora2.set(Calendar.YEAR, Integer.parseInt(dia[2]));
+//                data_hora2.set(Calendar.MONTH, Integer.parseInt(dia[1]) - 1);
+//                data_hora2.set(Calendar.DAY_OF_MONTH, Integer.parseInt(dia[0]));
+//                if (data_hora2.getTimeInMillis() - data_hora1.getTimeInMillis() >= 60000) {//1 minuto 
+//                    data_hora1.set(Calendar.HOUR_OF_DAY, Integer.parseInt(hora[0])); //ver dia
+//                    data_hora1.set(Calendar.MINUTE, Integer.parseInt(hora[1]));
+//                    data_hora1.set(Calendar.SECOND, Integer.parseInt(hora[2]));
+//                    data_hora1.set(Calendar.YEAR, Integer.parseInt(dia[2]));
+//                    data_hora1.set(Calendar.MONTH, Integer.parseInt(dia[1]) - 1);
+//                    data_hora1.set(Calendar.DAY_OF_MONTH, Integer.parseInt(dia[0]));
+//                    area.append("\n"
+//                            + "[" + c.getData()
+//                            + " " + c.getHora()
+//                            + " " + c.getNome() + "]"
+//                            + "\n\t"
+//                            + c.getComentario()
+//                    );
+//                } else {
+//                    area.append(
+//                            "\n\t"
+//                            + c.getComentario()
+//                    );
+//                }
+//
+//            } //mudou de usuario
+//            else if (!_usuario.equals(c.getNome())) {
+//                _usuario = c.getNome();
+//                data_hora1.set(Calendar.HOUR_OF_DAY, Integer.parseInt(hora[0]));
+//                data_hora1.set(Calendar.MINUTE, Integer.parseInt(hora[1]));
+//                data_hora1.set(Calendar.SECOND, Integer.parseInt(hora[2]));
+//                data_hora1.set(Calendar.YEAR, Integer.parseInt(dia[2]));
+//                data_hora1.set(Calendar.MONTH, Integer.parseInt(dia[1]) - 1);
+//                data_hora1.set(Calendar.DAY_OF_MONTH, Integer.parseInt(dia[0]));
+//                area.append("\n"
+//                        + "[" + c.getData()
+//                        + " " + c.getHora()
+//                        + " " + c.getNome() + "]"
+//                        + "\n\t"
+//                        + c.getComentario()
+//                );
+//            }
+//        }
+        List<Comentario> comentarios = new ComentarioDAO().getAllComentarios();
         for (Comentario c : comentarios) {
-            String[] hora = c.getHora().split(":");
-            if (usuario == null) {
-                usuario = c.getNome();
-                h1.set(Calendar.HOUR_OF_DAY, Integer.parseInt(hora[0]));
-                h1.set(Calendar.MINUTE, Integer.parseInt(hora[1]));
-                h1.set(Calendar.SECOND, Integer.parseInt(hora[2]));
-                jTextPane1.setText(
-                        jTextPane1.getText() + "\n"
-                        + "[" + c.getData()
-                        + " " + c.getHora()
-                        + " " + c.getNome() + "]"
-                        + "\n"
-                        + c.getComentario()
-                );
+            inserirLinha(c);
+        }
+
+        //esse star precisa ter no fim desse inicio para chavar a thread que verifica novos comentarios.
+        start();
+    }
+
+    private void inserirLinha(Comentario c) {
+        //        area.append(
+//                "\n"
+//                + "[" + CDate.DataPTBRAtual()
+//                + " " + CDate.getHoraAtualPTBR()
+//                + " " + usuario.getNome() + "]"
+//                + "\n\t"
+//                + comentario
+//        );
+        try {
+            if (usuario.getId() != c.getID_USER()) { //outro pc
+                doc.insertString(doc.getLength(), "[" + c.getData() + " " + c.getHora() + " " + c.getNome() + "]\n", blueStyle);
+                doc.insertString(doc.getLength(), "-> "+c.getComentario()+"\n", blueStyle);
+            } else { //esse pc
+                doc.insertString(doc.getLength(), "[" + c.getData() + " " + c.getHora() + " " + c.getNome() + "]\n", blackStyle);
+                doc.insertString(doc.getLength(), "-> "+c.getComentario()+"\n", blackStyle);
             }
-            else if (!usuario.equals(c.getNome())) { //mudou de usuario
-                usuario = c.getNome();
-                h1.set(Calendar.HOUR_OF_DAY, Integer.parseInt(hora[0]));
-                h1.set(Calendar.MINUTE, Integer.parseInt(hora[1]));
-                h1.set(Calendar.SECOND, Integer.parseInt(hora[2]));
-                jTextPane1.setText(
-                        jTextPane1.getText() + "\n"
-                        + "[" + c.getData()
-                        + " " + c.getHora()
-                        + " " + c.getNome() + "]"
-                        + "\n"
-                        + c.getComentario()
-                );
-            } else {
-                h2.set(Calendar.HOUR_OF_DAY, Integer.parseInt(hora[0]));
-                h2.set(Calendar.MINUTE, Integer.parseInt(hora[1]));
-                h2.set(Calendar.SECOND, Integer.parseInt(hora[2]));
-                if (h2.getTimeInMillis() - h1.getTimeInMillis() >= 60000) {//10 minutos
-                    jTextPane1.setText(
-                            jTextPane1.getText() + "\n"
-                            + "[" + c.getData()
-                            + " " + c.getHora()
-                            + " " + c.getNome() + "]"
-                            + "\n"
-                            + c.getComentario()
-                    );
-                } else {
-                    jTextPane1.setText(
-                            jTextPane1.getText() + "\n"
-                            + c.getComentario()
-                    );
+        } catch (BadLocationException ex) {
+            Logger.getLogger(ComentarioJF.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
+
+    private void inserirLinhaOther(Comentario c) {
+//        area.append(
+//                "\n"
+//                + "[" + c.getData()
+//                + " " + c.getHora()
+//                + " " + c.getNome() + "]"
+//                + "\n\t"
+//                + c.getComentario()
+//        );
+
+    }
+
+    private synchronized void start() {
+        thread = new Thread(() -> { //essa thread pesquisa se há um novo comentario feito por outra pessoa no banco de dados
+            while (isRunning) {
+                int countAtual = new ComentarioDAO().getNLinhasBYOTHER(usuario.getId());
+                if (countAtual != count) {
+                    List<Comentario> novos = new ComentarioDAO().getComentariosByOTHER(usuario.getNome(), count);
+                    for (Comentario c : novos) {
+                        inserirLinhaOther(c); //aqui ele chama o metodo para inserir esse comentario vindo do db
+                    }
+                    count = countAtual;
+                }
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(ComentarioJF.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
+        });
+        thread.start();
+    }
+
+    private synchronized void stop() {
+        isRunning = false;
+        try {
+            thread.join();
+        } catch (InterruptedException ex) {
+            Logger.getLogger(ComentarioJF.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+
 }

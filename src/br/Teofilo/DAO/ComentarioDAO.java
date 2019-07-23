@@ -24,6 +24,7 @@ import java.util.logging.Logger;
  * @author User
  */
 public class ComentarioDAO {
+
     Connection con;
     PreparedStatement stmt;
     ResultSet rs;
@@ -32,8 +33,8 @@ public class ComentarioDAO {
     public ComentarioDAO() {
         con = ConnectionFactoryMySQL.getConnection();
     }
-    
-    public boolean addComentario(String coment,int ID_USER){
+
+    public boolean addComentario(String coment, int ID_USER) {
         sql = "INSERT INTO comentarios (data,hora,ID_USER,comentario) VALUES (?,?,?,?)";
         try {
             stmt = con.prepareStatement(sql);
@@ -47,19 +48,18 @@ public class ComentarioDAO {
             Logger.getLogger(ComentarioDAO.class.getName()).log(Level.SEVERE, null, ex);
             GerarLogErro.gerar(ex.getMessage());
             return false;
-        }
-        finally{
+        } finally {
             ConnectionFactoryMySQL.closeConnection(con, stmt);
         }
     }
 
-    public List<Comentario> getComentarios(){
+    public List<Comentario> getAllComentarios() {
         List<Comentario> comentarios = new ArrayList<>();
         sql = "SELECT * FROM coments_vw";
         try {
-            stmt= con.prepareStatement(sql);
+            stmt = con.prepareStatement(sql);
             rs = stmt.executeQuery();
-            while(rs.next()){
+            while (rs.next()) {
                 Comentario c = new Comentario();
                 c.setId(rs.getInt("id"));
                 c.setID_USER(rs.getInt("ID_USER"));
@@ -72,9 +72,59 @@ public class ComentarioDAO {
         } catch (SQLException ex) {
             Logger.getLogger(ComentarioDAO.class.getName()).log(Level.SEVERE, null, ex);
             GerarLogErro.gerar(ex.getMessage());
-        }finally{
+        } finally {
             ConnectionFactoryMySQL.closeConnection(con, stmt, rs);
         }
         return comentarios;
+    }
+
+    public List<Comentario> getComentariosByOTHER(String myName, int count) {
+        List<Comentario> comentarios = new ArrayList<>();
+        sql = "SELECT * FROM coments_vw WHERE nome != ?";
+        try {
+            stmt = con.prepareStatement(sql);
+            stmt.setString(1, myName);
+            rs = stmt.executeQuery();
+            int contador = 0;
+            while (rs.next()) {
+                if (rs.isFirst()) {
+                    contador = 1;
+                }
+                if (contador > count) {
+                    Comentario c = new Comentario();
+                    c.setId(rs.getInt("id"));
+                    c.setID_USER(rs.getInt("ID_USER"));
+                    c.setHora(rs.getString("hora"));
+                    c.setData(CDate.DataMySQLtoDataStringPT(rs.getString("data")));
+                    c.setComentario(rs.getString("comentario"));
+                    c.setNome(rs.getString("nome"));
+                    comentarios.add(c);
+                }
+                contador++;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ComentarioDAO.class.getName()).log(Level.SEVERE, null, ex);
+            GerarLogErro.gerar(ex.getMessage());
+        } finally {
+            ConnectionFactoryMySQL.closeConnection(con, stmt, rs);
+        }
+        return comentarios;
+    }
+
+    public int getNLinhasBYOTHER(int myIDUSER) {
+        sql = "SELECT COUNT(*) FROM comentarios  where ID_USER != ?";
+        try {
+            stmt = con.prepareStatement(sql);
+            stmt.setInt(1, myIDUSER);
+            rs = stmt.executeQuery();
+            rs.first();
+            return rs.getInt("count(*)");
+        } catch (SQLException ex) {
+            Logger.getLogger(ComentarioDAO.class.getName()).log(Level.SEVERE, null, ex);
+            GerarLogErro.gerar("Retorno no getNLinhas: " + ex.getMessage());
+            return -1;
+        } finally {
+            ConnectionFactoryMySQL.closeConnection(con, stmt, rs);
+        }
     }
 }
