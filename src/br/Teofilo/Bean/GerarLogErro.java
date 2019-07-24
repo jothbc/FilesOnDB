@@ -19,7 +19,7 @@ import java.util.logging.Logger;
  */
 public class GerarLogErro {
 
-    public static final String PATH = "C:/JCR LOG/log - ";
+    public static final String PATH = "C:\\JCR LOG\\log - ";
 
     public final static void gerar(String l) {
         try {
@@ -27,7 +27,7 @@ public class GerarLogErro {
             if (f.getParentFile()!=null){
                 f.getParentFile().mkdirs();
             }
-            FileWriter arq = new FileWriter(PATH+CDate.DataPTBRAtual()+" - "+CDate.getHoraAtualPTBR().replaceAll(":", "-")+".txt");
+            FileWriter arq = new FileWriter(PATH+"Data "+CDate.DataPTBRAtual().replaceAll("/", "-")+" Hora "+CDate.getHoraAtualPTBR().replaceAll(":", "-")+".txt");
             try (PrintWriter gravarArq = new PrintWriter(arq)) {
                 gravarArq.append(l);
             }
