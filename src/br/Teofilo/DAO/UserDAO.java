@@ -8,6 +8,7 @@ package br.Teofilo.DAO;
 import JDBC.ConnectionFactoryMySQL;
 import br.Teofilo.Bean.GerarLogErro;
 import br.Teofilo.Bean.User;
+import funcoes.CDate;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.sql.Connection;
@@ -47,6 +48,7 @@ public class UserDAO {
             ConnectionFactoryMySQL.closeConnection(con, stmt);
         }
     }
+    
     public User getUser(){
         sql = "SELECT * FROM users WHERE ip = ?";
         try {
@@ -71,4 +73,46 @@ public class UserDAO {
         }
     }
     
+    public User getUltimoControle_Comentarios(User u){
+        sql = "SELECT * FROM controle_comentarios WHERE ID_USER = ?";
+        try {
+            stmt=con.prepareStatement(sql);
+            stmt.setInt(1, u.getId());
+            rs = stmt.executeQuery();
+            if (!rs.first()){
+                u.setData("01/01/2019");
+                u.setHora("12:00:00");
+                return u;
+            }
+            rs.beforeFirst();
+            while (rs.next()){
+                u.setData(CDate.DataMySQLtoDataStringPT(rs.getString("data")));
+                u.setHora(rs.getString("hora"));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
+            GerarLogErro.gerar(ex.getMessage());
+        }finally{
+            ConnectionFactoryMySQL.closeConnection(con, stmt, rs);
+        }
+        return u;
+    }
+    
+    public boolean setarControle_Comentarios(User u){
+        sql = "INSERT INTO controle_comentarios(data,hora,ID_USER) VALUES (?,?,?)";
+        try {
+            stmt= con.prepareStatement(sql);
+            stmt.setString(1, CDate.DataPTBRtoDataMySQL(u.getData()));
+            stmt.setString(2, u.getHora());
+            stmt.setInt(3, u.getId());
+            stmt.execute();
+            return true;
+        } catch (SQLException ex) {
+            Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
+            GerarLogErro.gerar(ex.getMessage());
+            return false;
+        }finally{
+            ConnectionFactoryMySQL.closeConnection(con, stmt);
+        }
+    }
 }

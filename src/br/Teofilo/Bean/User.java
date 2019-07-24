@@ -13,6 +13,9 @@ public class User {
     private int id;
     private String ip;
     private String nome;
+    private String data;
+    private String hora;
+    
 
     /**
      * @return the id
@@ -54,6 +57,34 @@ public class User {
      */
     public void setNome(String nome) {
         this.nome = nome;
+    }
+
+    /**
+     * @return the data
+     */
+    public String getData() {
+        return data;
+    }
+
+    /**
+     * @param data the data to set
+     */
+    public void setData(String data) {
+        this.data = data;
+    }
+
+    /**
+     * @return the hora
+     */
+    public String getHora() {
+        return hora;
+    }
+
+    /**
+     * @param hora the hora to set
+     */
+    public void setHora(String hora) {
+        this.hora = hora;
     }
     
 }

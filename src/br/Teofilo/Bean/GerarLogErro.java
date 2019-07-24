@@ -5,6 +5,7 @@
  */
 package br.Teofilo.Bean;
 
+import funcoes.CDate;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -26,7 +27,7 @@ public class GerarLogErro {
             if (f.getParentFile()!=null){
                 f.getParentFile().mkdirs();
             }
-            FileWriter arq = new FileWriter(PATH+System.currentTimeMillis()+".txt");
+            FileWriter arq = new FileWriter(PATH+CDate.DataPTBRAtual()+" - "+CDate.getHoraAtualPTBR().replaceAll(":", "-")+".txt");
             try (PrintWriter gravarArq = new PrintWriter(arq)) {
                 gravarArq.append(l);
             }

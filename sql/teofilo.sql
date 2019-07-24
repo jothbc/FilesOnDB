@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: 22-Jul-2019 às 21:44
+-- Generation Time: 24-Jul-2019 às 21:17
 -- Versão do servidor: 10.1.36-MariaDB
 -- versão do PHP: 7.2.11
 
@@ -125,6 +125,19 @@ CREATE TABLE `controle_cartao` (
 -- --------------------------------------------------------
 
 --
+-- Estrutura da tabela `controle_comentarios`
+--
+
+CREATE TABLE `controle_comentarios` (
+  `id` int(11) NOT NULL,
+  `data` date DEFAULT NULL,
+  `hora` time DEFAULT NULL,
+  `ID_USER` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
 -- Estrutura da tabela `documentos`
 --
 
@@ -236,6 +249,12 @@ ALTER TABLE `controle_cartao`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `controle_comentarios`
+--
+ALTER TABLE `controle_comentarios`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `documentos`
 --
 ALTER TABLE `documentos`
@@ -303,6 +322,12 @@ ALTER TABLE `conta_sub`
 -- AUTO_INCREMENT for table `controle_cartao`
 --
 ALTER TABLE `controle_cartao`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `controle_comentarios`
+--
+ALTER TABLE `controle_comentarios`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --

@@ -12,9 +12,11 @@ import br.Teofilo.Bean.GerarLogErro;
 import br.Teofilo.Bean.Processo;
 import br.Teofilo.Bean.TipoDoc;
 import br.Teofilo.DAO.ClienteDAO;
+import br.Teofilo.DAO.ComentarioDAO;
 import br.Teofilo.DAO.DocumentoDAO;
 import br.Teofilo.DAO.ProcessoDAO;
 import br.Teofilo.DAO.TipoDocDAO;
+import br.Teofilo.DAO.UserDAO;
 import java.awt.Desktop;
 import java.awt.HeadlessException;
 import java.awt.Point;
@@ -621,6 +623,9 @@ public class DocumentoJF extends javax.swing.JFrame {
         if (listDocumentos.isEmpty()) {
             return;
         }
+        if (jListDocumento.getSelectedIndex()<0){
+            return;
+        }
         Documento d = null;
         DocumentoPessoal dp = null;
         if (listDocumentos.getElementAt(jListDocumento.getSelectedIndex()) instanceof Documento) {
@@ -689,14 +694,15 @@ public class DocumentoJF extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, erro, "Cliente", JOptionPane.INFORMATION_MESSAGE);
             return;
         }
-        if (c != null) {
-            UploadJD jd = new UploadJD(null, true, c, t, dp, p);
-            jd.setVisible(true);
-        }
+        UploadJD jd = new UploadJD(null, true, c, t, dp, p);
+        jd.setVisible(true);
     }
 
     private void download() {
         if (listDocumentos.isEmpty()) {
+            return;
+        }
+        if (jListDocumento.getSelectedIndex()<0){
             return;
         }
         Documento d = null;
@@ -779,14 +785,22 @@ public class DocumentoJF extends javax.swing.JFrame {
                 File f = fl.getSelectedFile();
                 if (d != null && tp != null && p != null) {
                     if (!new DocumentoDAO().updateDocumento(f, d.getId(), tp.getId(), p.getId())) {
-                        JOptionPane.showMessageDialog(null, "Erro ao tentar atualizar o arquivo no bando de dados.", "Erro", JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(null, "Erro ao tentar atualizar o arquivo no banco de dados.", "Erro", JOptionPane.ERROR_MESSAGE);
                     } else {
+                        String coment = "@Editou um Documento.\n" + f.getName();
+                        if (!new ComentarioDAO().addComentario(coment, new UserDAO().getUser().getId())) {
+                            GerarLogErro.gerar("Erro ao tentar comentar uma edição de um Documento " + f.getName());
+                        }
                         carregarDocumentosDoTipoEProcessoSelecionado();
                     }
                 } else if (dp != null && c != null) {
                     if (!new DocumentoDAO().updateDocumentoPessoal(f, dp.getId())) {
-                        JOptionPane.showMessageDialog(null, "Erro ao tentar atualizar o arquivo no bando de dados.", "Erro", JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(null, "Erro ao tentar atualizar o arquivo no banco de dados.", "Erro", JOptionPane.ERROR_MESSAGE);
                     } else {
+                        String coment = "@Editou um Documento Pessoal.\n" + f.getName();
+                        if (!new ComentarioDAO().addComentario(coment, new UserDAO().getUser().getId())) {
+                            GerarLogErro.gerar("Erro ao tentar comentar uma edição de um Documento Pessoal " + f.getName());
+                        }
                         carregarDadosPessoaisDoClienteSelecionado(c);
                     }
                 }
@@ -888,11 +902,18 @@ public class DocumentoJF extends javax.swing.JFrame {
     }
 
     private void deletarDocumento() {
+        if (jListDocumento.getSelectedIndex()<0){
+            return;
+        }
         if (listDocumentos.getElementAt(jListDocumento.getSelectedIndex()) instanceof Documento) {
             Documento d = (Documento) listDocumentos.getElementAt(jListDocumento.getSelectedIndex());
             if (!new DocumentoDAO().removeDocumento(d)) {
                 JOptionPane.showMessageDialog(null, "Erro ao tentar remover o documento do Bando de Dados.", "Erro", JOptionPane.ERROR_MESSAGE);
             } else {
+                String coment = "@Removeu um Documento.\n" + d.getNome();
+                if (!new ComentarioDAO().addComentario(coment, new UserDAO().getUser().getId())) {
+                    GerarLogErro.gerar("Erro ao tentar comentar a remoção de um documento " + d.getNome());
+                }
                 carregarDocumentosDoTipoEProcessoSelecionado();
             }
         } else if (listDocumentos.getElementAt(jListDocumento.getSelectedIndex()) instanceof DocumentoPessoal) {
@@ -900,6 +921,10 @@ public class DocumentoJF extends javax.swing.JFrame {
             if (!new DocumentoDAO().removeDocumentoPessoal(dp)) {
                 JOptionPane.showMessageDialog(null, "Erro ao tentar remover o documento pessoal do Bando de Dados.", "Erro", JOptionPane.ERROR_MESSAGE);
             } else {
+                String coment = "@Removeu um Documento`Pessoal.\n" + dp.getNome();
+                if (!new ComentarioDAO().addComentario(coment, new UserDAO().getUser().getId())) {
+                    GerarLogErro.gerar("Erro ao tentar comentar a remoção de um Documento Pessoal " + dp.getNome());
+                }
                 carregarDadosPessoaisDoClienteSelecionado((Cliente) listClientes.getElementAt(jListCliente.getSelectedIndex()));
             }
         }

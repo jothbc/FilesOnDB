@@ -8,6 +8,7 @@ package br.Teofilo.DAO;
 import JDBC.ConnectionFactoryMySQL;
 import br.Teofilo.Bean.Comentario;
 import br.Teofilo.Bean.GerarLogErro;
+import br.Teofilo.Bean.User;
 import funcoes.CDate;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -127,4 +128,53 @@ public class ComentarioDAO {
             ConnectionFactoryMySQL.closeConnection(con, stmt, rs);
         }
     }
+
+    public int getNLinhas() {
+        sql = "SELECT COUNT(*) FROM comentarios";
+        try {
+            stmt = con.prepareStatement(sql);
+            rs = stmt.executeQuery();
+            rs.first();
+            return rs.getInt("count(*)");
+        } catch (SQLException ex) {
+            Logger.getLogger(ComentarioDAO.class.getName()).log(Level.SEVERE, null, ex);
+            GerarLogErro.gerar("Retorno no getNLinhas: " + ex.getMessage());
+            return -1;
+        } finally {
+            ConnectionFactoryMySQL.closeConnection(con, stmt, rs);
+        }
+    }
+
+    public List<Comentario> getNovosComentarios(int mycount) {
+        List<Comentario> comentarios = new ArrayList<>();
+        sql = "SELECT * FROM coments_vw";
+        try {
+            stmt = con.prepareStatement(sql);
+            rs = stmt.executeQuery();
+            int contador = 0;
+            while (rs.next()) {
+                if (rs.isFirst()) {
+                    contador = 1;
+                }
+                if (contador > mycount) {
+                    Comentario c = new Comentario();
+                    c.setId(rs.getInt("id"));
+                    c.setID_USER(rs.getInt("ID_USER"));
+                    c.setHora(rs.getString("hora"));
+                    c.setData(CDate.DataMySQLtoDataStringPT(rs.getString("data")));
+                    c.setComentario(rs.getString("comentario"));
+                    c.setNome(rs.getString("nome"));
+                    comentarios.add(c);
+                }
+                contador++;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ComentarioDAO.class.getName()).log(Level.SEVERE, null, ex);
+            GerarLogErro.gerar(ex.getMessage());
+        } finally {
+            ConnectionFactoryMySQL.closeConnection(con, stmt, rs);
+        }
+        return comentarios;
+    }
+
 }

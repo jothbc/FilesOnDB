@@ -36,12 +36,14 @@ public class ComentarioJF extends javax.swing.JFrame {
     User usuario;
     Thread thread;
     int count = 0;
+    int mycount = 0;
     boolean isRunning = true;
     StyleContext sc = new StyleContext();
     final DefaultStyledDocument doc = new DefaultStyledDocument(sc);
     final Style blueStyle = sc.addStyle("BLUE", null);
     final Style blackStyle = sc.addStyle("BLACK", null);
     final Style greenStyle = sc.addStyle("GREEN", null);
+    final Style yellowStyle = sc.addStyle("YELLOW", null);
     private int ult_coment_cliente;
     private Calendar h1, h2;
 
@@ -53,13 +55,14 @@ public class ComentarioJF extends javax.swing.JFrame {
         w = this.getWidth();
         h = this.getHeight();
         hp = jPanel3.getHeight();
-        usuario = new UserDAO().getUser();
         blueStyle.addAttribute(StyleConstants.Background, Color.WHITE);
         blueStyle.addAttribute(StyleConstants.Foreground, Color.BLUE);
         blackStyle.addAttribute(StyleConstants.Background, Color.WHITE);
         blackStyle.addAttribute(StyleConstants.Foreground, Color.BLACK);
         greenStyle.addAttribute(StyleConstants.Background, Color.BLACK);
         greenStyle.addAttribute(StyleConstants.Foreground, Color.GREEN);
+        yellowStyle.addAttribute(StyleConstants.Background, Color.YELLOW);
+        yellowStyle.addAttribute(StyleConstants.Foreground, Color.BLACK);
         jTextPane1.setDocument(doc);
         iniciar();
     }
@@ -77,6 +80,7 @@ public class ComentarioJF extends javax.swing.JFrame {
         coment = new javax.swing.JTextField();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTextPane1 = new javax.swing.JTextPane();
+        jButton1 = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         jButton3 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
@@ -109,24 +113,37 @@ public class ComentarioJF extends javax.swing.JFrame {
         jTextPane1.setEditable(false);
         jScrollPane2.setViewportView(jTextPane1);
 
+        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/Teofilo/IMG/1x/ic_details_24px.png"))); // NOI18N
+        jButton1.setBorder(null);
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(coment)
-                    .addComponent(jScrollPane2))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 345, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
+                        .addComponent(jButton1)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 192, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(coment, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jButton1)
+                .addContainerGap())
         );
 
         jPanel3.setBackground(new java.awt.Color(0, 0, 0));
@@ -191,7 +208,8 @@ public class ComentarioJF extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 251, Short.MAX_VALUE)
+                .addGap(2, 2, 2))
         );
 
         pack();
@@ -230,6 +248,10 @@ public class ComentarioJF extends javax.swing.JFrame {
         jPanel3.setBackground(Color.BLACK);
     }//GEN-LAST:event_formWindowGainedFocus
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        setarData();
+    }//GEN-LAST:event_jButton1ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -266,6 +288,7 @@ public class ComentarioJF extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField coment;
+    private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JPanel jPanel1;
@@ -278,17 +301,17 @@ public class ComentarioJF extends javax.swing.JFrame {
         jPanel1.setVisible(!jPanel1.isVisible());
         if (jPanel1.isVisible()) {
             this.setSize(w, h);
-            this.setLocation(this.getLocation().x, this.getLocation().y-h+jPanel3.getHeight());
+            this.setLocation(this.getLocation().x, this.getLocation().y - h + jPanel3.getHeight());
         } else {
             this.setSize(w, hp);
-            this.setLocation(this.getLocation().x, this.getLocation().y+h-jPanel3.getHeight());
+            this.setLocation(this.getLocation().x, this.getLocation().y + h - jPanel3.getHeight());
         }
     }
 
     private void inserir() {
         String comentario = coment.getText();
         if (new ComentarioDAO().addComentario(comentario, usuario.getId())) {
-            Comentario c= new Comentario();
+            Comentario c = new Comentario();
             c.setData(CDate.DataPTBRAtual());
             c.setHora(CDate.getHoraAtualPTBR());
             c.setComentario(coment.getText());
@@ -296,10 +319,13 @@ public class ComentarioJF extends javax.swing.JFrame {
             c.setNome(usuario.getNome());
             inserirLinha(c);
             coment.setText("");
+            mycount++;
         }
     }
 
     private void iniciar() {
+        usuario = new UserDAO().getUser();
+        usuario = new UserDAO().getUltimoControle_Comentarios(usuario);
         List<Comentario> comentarios = new ComentarioDAO().getAllComentarios();
         if (!comentarios.isEmpty()) {
             ult_coment_cliente = comentarios.get(0).getID_USER();
@@ -316,11 +342,35 @@ public class ComentarioJF extends javax.swing.JFrame {
                 inserirLinha(c);
             }
         }
+        mycount = comentarios.size();
         count = new ComentarioDAO().getNLinhasBYOTHER(usuario.getId());
         start();
     }
 
     private void inserirLinha(Comentario c) {
+        String[] hora_temp = usuario.getHora().split(":");
+        String[] dia_temp = usuario.getData().split("/");
+        Calendar h1_temp = Calendar.getInstance();
+        h1_temp.set(Calendar.YEAR, Integer.parseInt(dia_temp[2]));
+        h1_temp.set(Calendar.MONTH, Integer.parseInt(dia_temp[1]) - 1);
+        h1_temp.set(Calendar.DAY_OF_MONTH, Integer.parseInt(dia_temp[0]));
+        h1_temp.set(Calendar.HOUR_OF_DAY, Integer.parseInt(hora_temp[0]));
+        h1_temp.set(Calendar.MINUTE, Integer.parseInt(hora_temp[1]));
+        h1_temp.set(Calendar.SECOND, Integer.parseInt(hora_temp[2]));
+
+        String[] hora_temp2 = c.getHora().split(":");
+        String[] dia_temp2 = c.getData().split("/");
+        Calendar h2_temp = Calendar.getInstance();
+        h2_temp.set(Calendar.YEAR, Integer.parseInt(dia_temp2[2]));
+        h2_temp.set(Calendar.MONTH, Integer.parseInt(dia_temp2[1]) - 1);
+        h2_temp.set(Calendar.DAY_OF_MONTH, Integer.parseInt(dia_temp2[0]));
+        h2_temp.set(Calendar.HOUR_OF_DAY, Integer.parseInt(hora_temp2[0]));
+        h2_temp.set(Calendar.MINUTE, Integer.parseInt(hora_temp2[1]));
+        h2_temp.set(Calendar.SECOND, Integer.parseInt(hora_temp2[2]));
+
+        if (h2_temp.before(h1_temp)) {
+            return;
+        }
         try {
             if (ult_coment_cliente == c.getID_USER()) {
                 String[] horas = c.getHora().split(":");
@@ -335,16 +385,32 @@ public class ComentarioJF extends javax.swing.JFrame {
                 if (h2.getTimeInMillis() - h1.getTimeInMillis() >= 60000 || h2.getTimeInMillis() - h1.getTimeInMillis() == 0) { //1 min
                     if (usuario.getId() != c.getID_USER()) { //outro pc
                         doc.insertString(doc.getLength(), "[" + c.getData() + " " + c.getHora() + " " + c.getNome() + "]\n", greenStyle);
-                        doc.insertString(doc.getLength(), "   " + c.getComentario() + "\n", blueStyle);
+                        if (c.getComentario().charAt(0) == '@') {
+                            doc.insertString(doc.getLength(), "   " + c.getComentario() + "\n", yellowStyle);
+                        } else {
+                            doc.insertString(doc.getLength(), "   " + c.getComentario() + "\n", blueStyle);
+                        }
                     } else { //esse pc
                         doc.insertString(doc.getLength(), "[" + c.getData() + " " + c.getHora() + " " + c.getNome() + "]\n", greenStyle);
-                        doc.insertString(doc.getLength(), "   " + c.getComentario() + "\n", blackStyle);
+                        if (c.getComentario().charAt(0) == '@') {
+                            doc.insertString(doc.getLength(), "   " + c.getComentario() + "\n", yellowStyle);
+                        } else {
+                            doc.insertString(doc.getLength(), "   " + c.getComentario() + "\n", blackStyle);
+                        }
                     }
                 } else {
                     if (usuario.getId() != c.getID_USER()) { //outro pc
-                        doc.insertString(doc.getLength(), "   " + c.getComentario() + "\n", blueStyle);
+                        if (c.getComentario().charAt(0) == '@') {
+                            doc.insertString(doc.getLength(), "   " + c.getComentario() + "\n", yellowStyle);
+                        } else {
+                            doc.insertString(doc.getLength(), "   " + c.getComentario() + "\n", blueStyle);
+                        }
                     } else { //esse pc
-                        doc.insertString(doc.getLength(), "   " + c.getComentario() + "\n", blackStyle);
+                        if (c.getComentario().charAt(0) == '@') {
+                            doc.insertString(doc.getLength(), "   " + c.getComentario() + "\n", yellowStyle);
+                        } else {
+                            doc.insertString(doc.getLength(), "   " + c.getComentario() + "\n", blackStyle);
+                        }
                     }
                 }
                 h1 = h2;
@@ -361,10 +427,18 @@ public class ComentarioJF extends javax.swing.JFrame {
                 h1.set(Calendar.SECOND, Integer.parseInt(horas[2]));
                 if (usuario.getId() != c.getID_USER()) { //outro pc
                     doc.insertString(doc.getLength(), "[" + c.getData() + " " + c.getHora() + " " + c.getNome() + "]\n", greenStyle);
-                    doc.insertString(doc.getLength(), "   " + c.getComentario() + "\n", blueStyle);
+                    if (c.getComentario().charAt(0) == '@') {
+                        doc.insertString(doc.getLength(), "   " + c.getComentario() + "\n", yellowStyle);
+                    } else {
+                        doc.insertString(doc.getLength(), "   " + c.getComentario() + "\n", blueStyle);
+                    }
                 } else { //esse pc
                     doc.insertString(doc.getLength(), "[" + c.getData() + " " + c.getHora() + " " + c.getNome() + "]\n", greenStyle);
-                    doc.insertString(doc.getLength(), "   " + c.getComentario() + "\n", blackStyle);
+                    if (c.getComentario().charAt(0) == '@') {
+                        doc.insertString(doc.getLength(), "   " + c.getComentario() + "\n", yellowStyle);
+                    } else {
+                        doc.insertString(doc.getLength(), "   " + c.getComentario() + "\n", blackStyle);
+                    }
                 }
             }
         } catch (BadLocationException ex) {
@@ -381,6 +455,7 @@ public class ComentarioJF extends javax.swing.JFrame {
                     List<Comentario> novos = new ComentarioDAO().getComentariosByOTHER(usuario.getNome(), count);
                     for (Comentario c : novos) {
                         inserirLinha(c); //aqui ele chama o metodo para inserir esse comentario vindo do db
+                        mycount++;
                     }
                     count = countAtual;
                     for (int x = 0; x < 10; x++) { //aqui é só pra pisca o panel mesmo...
@@ -397,6 +472,13 @@ public class ComentarioJF extends javax.swing.JFrame {
                             Logger.getLogger(ComentarioJF.class.getName()).log(Level.SEVERE, null, ex);
                         }
                         jPanel3.setBackground(Color.ORANGE);
+                    }
+                }
+                if (mycount != new ComentarioDAO().getNLinhas()) {
+                    List<Comentario> n = new ComentarioDAO().getNovosComentarios(mycount);
+                    for (Comentario c : n) {
+                        inserirLinha(c); //aqui ele chama o metodo para inserir esse comentario vindo do db
+                        mycount++;
                     }
                 }
                 try {
@@ -416,6 +498,19 @@ public class ComentarioJF extends javax.swing.JFrame {
         } catch (InterruptedException ex) {
             Logger.getLogger(ComentarioJF.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    private void setarData() {
+        SetarDataJD jd = new SetarDataJD(null, true);
+        jd.setVisible(true);
+        jTextPane1.removeAll();
+        try {
+            doc.remove(0, doc.getLength());
+        } catch (BadLocationException ex) {
+            Logger.getLogger(ComentarioJF.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        stop();
+        iniciar();
     }
 
 }

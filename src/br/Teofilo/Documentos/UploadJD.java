@@ -6,10 +6,15 @@
 package br.Teofilo.Documentos;
 
 import br.Teofilo.Bean.Cliente;
+import br.Teofilo.Bean.Comentario;
 import br.Teofilo.Bean.DocumentoPessoal;
+import br.Teofilo.Bean.GerarLogErro;
 import br.Teofilo.Bean.Processo;
 import br.Teofilo.Bean.TipoDoc;
+import br.Teofilo.DAO.ComentarioDAO;
 import br.Teofilo.DAO.DocumentoDAO;
+import br.Teofilo.DAO.UserDAO;
+import funcoes.CDate;
 import java.awt.Desktop;
 import java.awt.Point;
 import java.io.File;
@@ -389,6 +394,10 @@ public class UploadJD extends javax.swing.JDialog {
                         JOptionPane.showMessageDialog(null, "Erro ao tentar salvar o arquivo " + f.getName() + " no Banco de dados", "Erro", JOptionPane.ERROR_MESSAGE);
                         return;
                     } else {
+                        String coment = "@Realizou o update de um novo Documento.\n"+f.getName();
+                        if (!new ComentarioDAO().addComentario(coment, new UserDAO().getUser().getId())){
+                            GerarLogErro.gerar("Erro ao tentar gerar um novo comentario de Documento para o arquivo "+f.getName());
+                        }
                         arquivos.remove(arquivos.getSize() - 1);
                         jProgressBar1.setValue(count);
                         count++;
@@ -398,6 +407,10 @@ public class UploadJD extends javax.swing.JDialog {
                         JOptionPane.showMessageDialog(null, "Erro ao tentar salvar o arquivo " + f.getName() + " no Banco de dados", "Erro", JOptionPane.ERROR_MESSAGE);
                         return;
                     } else {
+                        String coment = "@Realizou o update de um novo Documento Pessoal.\n"+f.getName();
+                        if (!new ComentarioDAO().addComentario(coment, new UserDAO().getUser().getId())){
+                            GerarLogErro.gerar("Erro ao tentar gerar um novo comentario de Documento para o arquivo "+f.getName());
+                        }
                         arquivos.remove(arquivos.getSize() - 1);
                         jProgressBar1.setValue(count);
                         count++;
