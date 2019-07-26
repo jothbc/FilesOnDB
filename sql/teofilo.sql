@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: 24-Jul-2019 às 21:17
+-- Generation Time: 26-Jul-2019 às 21:16
 -- Versão do servidor: 10.1.36-MariaDB
 -- versão do PHP: 7.2.11
 
@@ -176,7 +176,8 @@ CREATE TABLE `processos` (
   `id` int(11) NOT NULL,
   `ID_CLIENTE` int(11) NOT NULL,
   `processo` varchar(200) DEFAULT NULL,
-  `status` varchar(100) DEFAULT NULL
+  `status` varchar(100) DEFAULT NULL,
+  `data` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
