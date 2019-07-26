@@ -59,6 +59,7 @@ public class ComentarioJF extends javax.swing.JFrame {
         blueStyle.addAttribute(StyleConstants.Foreground, Color.BLUE);
         blackStyle.addAttribute(StyleConstants.Background, Color.WHITE);
         blackStyle.addAttribute(StyleConstants.Foreground, Color.BLACK);
+        blackStyle.addAttribute(StyleConstants.Alignment, StyleConstants.ALIGN_RIGHT);
         greenStyle.addAttribute(StyleConstants.Background, Color.BLACK);
         greenStyle.addAttribute(StyleConstants.Foreground, Color.GREEN);
         yellowStyle.addAttribute(StyleConstants.Background, Color.YELLOW);
@@ -93,11 +94,6 @@ public class ComentarioJF extends javax.swing.JFrame {
                 formWindowGainedFocus(evt);
             }
             public void windowLostFocus(java.awt.event.WindowEvent evt) {
-            }
-        });
-        addWindowListener(new java.awt.event.WindowAdapter() {
-            public void windowClosing(java.awt.event.WindowEvent evt) {
-                formWindowClosing(evt);
             }
         });
 
@@ -208,8 +204,7 @@ public class ComentarioJF extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 251, Short.MAX_VALUE)
-                .addGap(2, 2, 2))
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 253, Short.MAX_VALUE))
         );
 
         pack();
@@ -239,10 +234,6 @@ public class ComentarioJF extends javax.swing.JFrame {
             inserir();
         }
     }//GEN-LAST:event_comentKeyPressed
-
-    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
-
-    }//GEN-LAST:event_formWindowClosing
 
     private void formWindowGainedFocus(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowGainedFocus
         jPanel3.setBackground(Color.BLACK);
@@ -309,6 +300,9 @@ public class ComentarioJF extends javax.swing.JFrame {
     }
 
     private void inserir() {
+        if(coment.getText().equals("")){
+            return;
+        }
         String comentario = coment.getText();
         if (new ComentarioDAO().addComentario(comentario, usuario.getId())) {
             Comentario c = new Comentario();

@@ -371,6 +371,6 @@ public class RelatorioContaJD extends javax.swing.JDialog {
                 System.out.println(c);
             }
         }
-        JOptionPane.showMessageDialog(null, "Ainda falta criar os relatórios. É preciso de um pouco mais de tempo. \nEm média deixará o projeto 70Mb mais pesado devido as libs.");
+        JOptionPane.showMessageDialog(null, "Ainda falta criar os relatórios. É necessário mais tempo.\nEm média acrescentará ao projeto 80MB.");
     }
 }

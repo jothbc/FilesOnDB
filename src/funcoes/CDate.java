@@ -54,7 +54,7 @@ public class CDate {
      * @return
      */
     public static String DataPTBRtoDataMySQL(String temp) {
-        Date data = null;
+        Date data = new Date();
         try {
             data = new SimpleDateFormat("dd/MM/yyyy").parse(temp);
         } catch (ParseException ex) {

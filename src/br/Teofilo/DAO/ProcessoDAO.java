@@ -8,6 +8,7 @@ package br.Teofilo.DAO;
 import JDBC.ConnectionFactoryMySQL;
 import br.Teofilo.Bean.GerarLogErro;
 import br.Teofilo.Bean.Processo;
+import funcoes.CDate;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -48,6 +49,24 @@ public class ProcessoDAO {
         }
     }
     
+    public boolean addProcesso(int id_cliente,String processo,String data){
+        sql = "INSERT INTO processos (ID_CLIENTE,processo,data) VALUES (?,?,?)";
+        try {
+            stmt=con.prepareStatement(sql);
+            stmt.setInt(1, id_cliente);
+            stmt.setString(2, processo);
+            stmt.setString(3, CDate.DataPTBRtoDataMySQL(data));
+            stmt.execute();
+            return true;
+        } catch (SQLException ex) {
+            Logger.getLogger(ProcessoDAO.class.getName()).log(Level.SEVERE, null, ex);
+            GerarLogErro.gerar(ex.getMessage());
+            return false;
+        }finally{
+            ConnectionFactoryMySQL.closeConnection(con, stmt);
+        }
+    }
+    
     public List<Processo> getProcessos(int idCliente) {
         List<Processo> processos = new ArrayList<>();
         sql = "SELECT * FROM processos WHERE ID_CLIENTE = ?";
@@ -61,6 +80,9 @@ public class ProcessoDAO {
                 p.setId(rs.getInt("id"));
                 p.setN_processo(rs.getString("processo"));
                 p.setStatus(rs.getString("status"));
+                if (rs.getString("data")!=null){
+                    p.setData(CDate.DataMySQLtoDataStringPT(rs.getString("data")));
+                }
                 processos.add(p);
             }
         } catch (SQLException ex) {

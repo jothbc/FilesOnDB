@@ -9,6 +9,7 @@ import br.Teofilo.Bean.Cliente;
 import br.Teofilo.Bean.Processo;
 import br.Teofilo.DAO.ProcessoDAO;
 import java.awt.Point;
+import java.awt.event.KeyEvent;
 import javax.swing.JOptionPane;
 
 /**
@@ -105,6 +106,11 @@ public class StatusProcessoJD extends javax.swing.JDialog {
 
         statusProcessotxt.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         statusProcessotxt.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 0, new java.awt.Color(0, 0, 0)));
+        statusProcessotxt.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                statusProcessotxtKeyPressed(evt);
+            }
+        });
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel1.setText("Status do Processo");
@@ -186,6 +192,12 @@ public class StatusProcessoJD extends javax.swing.JDialog {
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         statusProcesso();
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void statusProcessotxtKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_statusProcessotxtKeyPressed
+        if (evt.getKeyCode()==KeyEvent.VK_ENTER){
+            jButton2.requestFocus();
+        }
+    }//GEN-LAST:event_statusProcessotxtKeyPressed
 
     /**
      * @param args the command line arguments
