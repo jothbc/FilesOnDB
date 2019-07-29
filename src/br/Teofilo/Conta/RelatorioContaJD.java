@@ -5,6 +5,7 @@
  */
 package br.Teofilo.Conta;
 
+import br.Teofilo.Cliente.SeletorDeClienteJD;
 import br.Teofilo.Bean.Cliente;
 import funcoes.CDate;
 import java.awt.Point;

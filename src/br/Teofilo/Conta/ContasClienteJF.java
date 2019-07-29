@@ -5,6 +5,7 @@
  */
 package br.Teofilo.Conta;
 
+import br.Teofilo.Cliente.SeletorDeClienteJD;
 import br.Teofilo.Bean.Cliente;
 import br.Teofilo.Bean.Conta;
 import br.Teofilo.Bean.ContaSub;

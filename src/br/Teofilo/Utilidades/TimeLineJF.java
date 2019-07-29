@@ -5,7 +5,17 @@
  */
 package br.Teofilo.Utilidades;
 
+import br.Teofilo.Bean.Tarefa;
+import br.Teofilo.DAO.TarefaDAO;
+import java.awt.Desktop;
+import java.awt.Dimension;
 import java.awt.Point;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.JButton;
 
 /**
  *
@@ -13,12 +23,19 @@ import java.awt.Point;
  */
 public class TimeLineJF extends javax.swing.JFrame {
 
-    private final Point point =new Point();
+    private final Point point = new Point();
+    List<Tarefa> tarefas;
+
     /**
      * Creates new form TimeLineJF
      */
     public TimeLineJF() {
         initComponents();
+        Toolkit toolkit = Toolkit.getDefaultToolkit();
+        Dimension scrnsize = toolkit.getScreenSize();
+        this.setSize((int) scrnsize.getWidth(), this.getHeight());
+        this.setLocation(0, (int) (scrnsize.getHeight() - this.getHeight()) - 40); //esse 40 vai depender do tamanho da barra
+        atualizarTarefas();
     }
 
     /**
@@ -34,6 +51,9 @@ public class TimeLineJF extends javax.swing.JFrame {
         jPanel3 = new javax.swing.JPanel();
         jButton3 = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
+        jButton4 = new javax.swing.JButton();
+        jsp = new javax.swing.JScrollPane();
+        desc = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setUndecorated(true);
@@ -66,35 +86,62 @@ public class TimeLineJF extends javax.swing.JFrame {
         jLabel3.setForeground(new java.awt.Color(255, 255, 255));
         jLabel3.setText("Linha do Tempo");
 
+        jButton4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/Teofilo/IMG/1x/ic_control_point_24px.png"))); // NOI18N
+        jButton4.setBorder(null);
+        jButton4.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                jButton4MouseEntered(evt);
+            }
+        });
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                .addGap(88, 88, 88)
+                .addContainerGap()
+                .addComponent(jButton4)
+                .addGap(59, 59, 59)
                 .addComponent(jLabel3)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 647, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 663, Short.MAX_VALUE)
                 .addComponent(jButton3))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addComponent(jButton3)
-                .addGap(0, 11, Short.MAX_VALUE))
             .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jButton3)
+                    .addComponent(jButton4))
+                .addGap(0, 12, Short.MAX_VALUE))
         );
+
+        jsp.setBackground(new java.awt.Color(255, 255, 255));
+        jsp.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+
+        desc.setEditable(false);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(desc)
+            .addComponent(jsp)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(167, Short.MAX_VALUE))
+                .addGap(0, 0, 0)
+                .addComponent(desc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jsp, javax.swing.GroupLayout.DEFAULT_SIZE, 134, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -105,7 +152,7 @@ public class TimeLineJF extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         pack();
@@ -125,6 +172,14 @@ public class TimeLineJF extends javax.swing.JFrame {
         point.x = evt.getX();
         point.y = evt.getY();
     }//GEN-LAST:event_jPanel3MousePressed
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        incluir();
+    }//GEN-LAST:event_jButton4ActionPerformed
+
+    private void jButton4MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton4MouseEntered
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton4MouseEntered
 
     /**
      * @param args the command line arguments
@@ -162,9 +217,78 @@ public class TimeLineJF extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTextField desc;
     private javax.swing.JButton jButton3;
+    private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel3;
+    private javax.swing.JScrollPane jsp;
     // End of variables declaration//GEN-END:variables
+
+    private void incluir() {
+        NovaTarefa nv = new NovaTarefa(null, true);
+        nv.setVisible(true);
+        atualizarTarefas();
+
+//        new Thread(() -> {
+//            JButton b = new JButton(Integer.toString(count));
+//            b.setName(Integer.toString(count)); //nome do botao
+//            b.setSize(50, 50); //tamanho do botao
+//            b.setLocation(jp.getComponentCount() * 50, 0); //seta o local que o botao deve aparecer
+//            b.addActionListener((java.awt.event.ActionEvent evt) -> { //expressao lambda para evento no botao
+//                jbuttonsPressionados(evt, b); //chama a função criada passando também o proprio botao
+//            });
+//            b.addMouseListener(new java.awt.event.MouseAdapter() {
+//                @Override
+//                public void mouseEntered(java.awt.event.MouseEvent evt) {
+//                    jbuttonsPassadoPorCima(evt, b);
+//                }
+//            });
+//            count++;
+//
+//            //adiciona ao jpanel
+//            jp.add(b);
+//            jp.setSize(jp.getWidth() + 100, jp.getHeight());
+//            jp.repaint();
+//        }).start();
+    }
+
+    private void jbuttonsPressionados(ActionEvent evt, JButton b) {
+        System.out.println(b.getName());
+    }
+
+    private void jbuttonsPassadoPorCima(MouseEvent evt, JButton b) {
+        desc.setText(b.getName());
+    }
+
+    private void atualizarTarefas() {
+        tarefas = new TarefaDAO().findAllNoConcluidas();
+        jsp.removeAll();
+        jsp.createHorizontalScrollBar();
+        if (tarefas.isEmpty()) {
+            return;
+        }
+        new Thread(() -> {
+            for (Tarefa t : tarefas) {
+                JButton b = new JButton(t.getInicio());
+                b.setName(t.getId() + "@ " + t.getInicio() + " - " + t.getFim() + " " + (t.getAnotacoes().length()> 100 ? t.getAnotacoes().substring(0,100) : t.getAnotacoes())+"..."); //nome do botao
+                b.setSize(100, 50); //tamanho do botao
+                b.setLocation((jsp.getComponentCount()) * 100, 0); //seta o local que o botao deve aparecer
+                b.addActionListener((java.awt.event.ActionEvent evt) -> { //expressao lambda para evento no botao
+                    jbuttonsPressionados(evt, b); //chama a função criada passando também o proprio botao
+                });
+                b.addMouseListener(new java.awt.event.MouseAdapter() {
+                    @Override
+                    public void mouseEntered(java.awt.event.MouseEvent evt) {
+                        jbuttonsPassadoPorCima(evt, b);
+                    }
+                });
+                b.setBackground(t.getMarcador());
+                jsp.add(b);
+                //jsp.setSize(jsp.getWidth()+100, jsp.getHeight());
+                jsp.repaint();
+            }
+        }).start();
+    }
 }

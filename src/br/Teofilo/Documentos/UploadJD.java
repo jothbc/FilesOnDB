@@ -6,7 +6,6 @@
 package br.Teofilo.Documentos;
 
 import br.Teofilo.Bean.Cliente;
-import br.Teofilo.Bean.Comentario;
 import br.Teofilo.Bean.DocumentoPessoal;
 import br.Teofilo.Bean.GerarLogErro;
 import br.Teofilo.Bean.Processo;
@@ -14,7 +13,6 @@ import br.Teofilo.Bean.TipoDoc;
 import br.Teofilo.DAO.ComentarioDAO;
 import br.Teofilo.DAO.DocumentoDAO;
 import br.Teofilo.DAO.UserDAO;
-import funcoes.CDate;
 import java.awt.Desktop;
 import java.awt.Point;
 import java.io.File;
@@ -365,18 +363,21 @@ public class UploadJD extends javax.swing.JDialog {
         int op = fl.showOpenDialog(null);
         if (op == JFileChooser.APPROVE_OPTION) {
             if (fl.getSelectedFile().isDirectory()) { //verifica se é diretório
-
                 File diretorio = fl.getSelectedFile();  //somente diretório sem \\ no fim
                 caminhotxt.setText(diretorio.getPath() + "\\");
                 String[] arq_string = fl.getSelectedFile().list();        //contém o caminho completo de todos os arquivos dentro da pasta arquivo
                 for (String f : arq_string) {
                     File f_temp = new File(diretorio + "\\" + f);
-                    arquivos.addElement(f_temp);
+                    if (f_temp.isFile()) {
+                        arquivos.addElement(f_temp);
+                    }
                 }
             } else {                                //senao é arquivo
                 caminhotxt.setText(fl.getSelectedFile().getPath());
                 File f_temp = fl.getSelectedFile();
-                arquivos.addElement(f_temp);
+                if (f_temp.isFile()) {
+                    arquivos.addElement(f_temp);
+                }
             }
         }
     }
@@ -386,6 +387,7 @@ public class UploadJD extends javax.swing.JDialog {
             jProgressBar1.setVisible(true);
             jProgressBar1.setMinimum(0);
             jProgressBar1.setMaximum(arquivos.size());
+            jProgressBar1.setStringPainted(true);
             int count = 0;
             while (arquivos.size() > 0) {
                 File f = (File) arquivos.getElementAt(arquivos.size() - 1);
@@ -394,9 +396,9 @@ public class UploadJD extends javax.swing.JDialog {
                         JOptionPane.showMessageDialog(null, "Erro ao tentar salvar o arquivo " + f.getName() + " no Banco de dados", "Erro", JOptionPane.ERROR_MESSAGE);
                         return;
                     } else {
-                        String coment = "@Realizou o update de um novo Documento.\n"+f.getName();
-                        if (!new ComentarioDAO().addComentario(coment, new UserDAO().getUser().getId())){
-                            GerarLogErro.gerar("Erro ao tentar gerar um novo comentario de Documento para o arquivo "+f.getName());
+                        String coment = "@Realizou o update de um novo Documento.\n" + f.getName();
+                        if (!new ComentarioDAO().addComentario(coment, new UserDAO().getUser().getId())) {
+                            GerarLogErro.gerar("Erro ao tentar gerar um novo comentario de Documento para o arquivo " + f.getName());
                         }
                         arquivos.remove(arquivos.getSize() - 1);
                         jProgressBar1.setValue(count);
@@ -407,9 +409,9 @@ public class UploadJD extends javax.swing.JDialog {
                         JOptionPane.showMessageDialog(null, "Erro ao tentar salvar o arquivo " + f.getName() + " no Banco de dados", "Erro", JOptionPane.ERROR_MESSAGE);
                         return;
                     } else {
-                        String coment = "@Realizou o update de um novo Documento Pessoal.\n"+f.getName();
-                        if (!new ComentarioDAO().addComentario(coment, new UserDAO().getUser().getId())){
-                            GerarLogErro.gerar("Erro ao tentar gerar um novo comentario de Documento para o arquivo "+f.getName());
+                        String coment = "@Realizou o update de um novo Documento Pessoal.\n" + f.getName();
+                        if (!new ComentarioDAO().addComentario(coment, new UserDAO().getUser().getId())) {
+                            GerarLogErro.gerar("Erro ao tentar gerar um novo comentario de Documento para o arquivo " + f.getName());
                         }
                         arquivos.remove(arquivos.getSize() - 1);
                         jProgressBar1.setValue(count);

@@ -3,13 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package br.Teofilo.Conta;
+package br.Teofilo.Utilidades;
 
 import br.Teofilo.Bean.Cliente;
-import br.Teofilo.DAO.ClienteDAO;
+import br.Teofilo.Bean.Processo;
+import br.Teofilo.Cliente.SeletorDeClienteJD;
+import br.Teofilo.DAO.ProcessoDAO;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
-import java.util.ArrayList;
 import java.util.List;
 import javax.swing.DefaultListModel;
 
@@ -17,24 +18,20 @@ import javax.swing.DefaultListModel;
  *
  * @author User
  */
-public class SeletorDeClienteJD extends javax.swing.JDialog {
-
-    private static Point point = new Point();
-    DefaultListModel listCliente = new DefaultListModel();
-    List<Cliente> clientes;
-    Cliente cliente = null;
-
+public class SeletorDeProcessoJD extends javax.swing.JDialog {
+    private final Point point = new Point();
+    Cliente cliente;
+    DefaultListModel listProcesso = new DefaultListModel();
+    Processo processo;
     /**
-     * Creates new form SeletorDeClienteJD
+     * Creates new form SeletorDeProcessoJD
      */
-    public SeletorDeClienteJD(java.awt.Frame parent, boolean modal) {
+    public SeletorDeProcessoJD(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
-        jList1.setModel(listCliente);
-        clientes = new ClienteDAO().getClintes();
-        for (Cliente c : clientes) {
-            listCliente.addElement(c);
-        }
+        cliente = null;
+        processo = null;
+        jList1.setModel(listProcesso);
     }
 
     /**
@@ -48,11 +45,12 @@ public class SeletorDeClienteJD extends javax.swing.JDialog {
 
         jPanel1 = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
-        jLabel13 = new javax.swing.JLabel();
         jButton3 = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jList1 = new javax.swing.JList<>();
-        comparatxt = new javax.swing.JTextField();
+        clienteNometxt = new javax.swing.JTextField();
+        jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setUndecorated(true);
@@ -72,9 +70,6 @@ public class SeletorDeClienteJD extends javax.swing.JDialog {
             }
         });
 
-        jLabel13.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel13.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/Teofilo/IMG/logo-2-teofilo-rocha-advocacia-balneario-camboriu-sc-advogado.png"))); // NOI18N
-
         jButton3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/Teofilo/IMG/1x/ic_cancel_18px.png"))); // NOI18N
         jButton3.setBorder(null);
         jButton3.addActionListener(new java.awt.event.ActionListener() {
@@ -83,24 +78,28 @@ public class SeletorDeClienteJD extends javax.swing.JDialog {
             }
         });
 
+        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel1.setText("Seletor de Processo");
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGap(33, 33, 33)
-                .addComponent(jLabel13)
-                .addGap(18, 18, 18)
+                .addGap(122, 122, 122)
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jButton3)
-                .addContainerGap(16, Short.MAX_VALUE))
+                .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton3)
-                    .addComponent(jLabel13))
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel1)
+                    .addComponent(jButton3))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -117,9 +116,19 @@ public class SeletorDeClienteJD extends javax.swing.JDialog {
         });
         jScrollPane1.setViewportView(jList1);
 
-        comparatxt.addKeyListener(new java.awt.event.KeyAdapter() {
+        clienteNometxt.setEditable(false);
+        clienteNometxt.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
-                comparatxtKeyPressed(evt);
+                clienteNometxtKeyPressed(evt);
+            }
+        });
+
+        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/Teofilo/IMG/1x/ic_account_circle_24px.png"))); // NOI18N
+        jButton1.setText("Buscar Cliente");
+        jButton1.setBorder(null);
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
             }
         });
 
@@ -128,21 +137,25 @@ public class SeletorDeClienteJD extends javax.swing.JDialog {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
-            .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane1)
-                    .addComponent(comparatxt))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(clienteNometxt, javax.swing.GroupLayout.PREFERRED_SIZE, 295, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
+            .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 13, Short.MAX_VALUE)
-                .addComponent(comparatxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(clienteNometxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 184, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -177,21 +190,30 @@ public class SeletorDeClienteJD extends javax.swing.JDialog {
         point.y = evt.getY();
     }//GEN-LAST:event_jPanel3MousePressed
 
-    private void comparatxtKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_comparatxtKeyPressed
-        repopular();
-    }//GEN-LAST:event_comparatxtKeyPressed
-
     private void jList1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jList1MouseClicked
         if (evt.getClickCount()==2){
-            retornarCliente();
+            retornarProcesso();
         }
     }//GEN-LAST:event_jList1MouseClicked
 
     private void jList1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jList1KeyPressed
         if (evt.getKeyCode() == KeyEvent.VK_ENTER){
-            retornarCliente();
+            retornarProcesso();
         }
     }//GEN-LAST:event_jList1KeyPressed
+
+    private void clienteNometxtKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_clienteNometxtKeyPressed
+    }//GEN-LAST:event_clienteNometxtKeyPressed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        SeletorDeClienteJD jd = new SeletorDeClienteJD(null, true);
+        jd.setVisible(true);
+        if (jd.getCliente()!=null){
+            cliente = jd.getCliente();
+            clienteNometxt.setText(cliente.getNome());
+            repopular();
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -210,20 +232,20 @@ public class SeletorDeClienteJD extends javax.swing.JDialog {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(SeletorDeClienteJD.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(SeletorDeProcessoJD.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(SeletorDeClienteJD.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(SeletorDeProcessoJD.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(SeletorDeClienteJD.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(SeletorDeProcessoJD.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(SeletorDeClienteJD.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(SeletorDeProcessoJD.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                SeletorDeClienteJD dialog = new SeletorDeClienteJD(new javax.swing.JFrame(), true);
+                SeletorDeProcessoJD dialog = new SeletorDeProcessoJD(new javax.swing.JFrame(), true);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {
@@ -236,34 +258,28 @@ public class SeletorDeClienteJD extends javax.swing.JDialog {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTextField comparatxt;
+    private javax.swing.JTextField clienteNometxt;
+    private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton3;
-    private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JList<String> jList1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
 
-    private void repopular() {
-        listCliente.removeAllElements();
-        for (Cliente c : clientes) {
-            if (c.getNome().toUpperCase().contains(comparatxt.getText().toUpperCase())) {
-                listCliente.addElement(c);
-            }
-        }
+    private void retornarProcesso() {
+        processo = (Processo) listProcesso.getElementAt(jList1.getSelectedIndex());
+        this.dispose();
     }
 
-    private void retornarCliente() {
-        if (!listCliente.isEmpty()){
-            if (jList1.getSelectedIndex()!=-1){
-                cliente= (Cliente) listCliente.getElementAt(jList1.getSelectedIndex());
-                dispose();
-            }
+    private void repopular() {
+        List<Processo> processos = new ProcessoDAO().getProcessos(cliente.getId());
+        for (Processo p:processos){
+            listProcesso.addElement(p);
         }
     }
-    
-    public Cliente getCliente(){
-        return this.cliente;
+    public Processo getProcesso(){
+        return this.processo;
     }
 }
