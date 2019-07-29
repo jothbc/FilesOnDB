@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: 26-Jul-2019 às 21:16
+-- Generation Time: 29-Jul-2019 às 21:53
 -- Versão do servidor: 10.1.36-MariaDB
 -- versão do PHP: 7.2.11
 
@@ -183,6 +183,24 @@ CREATE TABLE `processos` (
 -- --------------------------------------------------------
 
 --
+-- Estrutura da tabela `tarefas`
+--
+
+CREATE TABLE `tarefas` (
+  `id` int(11) NOT NULL,
+  `inicio` date DEFAULT NULL,
+  `fim` date DEFAULT NULL,
+  `concluido` tinyint(1) DEFAULT '0',
+  `anotacao` varchar(2000) DEFAULT NULL,
+  `vinculado` tinyint(1) DEFAULT NULL,
+  `nome_cliente` varchar(50) DEFAULT NULL,
+  `processo` varchar(100) DEFAULT NULL,
+  `marcador` varchar(45) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
 -- Estrutura da tabela `tipo`
 --
 
@@ -278,6 +296,12 @@ ALTER TABLE `processos`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `tarefas`
+--
+ALTER TABLE `tarefas`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `tipo`
 --
 ALTER TABLE `tipo`
@@ -347,6 +371,12 @@ ALTER TABLE `documentos_pessoais`
 -- AUTO_INCREMENT for table `processos`
 --
 ALTER TABLE `processos`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `tarefas`
+--
+ALTER TABLE `tarefas`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --

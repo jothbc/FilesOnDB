@@ -53,6 +53,7 @@ public class TimeLineJF extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         jButton4 = new javax.swing.JButton();
         jsp = new javax.swing.JScrollPane();
+        jp = new javax.swing.JPanel();
         desc = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -123,6 +124,19 @@ public class TimeLineJF extends javax.swing.JFrame {
 
         jsp.setBackground(new java.awt.Color(255, 255, 255));
         jsp.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+
+        javax.swing.GroupLayout jpLayout = new javax.swing.GroupLayout(jp);
+        jp.setLayout(jpLayout);
+        jpLayout.setHorizontalGroup(
+            jpLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 874, Short.MAX_VALUE)
+        );
+        jpLayout.setVerticalGroup(
+            jpLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 115, Short.MAX_VALUE)
+        );
+
+        jsp.setViewportView(jp);
 
         desc.setEditable(false);
 
@@ -223,6 +237,7 @@ public class TimeLineJF extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jp;
     private javax.swing.JScrollPane jsp;
     // End of variables declaration//GEN-END:variables
 
@@ -264,17 +279,22 @@ public class TimeLineJF extends javax.swing.JFrame {
 
     private void atualizarTarefas() {
         tarefas = new TarefaDAO().findAllNoConcluidas();
-        jsp.removeAll();
-        jsp.createHorizontalScrollBar();
+        jp.removeAll();
         if (tarefas.isEmpty()) {
             return;
         }
         new Thread(() -> {
+            int count = 0;
             for (Tarefa t : tarefas) {
+                count++;
                 JButton b = new JButton(t.getInicio());
-                b.setName(t.getId() + "@ " + t.getInicio() + " - " + t.getFim() + " " + (t.getAnotacoes().length()> 100 ? t.getAnotacoes().substring(0,100) : t.getAnotacoes())+"..."); //nome do botao
+                b.setName(t.getId() + "@ " + t.getInicio() + " - " + t.getFim() + " " + (t.getAnotacoes().length() > 100 ? t.getAnotacoes().substring(0, 100) : t.getAnotacoes()) + "..."); //nome do botao
                 b.setSize(100, 50); //tamanho do botao
-                b.setLocation((jsp.getComponentCount()) * 100, 0); //seta o local que o botao deve aparecer
+                if (count > 13) {
+                    b.setLocation((jp.getComponentCount()-13) * 100, 50); //seta o local que o botao deve aparecer
+                } else {
+                    b.setLocation((jp.getComponentCount()) * 100, 0); //seta o local que o botao deve aparecer
+                }
                 b.addActionListener((java.awt.event.ActionEvent evt) -> { //expressao lambda para evento no botao
                     jbuttonsPressionados(evt, b); //chama a função criada passando também o proprio botao
                 });
@@ -285,9 +305,9 @@ public class TimeLineJF extends javax.swing.JFrame {
                     }
                 });
                 b.setBackground(t.getMarcador());
-                jsp.add(b);
-                //jsp.setSize(jsp.getWidth()+100, jsp.getHeight());
-                jsp.repaint();
+                jp.add(b);
+                jp.repaint();
+                jsp.setViewportView(jp);
             }
         }).start();
     }
