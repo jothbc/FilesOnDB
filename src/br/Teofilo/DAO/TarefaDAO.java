@@ -24,6 +24,7 @@ import java.util.logging.Logger;
  * @author User
  */
 public class TarefaDAO {
+
     Connection con = null;
     PreparedStatement stmt;
     ResultSet rs;
@@ -32,21 +33,21 @@ public class TarefaDAO {
     public TarefaDAO() {
         con = ConnectionFactoryMySQL.getConnection();
     }
-    
-    public boolean addTarefa(Tarefa t){
+
+    public boolean addTarefa(Tarefa t) {
         sql = "INSERT INTO tarefas (inicio,fim,anotacao,vinculado,nome_cliente,processo,marcador,concluido,titulo) VALUES (?,?,?,?,?,?,?,?,?)";
         try {
-            stmt= con.prepareStatement(sql);
+            stmt = con.prepareStatement(sql);
             stmt.setString(1, CDate.DataPTBRtoDataMySQL(t.getInicio()));
             stmt.setString(2, CDate.DataPTBRtoDataMySQL(t.getFim()));
             stmt.setString(3, t.getAnotacoes());
             stmt.setBoolean(4, t.isVinculado());
             stmt.setString(5, null);
             stmt.setString(6, null);
-            if(t.isVinculado()){
-                if (t.getClienteNome()!=null){
+            if (t.isVinculado()) {
+                if (t.getClienteNome() != null) {
                     stmt.setString(5, t.getClienteNome());
-                }else{
+                } else {
                     stmt.setString(6, t.getProcesso());
                 }
             }
@@ -59,19 +60,18 @@ public class TarefaDAO {
             Logger.getLogger(TarefaDAO.class.getName()).log(Level.SEVERE, null, ex);
             GerarLogErro.gerar(ex.getMessage());
             return false;
-        }
-        finally{
+        } finally {
             ConnectionFactoryMySQL.closeConnection(con, stmt);
         }
     }
-    
-    public List<Tarefa> findAllNoConcluidas(){
+
+    public List<Tarefa> findAllNoConcluidas() {
         List<Tarefa> tarefas = new ArrayList<>();
-        sql = "SELECT * FROM tarefas WHERE concluido = false"; //ver se é = ou is
+        sql = "SELECT * FROM tarefas WHERE concluido = false ORDER BY inicio"; //ver se é = ou is
         try {
-            stmt=con.prepareStatement(sql);
-            rs=stmt.executeQuery();
-            while (rs.next()){
+            stmt = con.prepareStatement(sql);
+            rs = stmt.executeQuery();
+            while (rs.next()) {
                 Tarefa t = new Tarefa();
                 t.setId(rs.getInt("id"));
                 t.setInicio(CDate.DataMySQLtoDataStringPT(rs.getString("inicio")));
@@ -87,9 +87,73 @@ public class TarefaDAO {
         } catch (SQLException ex) {
             Logger.getLogger(TarefaDAO.class.getName()).log(Level.SEVERE, null, ex);
             GerarLogErro.gerar(ex.getMessage());
-        }finally{
+        } finally {
             ConnectionFactoryMySQL.closeConnection(con, stmt, rs);
         }
         return tarefas;
     }
+
+    public Tarefa getTarefa(int id) {
+        sql = "SELECT * FROM tarefas WHERE id = ?";
+        try {
+            stmt = con.prepareStatement(sql);
+            stmt.setInt(1, id);
+            rs = stmt.executeQuery();
+            rs.first();
+            if (!rs.isFirst()) {
+                return null;
+            }
+            Tarefa t = new Tarefa();
+            t.setId(rs.getInt("id"));
+            t.setInicio(CDate.DataMySQLtoDataStringPT(rs.getString("inicio")));
+            t.setFim(CDate.DataMySQLtoDataStringPT(rs.getString("fim")));
+            t.setAnotacoes(rs.getString("anotacao"));
+            t.setVinculado(rs.getBoolean("vinculado"));
+            t.setClienteNome(rs.getString("nome_cliente"));
+            t.setProcesso(rs.getString("processo"));
+            t.setMarcador(new Color(Integer.parseInt(rs.getString("marcador"))));
+            t.setTitulo(rs.getString("titulo"));
+            return t;
+        } catch (SQLException ex) {
+            Logger.getLogger(TarefaDAO.class.getName()).log(Level.SEVERE, null, ex);
+            GerarLogErro.gerar(ex.getMessage());
+            return null;
+        }
+        finally{
+            ConnectionFactoryMySQL.closeConnection(con, stmt, rs);
+        }
+    }
+
+    public boolean atualizarTarefa(Tarefa t) {
+        sql = "UPDATE tarefas SET inicio = ?,fim = ?,anotacao = ?,vinculado = ?,nome_cliente = ?,processo = ? ,marcador = ?,concluido = ?,titulo = ? WHERE id = ?";
+        try {
+            stmt = con.prepareStatement(sql);
+            stmt.setString(1, CDate.DataPTBRtoDataMySQL(t.getInicio()));
+            stmt.setString(2, CDate.DataPTBRtoDataMySQL(t.getFim()));
+            stmt.setString(3, t.getAnotacoes());
+            stmt.setBoolean(4, t.isVinculado());
+            stmt.setString(5, null);
+            stmt.setString(6, null);
+            if (t.isVinculado()) {
+                if (t.getClienteNome() != null) {
+                    stmt.setString(5, t.getClienteNome());
+                } else {
+                    stmt.setString(6, t.getProcesso());
+                }
+            }
+            stmt.setString(7, Integer.toString(t.getMarcador().getRGB()));
+            stmt.setBoolean(8, t.isConcluido());
+            stmt.setString(9, t.getTitulo());
+            stmt.setInt(10, t.getId());
+            stmt.executeUpdate();
+            return true;
+        } catch (SQLException ex) {
+            Logger.getLogger(TarefaDAO.class.getName()).log(Level.SEVERE, null, ex);
+            GerarLogErro.gerar(ex.getMessage());
+            return false;
+        } finally {
+            ConnectionFactoryMySQL.closeConnection(con, stmt);
+        }
+    }
+
 }

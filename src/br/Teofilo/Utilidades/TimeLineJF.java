@@ -241,13 +241,15 @@ public class TimeLineJF extends javax.swing.JFrame {
     // End of variables declaration//GEN-END:variables
 
     private void incluir() {
-        NovaTarefa nv = new NovaTarefa(null, true,NovaTarefa.NOVO,null);
+        NovaTarefa nv = new NovaTarefa(null, true, NovaTarefa.NOVO, null);
         nv.setVisible(true);
         atualizarTarefas();
     }
 
     private void jbuttonsPressionados(ActionEvent evt, JButton b) {
-        System.out.println(b.getName());
+        NovaTarefa nv = new NovaTarefa(null, true, NovaTarefa.EXISTENTE, b.getName());
+        nv.setVisible(true);
+        atualizarTarefas();
     }
 
     private void jbuttonsPassadoPorCima(MouseEvent evt, JButton b) {
@@ -255,19 +257,19 @@ public class TimeLineJF extends javax.swing.JFrame {
     }
 
     private void atualizarTarefas() {
-        tarefas = new TarefaDAO().findAllNoConcluidas();
-        jp.removeAll();
-        if (tarefas.isEmpty()) {
-            return;
-        }
         new Thread(() -> {
+            tarefas = new TarefaDAO().findAllNoConcluidas();
+            jp.removeAll();
+            if (tarefas.isEmpty()) {
+                return;
+            }
             int count = 0;
-            linhas=0;
+            linhas = 0;
             for (Tarefa t : tarefas) {
                 JButton b = new JButton("<html>" + t.getTitulo() + "<br>" + t.getInicio() + "</html>");
-                b.setName(t.getId() + "@ " + t.getInicio() + " - " + t.getFim() + " " + (t.getAnotacoes().length() > 100 ? t.getAnotacoes().substring(0, 100) : t.getAnotacoes()) + "..."); //nome do botao
+                b.setName(t.getId() + "@ Inicio " + t.getInicio() + " Fim " + t.getFim() + " Anotações: " + (t.getAnotacoes().length() > 100 ? t.getAnotacoes().substring(0, 100) : t.getAnotacoes()) + "..."); //nome do botao
                 b.setSize(100, 50); //tamanho do botao
-                b.setLocation(count%MAX_PORLINHA * 100, linhas*50); //seta o local que o botao deve aparecer
+                b.setLocation(count % MAX_PORLINHA * 100, linhas * 50); //seta o local que o botao deve aparecer
                 b.addActionListener((java.awt.event.ActionEvent evt) -> { //expressao lambda para evento no botao
                     jbuttonsPressionados(evt, b); //chama a função criada passando também o proprio botao
                 });
@@ -279,8 +281,8 @@ public class TimeLineJF extends javax.swing.JFrame {
                 });
                 b.setBackground(t.getMarcador());
                 count++;
-                if (count==MAX_PORLINHA){
-                    count=0;
+                if (count == MAX_PORLINHA) {
+                    count = 0;
                     linhas++;
                 }
                 jp.add(b);

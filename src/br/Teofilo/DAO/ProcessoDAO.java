@@ -23,6 +23,7 @@ import java.util.logging.Logger;
  * @author Jonathan
  */
 public class ProcessoDAO {
+
     Connection con;
     String sql;
     PreparedStatement stmt;
@@ -31,11 +32,11 @@ public class ProcessoDAO {
     public ProcessoDAO() {
         con = ConnectionFactoryMySQL.getConnection();
     }
-    
-    public boolean addProcesso(int id_cliente,String processo){
+
+    public boolean addProcesso(int id_cliente, String processo) {
         sql = "INSERT INTO processos (ID_CLIENTE,processo) VALUES (?,?)";
         try {
-            stmt=con.prepareStatement(sql);
+            stmt = con.prepareStatement(sql);
             stmt.setInt(1, id_cliente);
             stmt.setString(2, processo);
             stmt.execute();
@@ -44,15 +45,15 @@ public class ProcessoDAO {
             Logger.getLogger(ProcessoDAO.class.getName()).log(Level.SEVERE, null, ex);
             GerarLogErro.gerar(ex.getMessage());
             return false;
-        }finally{
+        } finally {
             ConnectionFactoryMySQL.closeConnection(con, stmt);
         }
     }
-    
-    public boolean addProcesso(int id_cliente,String processo,String data){
+
+    public boolean addProcesso(int id_cliente, String processo, String data) {
         sql = "INSERT INTO processos (ID_CLIENTE,processo,data) VALUES (?,?,?)";
         try {
-            stmt=con.prepareStatement(sql);
+            stmt = con.prepareStatement(sql);
             stmt.setInt(1, id_cliente);
             stmt.setString(2, processo);
             stmt.setString(3, CDate.DataPTBRtoDataMySQL(data));
@@ -62,11 +63,11 @@ public class ProcessoDAO {
             Logger.getLogger(ProcessoDAO.class.getName()).log(Level.SEVERE, null, ex);
             GerarLogErro.gerar(ex.getMessage());
             return false;
-        }finally{
+        } finally {
             ConnectionFactoryMySQL.closeConnection(con, stmt);
         }
     }
-    
+
     public List<Processo> getProcessos(int idCliente) {
         List<Processo> processos = new ArrayList<>();
         sql = "SELECT * FROM processos WHERE ID_CLIENTE = ?";
@@ -80,7 +81,7 @@ public class ProcessoDAO {
                 p.setId(rs.getInt("id"));
                 p.setN_processo(rs.getString("processo"));
                 p.setStatus(rs.getString("status"));
-                if (rs.getString("data")!=null){
+                if (rs.getString("data") != null) {
                     p.setData(CDate.DataMySQLtoDataStringPT(rs.getString("data")));
                 }
                 processos.add(p);
@@ -94,7 +95,7 @@ public class ProcessoDAO {
         return processos;
     }
 
-    public boolean existe(int idCliente,String processo) {
+    public boolean existe(int idCliente, String processo) {
         sql = "SELECT * FROM processos WHERE ID_CLIENTE = ? and processo = ?";
         try {
             stmt = con.prepareStatement(sql);
@@ -110,8 +111,8 @@ public class ProcessoDAO {
         }
         return false;
     }
-    
-    public boolean editarStatus(String status, int id){
+
+    public boolean editarStatus(String status, int id) {
         sql = "UPDATE processos SET status = ? WHERE id = ?";
         try {
             stmt = con.prepareStatement(sql);
@@ -123,8 +124,36 @@ public class ProcessoDAO {
             Logger.getLogger(ProcessoDAO.class.getName()).log(Level.SEVERE, null, ex);
             GerarLogErro.gerar(ex.getMessage());
             return false;
-        }finally{
+        } finally {
             ConnectionFactoryMySQL.closeConnection(con, stmt);
+        }
+    }
+
+    public Processo getProcesso(String processo) {
+        sql = "SELECT * FROM processos WHERE processo = ?";
+        try {
+            stmt = con.prepareStatement(sql);
+            stmt.setString(1, processo);
+            rs = stmt.executeQuery();
+            rs.first();
+            if (!rs.isFirst()){
+                return null;
+            }
+            Processo p = new Processo();
+            p.setID_CLIENTE(rs.getInt("ID_CLIENTE"));
+            p.setId(rs.getInt("id"));
+            p.setN_processo(rs.getString("processo"));
+            p.setStatus(rs.getString("status"));
+            if (rs.getString("data") != null) {
+                p.setData(CDate.DataMySQLtoDataStringPT(rs.getString("data")));
+            }
+            return p;
+        } catch (SQLException ex) {
+            Logger.getLogger(ClienteDAO.class.getName()).log(Level.SEVERE, null, ex);
+            GerarLogErro.gerar(ex.getMessage());
+            return null;
+        } finally {
+            ConnectionFactoryMySQL.closeConnection(con, stmt, rs);
         }
     }
 }

@@ -5,8 +5,12 @@
  */
 package br.Teofilo.Utilidades;
 
+import br.Teofilo.Bean.Cliente;
+import br.Teofilo.Bean.Processo;
 import br.Teofilo.Bean.Tarefa;
 import br.Teofilo.Cliente.SeletorDeClienteJD;
+import br.Teofilo.DAO.ClienteDAO;
+import br.Teofilo.DAO.ProcessoDAO;
 import br.Teofilo.DAO.TarefaDAO;
 import funcoes.CDate;
 import java.awt.Point;
@@ -17,17 +21,26 @@ import javax.swing.JOptionPane;
  * @author User
  */
 public class NovaTarefa extends javax.swing.JDialog {
+
     public final static int NOVO = 1;
     public final static int EXISTENTE = 2;
     private final Point point = new Point();
+    private boolean existente_carregado_sucesso;
+    private Tarefa temp;
+    private Cliente cliente;
+    private Processo processo;
+
     /**
      * Creates new form NovaTarefa
+     *
      * @param parent
      * @param modal
-     * @param novoExistente constante que defini se é uma nova inserção ou terá que buscar um existente no banco de dados
-     * @param cod é o id da tarefa, só sera usado caso o novoExistente for verdadeiro.
+     * @param novoExistente constante que defini se é uma nova inserção ou terá
+     * que buscar um existente no banco de dados
+     * @param cod é o id da tarefa, só sera usado caso o novoExistente for
+     * verdadeiro.
      */
-    public NovaTarefa(java.awt.Frame parent, boolean modal,int novoExistente,String cod) {
+    public NovaTarefa(java.awt.Frame parent, boolean modal, int novoExistente, String cod) {
         super(parent, modal);
         initComponents();
         nadaRadio.setSelected(true);
@@ -36,9 +49,11 @@ public class NovaTarefa extends javax.swing.JDialog {
         bg.add(processoRadio);
         iniciotxt.setText(CDate.DataPTBRAtual());
         fimtxt.setText(CDate.DataPTBRAtual());
-        if(novoExistente==EXISTENTE){
-            if (cod!=null){
-                
+        existente_carregado_sucesso = false;
+        nadaRadioActionPerformed(null);
+        if (novoExistente == EXISTENTE) {
+            if (cod != null) {
+                carregarExistente(cod);
             }
         }
     }
@@ -73,6 +88,7 @@ public class NovaTarefa extends javax.swing.JDialog {
         jLabel5 = new javax.swing.JLabel();
         concluidoBox = new javax.swing.JCheckBox();
         gravarBtn = new javax.swing.JButton();
+        vinculadotxt = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setUndecorated(true);
@@ -168,12 +184,27 @@ public class NovaTarefa extends javax.swing.JDialog {
 
         processoRadio.setBackground(new java.awt.Color(255, 255, 255));
         processoRadio.setText("Processo");
+        processoRadio.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                processoRadioActionPerformed(evt);
+            }
+        });
 
         clienteRadio.setBackground(new java.awt.Color(255, 255, 255));
         clienteRadio.setText("Cliente");
+        clienteRadio.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                clienteRadioActionPerformed(evt);
+            }
+        });
 
         nadaRadio.setBackground(new java.awt.Color(255, 255, 255));
         nadaRadio.setText("Nada");
+        nadaRadio.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                nadaRadioActionPerformed(evt);
+            }
+        });
 
         jLabel5.setText("Vinculado à");
 
@@ -213,6 +244,9 @@ public class NovaTarefa extends javax.swing.JDialog {
             }
         });
 
+        vinculadotxt.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        vinculadotxt.setText("Vinculado à ");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -234,7 +268,9 @@ public class NovaTarefa extends javax.swing.JDialog {
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel4)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(37, 37, 37)
+                        .addComponent(vinculadotxt, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(18, 18, 18)
                         .addComponent(concluidoBox))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(colorBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -261,7 +297,9 @@ public class NovaTarefa extends javax.swing.JDialog {
                     .addComponent(fimtxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel4)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel4)
+                        .addComponent(vinculadotxt))
                     .addComponent(concluidoBox))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 192, Short.MAX_VALUE)
@@ -307,6 +345,46 @@ public class NovaTarefa extends javax.swing.JDialog {
         gravar();
     }//GEN-LAST:event_gravarBtnActionPerformed
 
+    private void clienteRadioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clienteRadioActionPerformed
+        if (clienteRadio.isSelected()) {
+            processo = null;
+            SeletorDeClienteJD jd = new SeletorDeClienteJD(null, true);
+            jd.setVisible(true);
+            if (jd.getCliente() != null) {
+                cliente = jd.getCliente();
+                vinculadotxt.setVisible(true);
+                vinculadotxt.setText("Vinculado à cliente: " + cliente.getNome());
+            } else {
+                cliente = null;
+                vinculadotxt.setVisible(false);
+                nadaRadio.setSelected(true);
+            }
+        }
+    }//GEN-LAST:event_clienteRadioActionPerformed
+
+    private void processoRadioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_processoRadioActionPerformed
+        if (processoRadio.isSelected()) {
+            cliente = null;
+            SeletorDeProcessoJD jd = new SeletorDeProcessoJD(null, true);
+            jd.setVisible(true);
+            if (jd.getProcesso() != null) {
+                processo = jd.getProcesso();
+                vinculadotxt.setVisible(true);
+                vinculadotxt.setText("Vinculado a processo: " + processo.getN_processo());
+            } else {
+                processo = null;
+                vinculadotxt.setVisible(false);
+                nadaRadio.setSelected(true);
+            }
+        }
+    }//GEN-LAST:event_processoRadioActionPerformed
+
+    private void nadaRadioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nadaRadioActionPerformed
+        vinculadotxt.setText("Sem vínculo.");
+        cliente = null;
+        processo = null;
+    }//GEN-LAST:event_nadaRadioActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -337,7 +415,7 @@ public class NovaTarefa extends javax.swing.JDialog {
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                NovaTarefa dialog = new NovaTarefa(new javax.swing.JFrame(), true,NOVO,null);
+                NovaTarefa dialog = new NovaTarefa(new javax.swing.JFrame(), true, NOVO, null);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {
@@ -371,17 +449,71 @@ public class NovaTarefa extends javax.swing.JDialog {
     private javax.swing.JRadioButton nadaRadio;
     private javax.swing.JRadioButton processoRadio;
     private javax.swing.JTextField titulotxt;
+    private javax.swing.JLabel vinculadotxt;
     // End of variables declaration//GEN-END:variables
 
     private void escolherCor() {
         ColorJD jd = new ColorJD(null, true);
         jd.setVisible(true);
-        if (jd.getColor()!=null){
+        if (jd.getColor() != null) {
             colorBtn.setBackground(jd.getColor());
         }
     }
 
     private void gravar() {
+        if (!existente_carregado_sucesso) {
+            gravar_novo();
+        } else {
+            gravar_existente();
+        }
+    }
+
+    private void carregarExistente(String cod) {
+        int code = extrairCode(cod);
+        Tarefa t = new TarefaDAO().getTarefa(code);
+        if (t != null) {
+            temp = t;
+            vinculadotxt.setVisible(true);
+            titulotxt.setText(t.getTitulo());
+            colorBtn.setBackground(t.getMarcador());
+            if (t.isVinculado()) {
+                if (t.getClienteNome() != null) {
+                    cliente = new ClienteDAO().getCliente(t.getClienteNome());
+                    if (cliente == null) {
+                        JOptionPane.showMessageDialog(null, "Foi perdido o vinculo com o cliente.\nO cliente pode estar com nome diferente no banco de dados.\nPor favor Localize-o novamente.");
+                        clienteRadioActionPerformed(null);
+                    } else {
+                        vinculadotxt.setText("Vinculado à cliente: " + t.getClienteNome());
+                        clienteRadio.setSelected(true);
+                    }
+                } else {
+                    processo = new ProcessoDAO().getProcesso(t.getProcesso());
+                    if (processo == null) {
+                        JOptionPane.showMessageDialog(null, "Foi perdido o vinculo com o processo.\nO processo pode estar com id diferente no banco de dados.\nPor favor Localize-o novamente.");
+                        processoRadioActionPerformed(null);
+                    } else {
+                        vinculadotxt.setText("Vinculado a processo: " + t.getProcesso());
+                        processoRadio.setSelected(true);
+                    }
+                }
+            } else {
+                vinculadotxt.setText("Sem vínculo.");
+                nadaRadio.setSelected(true);
+            }
+            iniciotxt.setText(t.getInicio());
+            fimtxt.setText(t.getFim());
+            concluidoBox.setSelected(t.isConcluido());
+            anotacaotxt.setText(t.getAnotacoes());
+            existente_carregado_sucesso = true;
+        }
+    }
+
+    private int extrairCode(String cod) {
+        int index = cod.indexOf('@');
+        return Integer.parseInt(cod.substring(0, index));
+    }
+
+    private void gravar_novo() {
         Tarefa t = new Tarefa();
         t.setTitulo(titulotxt.getText());
         t.setMarcador(colorBtn.getBackground());
@@ -390,31 +522,46 @@ public class NovaTarefa extends javax.swing.JDialog {
         t.setAnotacoes(anotacaotxt.getText());
         t.setVinculado(clienteRadio.isSelected() || processoRadio.isSelected());
         t.setConcluido(concluidoBox.isSelected());
-        if (t.isVinculado()){
-            if (clienteRadio.isSelected()){
-                SeletorDeClienteJD jd = new SeletorDeClienteJD(null, true);
-                jd.setVisible(true);
-                if (jd.getCliente()!=null){
-                    t.setClienteNome(jd.getCliente().getNome());
-                }else{
-                    JOptionPane.showMessageDialog(null, "É preciso selecionar o cliente vinculado.");
-                    return;
-                }
-            }else{
-                SeletorDeProcessoJD jd = new SeletorDeProcessoJD(null, true);
-                jd.setVisible(true);
-                if (jd.getProcesso()!=null){
-                    t.setProcesso(jd.getProcesso().getN_processo());
-                }else{
-                    JOptionPane.showMessageDialog(null, "É preciso selecionar o processo vinculado.");
-                    return;
-                }
+        if (t.isVinculado()) {
+            if (clienteRadio.isSelected()) {
+                t.setClienteNome(cliente.getNome());
+            } else {
+                t.setProcesso(processo.getN_processo());
             }
         }
-        if (new TarefaDAO().addTarefa(t)){
+        if (new TarefaDAO().addTarefa(t)) {
             this.dispose();
-        }else{
-            JOptionPane.showMessageDialog(null, "Erro ao tentar salvar a tarefa no Bando de Dados.","Erro",JOptionPane.ERROR_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(null, "Erro ao tentar salvar a tarefa no Banco de Dados.", "Erro", JOptionPane.ERROR_MESSAGE);
         }
     }
+
+    private void gravar_existente() {
+        Tarefa t = temp;
+        t.setTitulo(titulotxt.getText());
+        t.setMarcador(colorBtn.getBackground());
+        t.setInicio(iniciotxt.getText());
+        t.setFim(fimtxt.getText());
+        t.setAnotacoes(anotacaotxt.getText());
+        t.setVinculado(clienteRadio.isSelected() || processoRadio.isSelected());
+        t.setConcluido(concluidoBox.isSelected());
+        if (t.isVinculado()) {
+            if (clienteRadio.isSelected()) {
+                t.setClienteNome(cliente.getNome());
+                t.setProcesso(null);
+            } else {
+                t.setProcesso(processo.getN_processo());
+                t.setClienteNome(null);
+            }
+        }else{
+            t.setProcesso(null);
+            t.setClienteNome(null);
+        }
+        if (new TarefaDAO().atualizarTarefa(t)) {
+            this.dispose();
+        } else {
+            JOptionPane.showMessageDialog(null, "Erro ao tentar atualizar a tarefa no Banco de Dados.", "Erro", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
 }

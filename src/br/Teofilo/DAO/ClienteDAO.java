@@ -219,4 +219,44 @@ public class ClienteDAO {
         }
     }
 
+    public Cliente getCliente(String clienteNome) {
+        sql = "SELECT * FROM clientes WHERE nome = ?";
+        try {
+            stmt = con.prepareStatement(sql);
+            stmt.setString(1, clienteNome);
+            rs = stmt.executeQuery();
+            rs.first();
+            if (!rs.first()){
+                return null;
+            }
+            Cliente c = new Cliente();
+            c.setId(rs.getInt("id"));
+            c.setNome(rs.getString("nome"));
+            c.setEmail(rs.getString("email"));
+            c.setTelefone(rs.getString("telefone"));
+            c.setTelefone2(rs.getString("telefone2"));
+            c.setCpf(rs.getString("cpf"));
+            c.setRg(rs.getString("rg"));
+            c.setSexo(rs.getString("sexo"));
+            if (rs.getString("nascimento") != null) {
+                c.setNascimento(CDate.DataMySQLtoDataStringPT(rs.getString("nascimento")));
+            }
+            if (rs.getString("data_cadastro") != null) {
+                c.setData_cadastro(CDate.DataMySQLtoDataStringPT(rs.getString("data_cadastro")));
+            }
+            c.setEndereco(rs.getString("endereco"));
+            c.setN_casa(rs.getString("n_casa"));
+            c.setComplemento(rs.getString("complemento"));
+            c.setValor(rs.getDouble("valor"));
+            c.setAtivo(rs.getBoolean("ativo"));
+            return c;
+        } catch (SQLException ex) {
+            Logger.getLogger(ClienteDAO.class.getName()).log(Level.SEVERE, null, ex);
+            GerarLogErro.gerar(ex.getMessage());
+            return null;
+        } finally {
+            ConnectionFactoryMySQL.closeConnection(con, stmt, rs);
+        }
+    }
+
 }
