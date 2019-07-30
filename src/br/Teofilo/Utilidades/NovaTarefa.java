@@ -17,13 +17,17 @@ import javax.swing.JOptionPane;
  * @author User
  */
 public class NovaTarefa extends javax.swing.JDialog {
+    public final static int NOVO = 1;
+    public final static int EXISTENTE = 2;
     private final Point point = new Point();
     /**
      * Creates new form NovaTarefa
      * @param parent
      * @param modal
+     * @param novoExistente constante que defini se é uma nova inserção ou terá que buscar um existente no banco de dados
+     * @param cod é o id da tarefa, só sera usado caso o novoExistente for verdadeiro.
      */
-    public NovaTarefa(java.awt.Frame parent, boolean modal) {
+    public NovaTarefa(java.awt.Frame parent, boolean modal,int novoExistente,String cod) {
         super(parent, modal);
         initComponents();
         nadaRadio.setSelected(true);
@@ -32,6 +36,11 @@ public class NovaTarefa extends javax.swing.JDialog {
         bg.add(processoRadio);
         iniciotxt.setText(CDate.DataPTBRAtual());
         fimtxt.setText(CDate.DataPTBRAtual());
+        if(novoExistente==EXISTENTE){
+            if (cod!=null){
+                
+            }
+        }
     }
 
     /**
@@ -48,6 +57,7 @@ public class NovaTarefa extends javax.swing.JDialog {
         jPanel3 = new javax.swing.JPanel();
         jButton3 = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
+        titulotxt = new javax.swing.JTextField();
         colorBtn = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
@@ -95,6 +105,8 @@ public class NovaTarefa extends javax.swing.JDialog {
         jLabel3.setForeground(new java.awt.Color(255, 255, 255));
         jLabel3.setText("Tarefa");
 
+        titulotxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -102,15 +114,22 @@ public class NovaTarefa extends javax.swing.JDialog {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
                 .addGap(20, 20, 20)
                 .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(titulotxt, javax.swing.GroupLayout.PREFERRED_SIZE, 283, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jButton3))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addComponent(jButton3)
-                .addGap(0, 18, Short.MAX_VALUE))
+                .addGap(0, 0, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(titulotxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3))
+                .addContainerGap())
         );
 
         colorBtn.setText("Marcador");
@@ -318,7 +337,7 @@ public class NovaTarefa extends javax.swing.JDialog {
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                NovaTarefa dialog = new NovaTarefa(new javax.swing.JFrame(), true);
+                NovaTarefa dialog = new NovaTarefa(new javax.swing.JFrame(), true,NOVO,null);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {
@@ -351,6 +370,7 @@ public class NovaTarefa extends javax.swing.JDialog {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JRadioButton nadaRadio;
     private javax.swing.JRadioButton processoRadio;
+    private javax.swing.JTextField titulotxt;
     // End of variables declaration//GEN-END:variables
 
     private void escolherCor() {
@@ -363,6 +383,7 @@ public class NovaTarefa extends javax.swing.JDialog {
 
     private void gravar() {
         Tarefa t = new Tarefa();
+        t.setTitulo(titulotxt.getText());
         t.setMarcador(colorBtn.getBackground());
         t.setInicio(iniciotxt.getText());
         t.setFim(fimtxt.getText());

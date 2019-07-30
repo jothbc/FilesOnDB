@@ -7,13 +7,11 @@ package br.Teofilo.Utilidades;
 
 import br.Teofilo.Bean.Tarefa;
 import br.Teofilo.DAO.TarefaDAO;
-import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
-import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JButton;
 
@@ -23,18 +21,20 @@ import javax.swing.JButton;
  */
 public class TimeLineJF extends javax.swing.JFrame {
 
+    private final static int MAX_PORLINHA = 8;
     private final Point point = new Point();
     List<Tarefa> tarefas;
+    private int linhas = 0;
 
     /**
      * Creates new form TimeLineJF
      */
     public TimeLineJF() {
         initComponents();
-        Toolkit toolkit = Toolkit.getDefaultToolkit();
-        Dimension scrnsize = toolkit.getScreenSize();
-        this.setSize((int) scrnsize.getWidth(), this.getHeight());
-        this.setLocation(0, (int) (scrnsize.getHeight() - this.getHeight()) - 40); //esse 40 vai depender do tamanho da barra
+//        Toolkit toolkit = Toolkit.getDefaultToolkit();
+//        Dimension scrnsize = toolkit.getScreenSize();
+//        this.setSize((int) scrnsize.getWidth(), this.getHeight());
+//        this.setLocation(0, (int) (scrnsize.getHeight() - this.getHeight()) - 40); //esse 40 vai depender do tamanho da barra
         atualizarTarefas();
     }
 
@@ -109,7 +109,7 @@ public class TimeLineJF extends javax.swing.JFrame {
                 .addComponent(jButton4)
                 .addGap(59, 59, 59)
                 .addComponent(jLabel3)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 663, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 631, Short.MAX_VALUE)
                 .addComponent(jButton3))
         );
         jPanel3Layout.setVerticalGroup(
@@ -123,7 +123,6 @@ public class TimeLineJF extends javax.swing.JFrame {
         );
 
         jsp.setBackground(new java.awt.Color(255, 255, 255));
-        jsp.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
 
         javax.swing.GroupLayout jpLayout = new javax.swing.GroupLayout(jp);
         jp.setLayout(jpLayout);
@@ -133,7 +132,7 @@ public class TimeLineJF extends javax.swing.JFrame {
         );
         jpLayout.setVerticalGroup(
             jpLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 115, Short.MAX_VALUE)
+            .addGap(0, 373, Short.MAX_VALUE)
         );
 
         jsp.setViewportView(jp);
@@ -146,7 +145,7 @@ public class TimeLineJF extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(desc)
-            .addComponent(jsp)
+            .addComponent(jsp, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -155,7 +154,7 @@ public class TimeLineJF extends javax.swing.JFrame {
                 .addGap(0, 0, 0)
                 .addComponent(desc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jsp, javax.swing.GroupLayout.DEFAULT_SIZE, 134, Short.MAX_VALUE))
+                .addComponent(jsp))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -166,7 +165,7 @@ public class TimeLineJF extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
@@ -242,31 +241,9 @@ public class TimeLineJF extends javax.swing.JFrame {
     // End of variables declaration//GEN-END:variables
 
     private void incluir() {
-        NovaTarefa nv = new NovaTarefa(null, true);
+        NovaTarefa nv = new NovaTarefa(null, true,NovaTarefa.NOVO,null);
         nv.setVisible(true);
         atualizarTarefas();
-
-//        new Thread(() -> {
-//            JButton b = new JButton(Integer.toString(count));
-//            b.setName(Integer.toString(count)); //nome do botao
-//            b.setSize(50, 50); //tamanho do botao
-//            b.setLocation(jp.getComponentCount() * 50, 0); //seta o local que o botao deve aparecer
-//            b.addActionListener((java.awt.event.ActionEvent evt) -> { //expressao lambda para evento no botao
-//                jbuttonsPressionados(evt, b); //chama a função criada passando também o proprio botao
-//            });
-//            b.addMouseListener(new java.awt.event.MouseAdapter() {
-//                @Override
-//                public void mouseEntered(java.awt.event.MouseEvent evt) {
-//                    jbuttonsPassadoPorCima(evt, b);
-//                }
-//            });
-//            count++;
-//
-//            //adiciona ao jpanel
-//            jp.add(b);
-//            jp.setSize(jp.getWidth() + 100, jp.getHeight());
-//            jp.repaint();
-//        }).start();
     }
 
     private void jbuttonsPressionados(ActionEvent evt, JButton b) {
@@ -285,16 +262,12 @@ public class TimeLineJF extends javax.swing.JFrame {
         }
         new Thread(() -> {
             int count = 0;
+            linhas=0;
             for (Tarefa t : tarefas) {
-                count++;
-                JButton b = new JButton(t.getInicio());
+                JButton b = new JButton("<html>" + t.getTitulo() + "<br>" + t.getInicio() + "</html>");
                 b.setName(t.getId() + "@ " + t.getInicio() + " - " + t.getFim() + " " + (t.getAnotacoes().length() > 100 ? t.getAnotacoes().substring(0, 100) : t.getAnotacoes()) + "..."); //nome do botao
                 b.setSize(100, 50); //tamanho do botao
-                if (count > 13) {
-                    b.setLocation((jp.getComponentCount()-13) * 100, 50); //seta o local que o botao deve aparecer
-                } else {
-                    b.setLocation((jp.getComponentCount()) * 100, 0); //seta o local que o botao deve aparecer
-                }
+                b.setLocation(count%MAX_PORLINHA * 100, linhas*50); //seta o local que o botao deve aparecer
                 b.addActionListener((java.awt.event.ActionEvent evt) -> { //expressao lambda para evento no botao
                     jbuttonsPressionados(evt, b); //chama a função criada passando também o proprio botao
                 });
@@ -305,8 +278,12 @@ public class TimeLineJF extends javax.swing.JFrame {
                     }
                 });
                 b.setBackground(t.getMarcador());
+                count++;
+                if (count==MAX_PORLINHA){
+                    count=0;
+                    linhas++;
+                }
                 jp.add(b);
-                jp.repaint();
                 jsp.setViewportView(jp);
             }
         }).start();

@@ -13,6 +13,7 @@ import java.awt.Color;
  */
 public class Tarefa {
     private int id;
+    private String titulo;
     private String inicio;
     private String fim;
     private boolean concluido;
@@ -146,5 +147,19 @@ public class Tarefa {
      */
     public void setMarcador(Color marcador) {
         this.marcador = marcador;
+    }
+
+    /**
+     * @return the titulo
+     */
+    public String getTitulo() {
+        return titulo;
+    }
+
+    /**
+     * @param titulo the titulo to set
+     */
+    public void setTitulo(String titulo) {
+        this.titulo = titulo;
     }
 }

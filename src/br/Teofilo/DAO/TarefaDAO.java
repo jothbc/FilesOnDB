@@ -34,7 +34,7 @@ public class TarefaDAO {
     }
     
     public boolean addTarefa(Tarefa t){
-        sql = "INSERT INTO tarefas (inicio,fim,anotacao,vinculado,nome_cliente,processo,marcador,concluido) VALUES (?,?,?,?,?,?,?,?)";
+        sql = "INSERT INTO tarefas (inicio,fim,anotacao,vinculado,nome_cliente,processo,marcador,concluido,titulo) VALUES (?,?,?,?,?,?,?,?,?)";
         try {
             stmt= con.prepareStatement(sql);
             stmt.setString(1, CDate.DataPTBRtoDataMySQL(t.getInicio()));
@@ -52,6 +52,7 @@ public class TarefaDAO {
             }
             stmt.setString(7, Integer.toString(t.getMarcador().getRGB()));
             stmt.setBoolean(8, t.isConcluido());
+            stmt.setString(9, t.getTitulo());
             stmt.execute();
             return true;
         } catch (SQLException ex) {
@@ -80,6 +81,7 @@ public class TarefaDAO {
                 t.setClienteNome(rs.getString("nome_cliente"));
                 t.setProcesso(rs.getString("processo"));
                 t.setMarcador(new Color(Integer.parseInt(rs.getString("marcador"))));
+                t.setTitulo(rs.getString("titulo"));
                 tarefas.add(t);
             }
         } catch (SQLException ex) {
