@@ -13,6 +13,7 @@ import br.Teofilo.Bean.TipoDoc;
 import br.Teofilo.DAO.ComentarioDAO;
 import br.Teofilo.DAO.DocumentoDAO;
 import br.Teofilo.DAO.UserDAO;
+import funcoes.Conv;
 import java.awt.Desktop;
 import java.awt.Point;
 import java.io.File;
@@ -35,6 +36,7 @@ public class UploadJD extends javax.swing.JDialog {
     DocumentoPessoal documentoPessoal;
     Processo processo;
     TipoDoc tipoDoc;
+    double tam = 0;
 
     /**
      * Creates new form UploadJD
@@ -74,6 +76,7 @@ public class UploadJD extends javax.swing.JDialog {
         jButton1 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
         jProgressBar1 = new javax.swing.JProgressBar();
+        tamtxt = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setUndecorated(true);
@@ -175,6 +178,8 @@ public class UploadJD extends javax.swing.JDialog {
             }
         });
 
+        tamtxt.setText("Tamanho Total");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -186,7 +191,9 @@ public class UploadJD extends javax.swing.JDialog {
                     .addComponent(jScrollPane1)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addComponent(obs, javax.swing.GroupLayout.PREFERRED_SIZE, 447, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 258, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(tamtxt, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 74, Short.MAX_VALUE)
                         .addComponent(jButton1))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jCheckBox1)
@@ -224,7 +231,8 @@ public class UploadJD extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(obs)
-                    .addComponent(jButton1))
+                    .addComponent(jButton1)
+                    .addComponent(tamtxt))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jProgressBar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -335,6 +343,7 @@ public class UploadJD extends javax.swing.JDialog {
     private javax.swing.JProgressBar jProgressBar1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel obs;
+    private javax.swing.JLabel tamtxt;
     // End of variables declaration//GEN-END:variables
 
     private void init() {
@@ -370,6 +379,7 @@ public class UploadJD extends javax.swing.JDialog {
                     File f_temp = new File(diretorio + "\\" + f);
                     if (f_temp.isFile()) {
                         arquivos.addElement(f_temp);
+                        tam+=f_temp.length();
                     }
                 }
             } else {                                //senao é arquivo
@@ -377,9 +387,11 @@ public class UploadJD extends javax.swing.JDialog {
                 File f_temp = fl.getSelectedFile();
                 if (f_temp.isFile()) {
                     arquivos.addElement(f_temp);
+                    tam+=f_temp.length();
                 }
             }
         }
+        setTamtxt();
     }
 
     private void upload() {
@@ -418,6 +430,8 @@ public class UploadJD extends javax.swing.JDialog {
                         count++;
                     }
                 }
+                tam-=f.length();
+                setTamtxt();
             }
             jProgressBar1.setVisible(false);
         }).start();
@@ -427,7 +441,10 @@ public class UploadJD extends javax.swing.JDialog {
         if (jList1.getSelectedIndex() < 0) {
             return;
         }
+        File f = (File) arquivos.getElementAt(jList1.getSelectedIndex());
+        tam -=f.length();
         arquivos.remove(jList1.getSelectedIndex());
+        setTamtxt();
     }
 
     private void visualizar() {
@@ -439,5 +456,9 @@ public class UploadJD extends javax.swing.JDialog {
         } catch (IOException ex) {
             Logger.getLogger(UploadJD.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    private void setTamtxt() {
+        tamtxt.setText("Tamanho total "+Conv.CDblDuasCasas(((tam/1024)/1024)) +"MB");
     }
 }

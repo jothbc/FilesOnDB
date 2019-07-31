@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: 29-Jul-2019 às 21:53
+-- Generation Time: 31-Jul-2019 às 21:53
 -- Versão do servidor: 10.1.36-MariaDB
 -- versão do PHP: 7.2.11
 
@@ -143,7 +143,6 @@ CREATE TABLE `controle_comentarios` (
 
 CREATE TABLE `documentos` (
   `id` int(11) NOT NULL,
-  `documento` longblob,
   `nome` varchar(200) DEFAULT NULL,
   `ID_CLIENTE` int(4) DEFAULT NULL,
   `modificacao` date DEFAULT NULL,
@@ -155,15 +154,36 @@ CREATE TABLE `documentos` (
 -- --------------------------------------------------------
 
 --
+-- Estrutura da tabela `documentos_arq`
+--
+
+CREATE TABLE `documentos_arq` (
+  `id` int(11) NOT NULL,
+  `arq` longblob
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
 -- Estrutura da tabela `documentos_pessoais`
 --
 
 CREATE TABLE `documentos_pessoais` (
   `id` int(11) NOT NULL,
-  `documento` longblob,
   `nome` varchar(200) DEFAULT NULL,
   `ID_CLIENTE` int(4) DEFAULT NULL,
   `alteracao` date DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura da tabela `documentos_pessoais_arq`
+--
+
+CREATE TABLE `documentos_pessoais_arq` (
+  `id` int(11) NOT NULL,
+  `arq` longblob
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -195,7 +215,8 @@ CREATE TABLE `tarefas` (
   `vinculado` tinyint(1) DEFAULT NULL,
   `nome_cliente` varchar(50) DEFAULT NULL,
   `processo` varchar(100) DEFAULT NULL,
-  `marcador` varchar(45) DEFAULT NULL
+  `marcador` varchar(45) DEFAULT NULL,
+  `titulo` varchar(100) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -283,11 +304,23 @@ ALTER TABLE `documentos`
   ADD KEY `fk_clienteDocumento` (`ID_CLIENTE`);
 
 --
+-- Indexes for table `documentos_arq`
+--
+ALTER TABLE `documentos_arq`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `documentos_pessoais`
 --
 ALTER TABLE `documentos_pessoais`
   ADD PRIMARY KEY (`id`),
   ADD KEY `fk_clienteDocumentoPessoal` (`ID_CLIENTE`);
+
+--
+-- Indexes for table `documentos_pessoais_arq`
+--
+ALTER TABLE `documentos_pessoais_arq`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `processos`

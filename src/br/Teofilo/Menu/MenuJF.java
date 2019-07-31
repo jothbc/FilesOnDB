@@ -5,6 +5,7 @@
  */
 package br.Teofilo.Menu;
 
+import br.Teofilo.Bean.GerarLogErro;
 import br.Teofilo.Bean.User;
 import br.Teofilo.Cliente.ClienteJF;
 import br.Teofilo.Conta.ContasClienteJF;
@@ -15,9 +16,12 @@ import br.Teofilo.Utilidades.CadastrarUsuarioJD;
 import br.Teofilo.Utilidades.ComentarioJF;
 import br.Teofilo.Utilidades.TimeLineJF;
 import java.awt.Desktop;
+import java.awt.Image;
+import java.awt.Toolkit;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
@@ -42,6 +46,13 @@ public class MenuJF extends javax.swing.JFrame {
     public MenuJF() {
         initComponents();
         init();
+        try {
+            URL url = this.getClass().getResource("/br/Teofilo/IMG/icon.png");
+            Image imagemTitulo = Toolkit.getDefaultToolkit().getImage(url);
+            this.setIconImage(imagemTitulo);
+        }catch(Exception e){
+            GerarLogErro.gerar("Icone não pode ser carregado devido a um erro.\n"+e.getMessage());
+        }
     }
 
     /**
@@ -84,9 +95,10 @@ public class MenuJF extends javax.swing.JFrame {
             }
         });
 
-        jButton1.setBackground(new java.awt.Color(255, 255, 255));
+        jButton1.setBackground(new java.awt.Color(0, 0, 0));
         jButton1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/Teofilo/IMG/1x/ic_account_circle_24px.png"))); // NOI18N
+        jButton1.setForeground(new java.awt.Color(255, 255, 255));
+        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/Teofilo/IMG/1x/ic_person_outline_18px_white.png"))); // NOI18N
         jButton1.setText("Clientes");
         jButton1.setBorder(null);
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -95,9 +107,10 @@ public class MenuJF extends javax.swing.JFrame {
             }
         });
 
-        jButton2.setBackground(new java.awt.Color(255, 255, 255));
+        jButton2.setBackground(new java.awt.Color(0, 0, 0));
         jButton2.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/Teofilo/IMG/1x/archive-2.png"))); // NOI18N
+        jButton2.setForeground(new java.awt.Color(255, 255, 255));
+        jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/Teofilo/IMG/1x/ic_style_24px_white.png"))); // NOI18N
         jButton2.setText("Documentos");
         jButton2.setBorder(null);
         jButton2.addActionListener(new java.awt.event.ActionListener() {
@@ -106,9 +119,10 @@ public class MenuJF extends javax.swing.JFrame {
             }
         });
 
-        jButton3.setBackground(new java.awt.Color(255, 255, 255));
+        jButton3.setBackground(new java.awt.Color(0, 0, 0));
         jButton3.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jButton3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/Teofilo/IMG/1x/ic_insert_invitation_24px.png"))); // NOI18N
+        jButton3.setForeground(new java.awt.Color(255, 255, 255));
+        jButton3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/Teofilo/IMG/1x/ic_local_atm_24px_white.png"))); // NOI18N
         jButton3.setText("Contas");
         jButton3.setBorder(null);
         jButton3.addActionListener(new java.awt.event.ActionListener() {
@@ -149,9 +163,9 @@ public class MenuJF extends javax.swing.JFrame {
         back.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         back.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/Teofilo/IMG/suit.jpg"))); // NOI18N
 
-        jButton4.setBackground(new java.awt.Color(255, 255, 255));
+        jButton4.setBackground(new java.awt.Color(0, 0, 0));
         jButton4.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jButton4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/Teofilo/IMG/1x/ic_chat_bubble_outline_24px.png"))); // NOI18N
+        jButton4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/Teofilo/IMG/1x/chat-46_white.png"))); // NOI18N
         jButton4.setBorder(null);
         jButton4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -315,7 +329,7 @@ public class MenuJF extends javax.swing.JFrame {
         if (contasClientesJF != null) {
             contasClientesJF.dispose();
         }
-        if (timeLineJF!=null){
+        if (timeLineJF != null) {
             timeLineJF.dispose();
         }
     }

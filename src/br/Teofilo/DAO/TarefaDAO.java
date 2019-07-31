@@ -67,7 +67,7 @@ public class TarefaDAO {
 
     public List<Tarefa> findAllNoConcluidas() {
         List<Tarefa> tarefas = new ArrayList<>();
-        sql = "SELECT * FROM tarefas WHERE concluido = false ORDER BY inicio"; //ver se é = ou is
+        sql = "SELECT * FROM tarefas WHERE concluido = false ORDER BY inicio";
         try {
             stmt = con.prepareStatement(sql);
             rs = stmt.executeQuery();
@@ -154,6 +154,35 @@ public class TarefaDAO {
         } finally {
             ConnectionFactoryMySQL.closeConnection(con, stmt);
         }
+    }
+
+    public List<Tarefa> findAllConcluidas() {
+        List<Tarefa> tarefas = new ArrayList<>();
+        sql = "SELECT * FROM tarefas ORDER BY inicio";
+        try {
+            stmt = con.prepareStatement(sql);
+            rs = stmt.executeQuery();
+            while (rs.next()) {
+                Tarefa t = new Tarefa();
+                t.setId(rs.getInt("id"));
+                t.setInicio(CDate.DataMySQLtoDataStringPT(rs.getString("inicio")));
+                t.setFim(CDate.DataMySQLtoDataStringPT(rs.getString("fim")));
+                t.setAnotacoes(rs.getString("anotacao"));
+                t.setVinculado(rs.getBoolean("vinculado"));
+                t.setClienteNome(rs.getString("nome_cliente"));
+                t.setProcesso(rs.getString("processo"));
+                t.setMarcador(new Color(Integer.parseInt(rs.getString("marcador"))));
+                t.setTitulo(rs.getString("titulo"));
+                t.setConcluido(rs.getBoolean("concluido"));
+                tarefas.add(t);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(TarefaDAO.class.getName()).log(Level.SEVERE, null, ex);
+            GerarLogErro.gerar(ex.getMessage());
+        } finally {
+            ConnectionFactoryMySQL.closeConnection(con, stmt, rs);
+        }
+        return tarefas;
     }
 
 }
