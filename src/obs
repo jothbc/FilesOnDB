@@ -4,3 +4,15 @@ presets do banco de dados;
 innodb_log_file_size = 256M
 max_allowed_packet = 128M
 wait_timeout = 3600
+innodb_buffer_pool_size = 3072M
+
+
+
+garantir acesso ao db
+
+use teofilo;
+GRANT ALL PRIVILEGES ON 
+teofilo.* 
+TO 
+'root'@'%' ;
+FLUSH PRIVILEGES;

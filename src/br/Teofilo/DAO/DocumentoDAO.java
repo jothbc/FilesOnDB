@@ -44,17 +44,24 @@ public class DocumentoDAO {
     }
 
     public boolean addDocumento(File f, int idCliente, int tipo, int processo) {
-        sql = "INSERT INTO documentos (documento,nome,ID_CLIENTE,modificacao,ID_TIPO,ID_PROCESSO) values (?,?,?,?,?,?)";
+        sql = "INSERT INTO documentos (nome,ID_CLIENTE,modificacao,ID_TIPO,ID_PROCESSO) values (?,?,?,?,?)";
         try {
             InputStream is = new FileInputStream(f);
             //InputStream is_c = new FileInputStream(RSA.criptografa(f, RSA.));
             stmt = con.prepareStatement(sql);
+            //stmt.setBlob(1, is);
+            stmt.setString(1, f.getName());
+            stmt.setInt(2, idCliente);
+            stmt.setString(3, CDate.DataPTBRtoDataMySQL(CDate.DataPTBRAtual()));
+            stmt.setInt(4, tipo);
+            stmt.setInt(5, processo);
+            stmt.execute();
+            sql = "SELECT LAST_INSERT_ID() INTO @id";
+            stmt = con.prepareStatement(sql);
+            stmt.execute();
+            sql = "INSERT INTO documentos_arq (id,arq) VALUES (@id,?)";
+            stmt = con.prepareStatement(sql);
             stmt.setBlob(1, is);
-            stmt.setString(2, f.getName());
-            stmt.setInt(3, idCliente);
-            stmt.setString(4, CDate.DataPTBRtoDataMySQL(CDate.DataPTBRAtual()));
-            stmt.setInt(5, tipo);
-            stmt.setInt(6, processo);
             stmt.execute();
             return true;
         } catch (SQLException | FileNotFoundException ex) {
@@ -68,14 +75,21 @@ public class DocumentoDAO {
     }
 
     public boolean addDocumentoPessoal(File f, int idCliente) {
-        sql = "INSERT INTO documentos_pessoais (documento,nome,ID_CLIENTE,alteracao) values (?,?,?,?)";
+        sql = "INSERT INTO documentos_pessoais (nome,ID_CLIENTE,alteracao) values (?,?,?)";
         try {
             InputStream is = new FileInputStream(f);
             stmt = con.prepareStatement(sql);
+            //stmt.setBlob(1, is);
+            stmt.setString(1, f.getName());
+            stmt.setInt(2, idCliente);
+            stmt.setString(3, CDate.DataPTBRtoDataMySQL(CDate.DataPTBRAtual()));
+            stmt.execute();
+            sql = "SELECT LAST_INSERT_ID() INTO @id";
+            stmt = con.prepareStatement(sql);
+            stmt.execute();
+            sql = "INSERT INTO documentos_pessoais_arq (id,arq) VALUES (@id,?)";
+            stmt = con.prepareStatement(sql);
             stmt.setBlob(1, is);
-            stmt.setString(2, f.getName());
-            stmt.setInt(3, idCliente);
-            stmt.setString(4, CDate.DataPTBRtoDataMySQL(CDate.DataPTBRAtual()));
             stmt.execute();
             return true;
         } catch (SQLException | FileNotFoundException ex) {
@@ -87,19 +101,25 @@ public class DocumentoDAO {
             ConnectionFactoryMySQL.closeConnection(con, stmt);
         }
     }
-    
+
     //retorna o file em si
     public File getArquivo(int id, String local, String tabela) {
         File f = null;
-        sql = "SELECT id,nome,documento from " + tabela + " where id = ?";
+        sql = "SELECT id,nome from " + tabela + " where id = ?";
         try {
             stmt = con.prepareStatement(sql);
             stmt.setInt(1, id);
             rs = stmt.executeQuery();
             rs.first();
-            f = new File(local + rs.getString("nome"));
+            String nome_temp = local + rs.getString("nome");
+            sql = "SELECT * FROM " + tabela + "_arq WHERE id = ?";
+            stmt = con.prepareStatement(sql);
+            stmt.setInt(1, id);
+            rs = stmt.executeQuery();
+            rs.first();
+            f = new File(nome_temp);
             try (FileOutputStream fos = new FileOutputStream(f)) {
-                fos.write(rs.getBytes("documento"));
+                fos.write(rs.getBytes("arq"));
                 fos.close();
             }
         } catch (SQLException | IOException ex) {
@@ -173,16 +193,47 @@ public class DocumentoDAO {
     }
 
     public boolean updateDocumento(File f, int idArquivo, int tipo, int processo) {
-        sql = "UPDATE documentos SET documento = ?, nome = ?, modificacao = ? WHERE ID_TIPO = ? and ID_PROCESSO = ? and id = ?";
+        sql = "UPDATE documentos SET nome = ?, modificacao = ? WHERE ID_TIPO = ? and ID_PROCESSO = ? and id = ?";
         try {
             InputStream is = new FileInputStream(f);
             stmt = con.prepareStatement(sql);
+            //stmt.setBlob(1, is);
+            stmt.setString(1, f.getName());
+            stmt.setString(2, CDate.DataPTBRtoDataMySQL(CDate.DataPTBRAtual()));
+            stmt.setInt(3, tipo);
+            stmt.setInt(4, processo);
+            stmt.setInt(5, idArquivo);
+            stmt.executeUpdate();
+            sql = "UPDATE documentos_arq SET arq = ? WHERE id = ?";
+            stmt = con.prepareStatement(sql);
             stmt.setBlob(1, is);
-            stmt.setString(2, f.getName());
-            stmt.setString(3, CDate.DataPTBRtoDataMySQL(CDate.DataPTBRAtual()));
-            stmt.setInt(4, tipo);
-            stmt.setInt(5, processo);
-            stmt.setInt(6, idArquivo);
+            stmt.setInt(2, idArquivo);
+            stmt.executeUpdate();
+            return true;
+        } catch (SQLException | FileNotFoundException ex) {
+            Logger.getLogger(DocumentoDAO.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null, ex, "Informe o programador", JOptionPane.ERROR_MESSAGE);
+            GerarLogErro.gerar(ex.getMessage());
+            return false;
+        } finally {
+            ConnectionFactoryMySQL.closeConnection(con, stmt);
+        }
+    }
+
+    public boolean updateDocumentoPessoal(File f, int idArquivo) {
+        sql = "UPDATE documentos_pessoais SET nome = ?, alteracao = ? WHERE id = ?";
+        try {
+            InputStream is = new FileInputStream(f);
+            stmt = con.prepareStatement(sql);
+            //stmt.setBlob(1, is);
+            stmt.setString(1, f.getName());
+            stmt.setString(2, CDate.DataPTBRtoDataMySQL(CDate.DataPTBRAtual()));
+            stmt.setInt(3, idArquivo);
+            stmt.executeUpdate();
+            sql = "UPDATE documentos_pessoais_arq SET arq = ? WHERE id = ?";
+            stmt = con.prepareStatement(sql);
+            stmt.setBlob(1, is);
+            stmt.setInt(2, idArquivo);
             stmt.executeUpdate();
             return true;
         } catch (SQLException | FileNotFoundException ex) {
@@ -195,31 +246,14 @@ public class DocumentoDAO {
         }
     }
     
-    public boolean updateDocumentoPessoal(File f, int idArquivo) {
-        sql = "UPDATE documentos_pessoais SET documento = ?, nome = ?, alteracao = ? WHERE id = ?";
-        try {
-            InputStream is = new FileInputStream(f);
-            stmt = con.prepareStatement(sql);
-            stmt.setBlob(1, is);
-            stmt.setString(2, f.getName());
-            stmt.setString(3, CDate.DataPTBRtoDataMySQL(CDate.DataPTBRAtual()));
-            stmt.setInt(4, idArquivo);
-            stmt.executeUpdate();
-            return true;
-        } catch (SQLException | FileNotFoundException ex) {
-            Logger.getLogger(DocumentoDAO.class.getName()).log(Level.SEVERE, null, ex);
-            JOptionPane.showMessageDialog(null, ex, "Informe o programador", JOptionPane.ERROR_MESSAGE);
-            GerarLogErro.gerar(ex.getMessage());
-            return false;
-        } finally {
-            ConnectionFactoryMySQL.closeConnection(con, stmt);
-        }
-    }
-
     public boolean removeDocumento(Documento d) {
         sql = "DELETE FROM documentos WHERE id = ?";
         try {
-            stmt= con.prepareStatement(sql);
+            stmt = con.prepareStatement(sql);
+            stmt.setInt(1, d.getId());
+            stmt.execute();
+            sql = "DELETE FROM documentos_arq WHERE id = ?";
+            stmt = con.prepareStatement(sql);
             stmt.setInt(1, d.getId());
             stmt.execute();
             return true;
@@ -227,7 +261,7 @@ public class DocumentoDAO {
             Logger.getLogger(DocumentoDAO.class.getName()).log(Level.SEVERE, null, ex);
             GerarLogErro.gerar(ex.getMessage());
             return false;
-        }finally{
+        } finally {
             ConnectionFactoryMySQL.closeConnection(con, stmt);
         }
     }
@@ -235,7 +269,11 @@ public class DocumentoDAO {
     public boolean removeDocumentoPessoal(DocumentoPessoal dp) {
         sql = "DELETE FROM documentos_pessoais WHERE id = ?";
         try {
-            stmt= con.prepareStatement(sql);
+            stmt = con.prepareStatement(sql);
+            stmt.setInt(1, dp.getId());
+            stmt.execute();
+            sql = "DELETE FROM documentos_pessoais_arq WHERE id = ?";
+            stmt = con.prepareStatement(sql);
             stmt.setInt(1, dp.getId());
             stmt.execute();
             return true;
@@ -243,7 +281,7 @@ public class DocumentoDAO {
             Logger.getLogger(DocumentoDAO.class.getName()).log(Level.SEVERE, null, ex);
             GerarLogErro.gerar(ex.getMessage());
             return false;
-        }finally{
+        } finally {
             ConnectionFactoryMySQL.closeConnection(con, stmt);
         }
     }

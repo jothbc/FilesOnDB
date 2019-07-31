@@ -42,3 +42,8 @@
 ## remove caracteres não numéricos
     .replaceAll("[^0-9]", "");
 
+## obter id do auto increment MYSQL
+    sql = "SELECT LAST_INSERT_ID() INTO @id";
+    stmt = con.prepareStatement(sql);
+    stmt.execute();
+    
