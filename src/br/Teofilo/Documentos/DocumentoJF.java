@@ -17,12 +17,10 @@ import br.Teofilo.DAO.DocumentoDAO;
 import br.Teofilo.DAO.ProcessoDAO;
 import br.Teofilo.DAO.TipoDocDAO;
 import br.Teofilo.DAO.UserDAO;
-import com.sun.prism.j2d.J2DPipeline;
 import java.awt.Color;
 import java.awt.Desktop;
 import java.awt.HeadlessException;
 import java.awt.Point;
-import java.awt.Toolkit;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -89,13 +87,14 @@ public class DocumentoJF extends javax.swing.JFrame {
         jButton1 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
-        jButton5 = new javax.swing.JButton();
+        downloadBtn = new javax.swing.JButton();
         jButton6 = new javax.swing.JButton();
         jButton7 = new javax.swing.JButton();
         jButton8 = new javax.swing.JButton();
         jButton9 = new javax.swing.JButton();
         jLabel8 = new javax.swing.JLabel();
         abertoEmtxt = new javax.swing.JTextField();
+        informtxt = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setUndecorated(true);
@@ -155,7 +154,6 @@ public class DocumentoJF extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(jListCliente);
 
-        jListDocumento.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         jListDocumento.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jListDocumentoMouseClicked(evt);
@@ -256,14 +254,14 @@ public class DocumentoJF extends javax.swing.JFrame {
             }
         });
 
-        jButton5.setBackground(new java.awt.Color(255, 255, 255));
-        jButton5.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        jButton5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/Teofilo/IMG/1x/square-download.png"))); // NOI18N
-        jButton5.setText("Download");
-        jButton5.setBorder(null);
-        jButton5.addActionListener(new java.awt.event.ActionListener() {
+        downloadBtn.setBackground(new java.awt.Color(255, 255, 255));
+        downloadBtn.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        downloadBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/Teofilo/IMG/1x/square-download.png"))); // NOI18N
+        downloadBtn.setText("Download");
+        downloadBtn.setBorder(null);
+        downloadBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton5ActionPerformed(evt);
+                downloadBtnActionPerformed(evt);
             }
         });
 
@@ -362,12 +360,13 @@ public class DocumentoJF extends javax.swing.JFrame {
                             .addComponent(jButton7))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton9, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jButton6, javax.swing.GroupLayout.DEFAULT_SIZE, 95, Short.MAX_VALUE)
+                    .addComponent(downloadBtn, javax.swing.GroupLayout.DEFAULT_SIZE, 95, Short.MAX_VALUE)
+                    .addComponent(jButton4, javax.swing.GroupLayout.DEFAULT_SIZE, 95, Short.MAX_VALUE)
+                    .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, 95, Short.MAX_VALUE)
+                    .addComponent(jButton9, javax.swing.GroupLayout.DEFAULT_SIZE, 95, Short.MAX_VALUE)
+                    .addComponent(informtxt, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
             .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
@@ -390,12 +389,13 @@ public class DocumentoJF extends javax.swing.JFrame {
                                 .addGap(18, 18, 18)
                                 .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
-                                .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(downloadBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
                                 .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
                                 .addComponent(jButton9, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 0, Short.MAX_VALUE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(informtxt, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(jScrollPane2))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -494,9 +494,9 @@ public class DocumentoJF extends javax.swing.JFrame {
         upload();
     }//GEN-LAST:event_jButton4ActionPerformed
 
-    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+    private void downloadBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_downloadBtnActionPerformed
         download();
-    }//GEN-LAST:event_jButton5ActionPerformed
+    }//GEN-LAST:event_downloadBtnActionPerformed
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
         editar();
@@ -555,11 +555,12 @@ public class DocumentoJF extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField abertoEmtxt;
+    private javax.swing.JButton downloadBtn;
+    private javax.swing.JLabel informtxt;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
     private javax.swing.JButton jButton7;
     private javax.swing.JButton jButton8;
@@ -633,28 +634,30 @@ public class DocumentoJF extends javax.swing.JFrame {
         }
     }
 
-    private void carregarProcessosDoClienteSelecionado(Cliente c) {
-        new Thread(() -> {
-            jLabelProcessos.setForeground(Color.BLUE);
-            listProcessos.removeAllElements();
-            List<Processo> processos = new ProcessoDAO().getProcessos(c.getId());
-            for (Processo p : processos) {
-                listProcessos.addElement(p);
-            }
-            jLabelProcessos.setForeground(Color.BLACK);
-        }).start();
+    private synchronized void carregarProcessosDoClienteSelecionado(Cliente c) {
+        /*as Threads estavam dando problemas*/
+        //new Thread(() -> {
+        jLabelProcessos.setForeground(Color.BLUE);
+        listProcessos.removeAllElements();
+        List<Processo> processos = new ProcessoDAO().getProcessos(c.getId());
+        processos.forEach((p) -> {
+            listProcessos.addElement(p);
+        });
+        jLabelProcessos.setForeground(Color.BLACK);
+        //}).start();
     }
 
-    private void carregarDadosPessoaisDoClienteSelecionado(Cliente c) {
-        new Thread(() -> {
-            jLabelDocumentos.setForeground(Color.BLUE);
-            listDocumentos.removeAllElements();
-            List<DocumentoPessoal> docuemnto_pessoal = new DocumentoDAO().getDocumentosPessoais(c.getId());
-            for (DocumentoPessoal d : docuemnto_pessoal) {
-                listDocumentos.addElement(d);
-            }
-            jLabelDocumentos.setForeground(Color.BLACK);
-        }).start();
+    private synchronized void carregarDadosPessoaisDoClienteSelecionado(Cliente c) {
+        /*as Threads estavam dando problemas*/
+        //new Thread(() -> {
+        jLabelDocumentos.setForeground(Color.BLUE);
+        listDocumentos.removeAllElements();
+        List<DocumentoPessoal> docuemnto_pessoal = new DocumentoDAO().getDocumentosPessoais(c.getId());
+        docuemnto_pessoal.forEach((d) -> {
+            listDocumentos.addElement(d);
+        });
+        jLabelDocumentos.setForeground(Color.BLACK);
+        //}).start();
     }
 
     private void limparListas() {
@@ -663,37 +666,46 @@ public class DocumentoJF extends javax.swing.JFrame {
         listTipo.removeAllElements();
     }
 
-    private void visualizarArquivo() {
+    private synchronized void visualizarArquivo() {
         if (listDocumentos.isEmpty()) {
+            return;
+        }
+        if (jListDocumento.getSelectedIndices().length > 1) {
+            JOptionPane.showMessageDialog(null, "Selecione apenas um arquivo por vez para visualizar.");
             return;
         }
         if (jListDocumento.getSelectedIndex() < 0) {
             return;
         }
-        Documento d = null;
-        DocumentoPessoal dp = null;
-        if (listDocumentos.getElementAt(jListDocumento.getSelectedIndex()) instanceof Documento) {
-            d = (Documento) listDocumentos.getElementAt(jListDocumento.getSelectedIndex());
-        } else if (listDocumentos.getElementAt(jListDocumento.getSelectedIndex()) instanceof DocumentoPessoal) {
-            dp = (DocumentoPessoal) listDocumentos.getElementAt(jListDocumento.getSelectedIndex());
-        }
-        if (d != null || dp != null) {
-            File f = null;
-            if (d != null) {
-                f = new DocumentoDAO().getArquivo(d.getId(), "C:\\JCR LOG\\", "documentos");
-                f.deleteOnExit();
-            } else if (dp != null) {
-                f = new DocumentoDAO().getArquivo(dp.getId(), "C:\\JCR LOG\\", "documentos_pessoais");
-                f.deleteOnExit();
+        new Thread(() -> {
+            informtxt.setText("Carregando..");
+            informtxt.setForeground(Color.red);
+            Documento d = null;
+            DocumentoPessoal dp = null;
+            if (listDocumentos.getElementAt(jListDocumento.getSelectedIndex()) instanceof Documento) {
+                d = (Documento) listDocumentos.getElementAt(jListDocumento.getSelectedIndex());
+            } else if (listDocumentos.getElementAt(jListDocumento.getSelectedIndex()) instanceof DocumentoPessoal) {
+                dp = (DocumentoPessoal) listDocumentos.getElementAt(jListDocumento.getSelectedIndex());
             }
-            try {
-                Desktop.getDesktop().open(f);
-            } catch (IOException ex) {
-                Logger.getLogger(DocumentoJF.class.getName()).log(Level.SEVERE, null, ex);
-                GerarLogErro.gerar("Tentando visualizar um arquivo." + ex.getMessage());
-                JOptionPane.showMessageDialog(null, "Não há aplicativos associados ao arquivo especificado para esta operação..", "Erro", JOptionPane.ERROR_MESSAGE);
+            if (d != null || dp != null) {
+                File f = null;
+                if (d != null) {
+                    f = new DocumentoDAO().getArquivo(d.getId(), "C:\\JCR LOG\\", "documentos");
+                    f.deleteOnExit();
+                } else if (dp != null) {
+                    f = new DocumentoDAO().getArquivo(dp.getId(), "C:\\JCR LOG\\", "documentos_pessoais");
+                    f.deleteOnExit();
+                }
+                try {
+                    Desktop.getDesktop().open(f);
+                } catch (IOException ex) {
+                    Logger.getLogger(DocumentoJF.class.getName()).log(Level.SEVERE, null, ex);
+                    GerarLogErro.gerar("Tentando visualizar um arquivo." + ex.getMessage());
+                    JOptionPane.showMessageDialog(null, "Não há aplicativos associados ao arquivo especificado para esta operação..", "Erro", JOptionPane.ERROR_MESSAGE);
+                }
             }
-        }
+            informtxt.setText("");
+        }).start();
     }
 
     private void upload() {
@@ -742,61 +754,68 @@ public class DocumentoJF extends javax.swing.JFrame {
         jd.setVisible(true);
     }
 
-    private void download() {
-        if (listDocumentos.isEmpty()) {
+    private synchronized void download() {
+        if (listDocumentos.isEmpty() || jListDocumento.getSelectedIndices().length == 0) {
             return;
         }
-        if (jListDocumento.getSelectedIndex() < 0) {
-            return;
-        }
-        Documento d = null;
-        DocumentoPessoal dp = null;
-        if (listDocumentos.getElementAt(jListDocumento.getSelectedIndex()) instanceof Documento) {
-            d = (Documento) listDocumentos.getElementAt(jListDocumento.getSelectedIndex());
-        } else if (listDocumentos.getElementAt(jListDocumento.getSelectedIndex()) instanceof DocumentoPessoal) {
-            dp = (DocumentoPessoal) listDocumentos.getElementAt(jListDocumento.getSelectedIndex());
-        }
-        if (d != null || dp != null) {
+        new Thread(() -> {
             JFileChooser fl = new JFileChooser();
             fl.setDialogTitle("Selecionar diretório");
             fl.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
             int op = fl.showOpenDialog(null);
             if (op == JFileChooser.APPROVE_OPTION) {
+                //desabilitei o botao de download enquanto realiza um download para não acontecer te clicar para baixar duas vezes
+                downloadBtn.setEnabled(false);
+                informtxt.setText("Baixando...");
+                informtxt.setForeground(Color.red);
                 File f = null;
-                if (d != null) { //documento de processo (Documento)
-                    f = new DocumentoDAO().getArquivo(d.getId(), fl.getSelectedFile().getPath() + "\\", "documentos");
-                } else if (dp != null) { //documento pessoal (DocumentoPessoal)
-                    f = new DocumentoDAO().getArquivo(dp.getId(), fl.getSelectedFile().getPath() + "\\", "documentos_pessoais");
+                if (listDocumentos.getElementAt(jListDocumento.getSelectedIndices()[0]) instanceof Documento) {
+                    Documento[] d = new Documento[jListDocumento.getSelectedIndices().length];
+                    for (int x = 0; x < d.length; x++) {
+                        d[x] = (Documento) listDocumentos.getElementAt(jListDocumento.getSelectedIndices()[x]);
+                        f = new DocumentoDAO().getArquivo(d[x].getId(), fl.getSelectedFile().getPath() + "\\", "documentos");
+                    }
+                } else if (listDocumentos.getElementAt(jListDocumento.getSelectedIndex()) instanceof DocumentoPessoal) {
+                    DocumentoPessoal[] dp = new DocumentoPessoal[jListDocumento.getSelectedIndices().length];
+                    for (int x = 0; x < dp.length; x++) {
+                        dp[x] = (DocumentoPessoal) listDocumentos.getElementAt(jListDocumento.getSelectedIndices()[x]);
+                        f = new DocumentoDAO().getArquivo(dp[x].getId(), fl.getSelectedFile().getPath() + "\\", "documentos_pessoais");
+                    }
                 }
-                try {
-                    Desktop.getDesktop().open(f);
-                } catch (IOException ex) {
-                    Logger.getLogger(DocumentoJF.class.getName()).log(Level.SEVERE, null, ex);
-                    GerarLogErro.gerar("Tentando visualizar um arquivo." + ex.getMessage());
-                    JOptionPane.showMessageDialog(null, "Arquivo baixado, porém não há aplicativos associados ao arquivo especificado para abri-lo..", "Erro", JOptionPane.ERROR_MESSAGE);
-                }
+                downloadBtn.setEnabled(true);
+                informtxt.setText("");
             }
-        }
+        }).start();
     }
 
     private void atualizarInfos() {
         if (listDocumentos.isEmpty()) {
             return;
         }
-        if (listDocumentos.getElementAt(jListDocumento.getSelectedIndex()) instanceof Documento) {
-            Documento d = (Documento) listDocumentos.getElementAt(jListDocumento.getSelectedIndex());
-            statustxt.setText(d.getStatus());
-            modiftxt.setText(d.getModificacao());
-            abertoEmtxt.setText("");
-        } else if (listDocumentos.getElementAt(jListDocumento.getSelectedIndex()) instanceof DocumentoPessoal) {
-            DocumentoPessoal dp = (DocumentoPessoal) listDocumentos.getElementAt(jListDocumento.getSelectedIndex());
+        if (jListDocumento.getSelectedIndices().length == 1) {
+            if (listDocumentos.getElementAt(jListDocumento.getSelectedIndex()) instanceof Documento) {
+                Documento d = (Documento) listDocumentos.getElementAt(jListDocumento.getSelectedIndex());
+                statustxt.setText(d.getStatus());
+                modiftxt.setText(d.getModificacao());
+                abertoEmtxt.setText("");
+            } else if (listDocumentos.getElementAt(jListDocumento.getSelectedIndex()) instanceof DocumentoPessoal) {
+                DocumentoPessoal dp = (DocumentoPessoal) listDocumentos.getElementAt(jListDocumento.getSelectedIndex());
+                statustxt.setText("");
+                modiftxt.setText(dp.getAlteracao());
+                abertoEmtxt.setText("");
+            }
+        } else {
             statustxt.setText("");
-            modiftxt.setText(dp.getAlteracao());
+            modiftxt.setText("");
             abertoEmtxt.setText("");
         }
     }
 
     private void editar() {
+        if (jListDocumento.getSelectedIndices().length>1){
+            JOptionPane.showMessageDialog(null, "Edite um documento por vez.");
+            return;
+        }
         if (jListDocumento.getSelectedIndex() < 0) {
             JOptionPane.showMessageDialog(null, "Selecione um documento para editar.");
             return;

@@ -22,6 +22,9 @@ public class NovoProcessoJD extends javax.swing.JDialog {
 
     /**
      * Creates new form NovoProcessoJD
+     * @param parent set parent
+     * @param modal set modal
+     * @param c informe o Cliente
      */
     public NovoProcessoJD(java.awt.Frame parent, boolean modal, Cliente c) {
         super(parent, modal);

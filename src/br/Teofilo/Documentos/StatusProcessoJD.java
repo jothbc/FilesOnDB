@@ -24,10 +24,9 @@ public class StatusProcessoJD extends javax.swing.JDialog {
     /**
      * Creates new form NovoTipoDocJD
      *
-     * @param parent
-     * @param modal
-     * @param c
-     * @param p
+     * @param parent set parent
+     * @param modal set modal
+     * @param p infome o Processo
      */
     public StatusProcessoJD(java.awt.Frame parent, boolean modal, Processo p) {
         super(parent, modal);

@@ -5,6 +5,7 @@
  */
 package br.Teofilo.Menu;
 
+import JDBC.ConnectionFactoryMySQL;
 import br.Teofilo.Bean.GerarLogErro;
 import br.Teofilo.Bean.User;
 import br.Teofilo.Cliente.ClienteJF;
@@ -12,6 +13,7 @@ import br.Teofilo.Conta.ContasClienteJF;
 import br.Teofilo.DAO.ContaDAO;
 import br.Teofilo.DAO.UserDAO;
 import br.Teofilo.Documentos.DocumentoJF;
+import br.Teofilo.Utilidades.BackupJD;
 import br.Teofilo.Utilidades.CadastrarUsuarioJD;
 import br.Teofilo.Utilidades.ComentarioJF;
 import br.Teofilo.Utilidades.TimeLineJF;
@@ -22,6 +24,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.sql.Connection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
@@ -33,12 +36,14 @@ import javax.swing.JOptionPane;
  */
 public class MenuJF extends javax.swing.JFrame {
 
-    User user;
-    ClienteJF clienteJF;
-    DocumentoJF documentoJF;
-    ContasClienteJF contasClientesJF;
-    ComentarioJF comentariosJF;
-    TimeLineJF timeLineJF;
+    private User user;
+    private ClienteJF clienteJF;
+    private DocumentoJF documentoJF;
+    private ContasClienteJF contasClientesJF;
+    private ComentarioJF comentariosJF;
+    private TimeLineJF timeLineJF;
+
+    private boolean conectado = false;
 
     /**
      * Creates new form MenuJF
@@ -50,8 +55,8 @@ public class MenuJF extends javax.swing.JFrame {
             URL url = this.getClass().getResource("/br/Teofilo/IMG/icon.png");
             Image imagemTitulo = Toolkit.getDefaultToolkit().getImage(url);
             this.setIconImage(imagemTitulo);
-        }catch(Exception e){
-            GerarLogErro.gerar("Icone não pode ser carregado devido a um erro.\n"+e.getMessage());
+        } catch (Exception e) {
+            GerarLogErro.gerar("Icone não pode ser carregado devido a um erro.\n" + e.getMessage());
         }
     }
 
@@ -73,6 +78,7 @@ public class MenuJF extends javax.swing.JFrame {
         back = new javax.swing.JLabel();
         jButton4 = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
+        jButton6 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Advocacia Teófilo Rocha");
@@ -183,6 +189,16 @@ public class MenuJF extends javax.swing.JFrame {
             }
         });
 
+        jButton6.setBackground(new java.awt.Color(0, 0, 0));
+        jButton6.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jButton6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/Teofilo/IMG/1x/cloud-26_white.png"))); // NOI18N
+        jButton6.setBorder(null);
+        jButton6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton6ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -193,7 +209,8 @@ public class MenuJF extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -204,6 +221,8 @@ public class MenuJF extends javax.swing.JFrame {
                     .addComponent(back, javax.swing.GroupLayout.PREFERRED_SIZE, 495, Short.MAX_VALUE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))))
@@ -238,24 +257,34 @@ public class MenuJF extends javax.swing.JFrame {
     }//GEN-LAST:event_jLabel3MouseClicked
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        cliente();
+        if (conectado)
+            cliente();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        documento();
+        if (conectado)
+            documento();
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        valoresClientes();
+        if (conectado)
+            valoresClientes();
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        comentarios();
+        if (conectado)
+            comentarios();
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-        tarefas();
+        if (conectado)
+            tarefas();
     }//GEN-LAST:event_jButton5ActionPerformed
+
+    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
+        if (conectado)
+            backup();
+    }//GEN-LAST:event_jButton6ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -297,9 +326,12 @@ public class MenuJF extends javax.swing.JFrame {
         ImageIcon icon = (ImageIcon) back.getIcon();
         icon.setImage(icon.getImage().getScaledInstance(back.getWidth(), back.getHeight(), 1));
         back.setIcon(icon);
-        verificar_cartao();
-        verificar_user();
-        iniciar_chat();
+        testarConexao();
+        if (conectado) {
+            verificar_cartao();
+            verificar_user();
+            iniciar_chat();
+        }
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -309,6 +341,7 @@ public class MenuJF extends javax.swing.JFrame {
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
+    private javax.swing.JButton jButton6;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
@@ -344,7 +377,7 @@ public class MenuJF extends javax.swing.JFrame {
         contasClientesJF.setVisible(true);
     }
 
-    private void verificar_cartao() {
+    private synchronized void verificar_cartao() {
         new Thread(() -> {
             if (new ContaDAO().controleCartao()) {
                 if (new ContaDAO().baixarCartoesHoje()) {
@@ -382,19 +415,36 @@ public class MenuJF extends javax.swing.JFrame {
         comentariosJF.setVisible(true);
     }
 
-    private void iniciar_chat() {
+    private synchronized void iniciar_chat() {
         new Thread(() -> {
             comentariosJF = new ComentarioJF();
             comentariosJF.setLocation(this.getWidth() - comentariosJF.getWidth() - 10, this.getHeight() - comentariosJF.getHeight() - 15);
         }).start();
     }
 
-    private void tarefas() {
+    private synchronized void tarefas() {
         new Thread(() -> {
             timeLineJF = new TimeLineJF();
             timeLineJF.setVisible(true);
         }).start();
 
+    }
+
+    private void backup() {
+        BackupJD jd = new BackupJD(null, true);
+        jd.setVisible(true);
+    }
+
+    private void testarConexao() {
+        Connection con = null;
+        try {
+            con = ConnectionFactoryMySQL.getConnection();
+            conectado = true;
+        } catch (Exception e) {
+            this.setTitle(this.getTitle() + "  ## DESCONECTADO ##");
+        } finally {
+            ConnectionFactoryMySQL.closeConnection(con);
+        }
     }
 
 }

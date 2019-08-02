@@ -25,9 +25,9 @@ public class ParcelasJD extends javax.swing.JDialog {
 
     /**
      * Creates new form ParcelasJD
-     * @param parent
-     * @param modal
-     * @param c
+     * @param parent set parent
+     * @param modal set modal
+     * @param c é preciso informar a Conta para agregar a ela
      */
     public ParcelasJD(java.awt.Frame parent, boolean modal,Conta c) {
         super(parent, modal);

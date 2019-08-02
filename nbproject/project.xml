@@ -4,6 +4,7 @@
     <configuration>
         <data xmlns="http://www.netbeans.org/ns/j2se-project/3">
             <name>Teofilo</name>
+            <explicit-platform explicit-source-supported="true"/>
             <source-roots>
                 <root id="src.sql.dir"/>
                 <root id="src.dir"/>

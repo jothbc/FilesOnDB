@@ -23,6 +23,8 @@ public class ClientesInativosJD extends javax.swing.JDialog {
     List<Cliente> clientes;
     /**
      * Creates new form ClientesInativosJD
+     * @param parent frame parent
+     * @param modal set modal
      */
     public ClientesInativosJD(java.awt.Frame parent, boolean modal) {
         super(parent, modal);

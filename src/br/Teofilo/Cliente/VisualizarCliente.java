@@ -19,6 +19,8 @@ public class VisualizarCliente extends javax.swing.JDialog {
 
     /**
      * Creates new form VisualizarCliente
+     * @param parent set parent
+     * @param modal set modal
      */
     public VisualizarCliente(java.awt.Frame parent, boolean modal, Cliente c) {
         super(parent, modal);

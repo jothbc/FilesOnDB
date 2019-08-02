@@ -106,12 +106,13 @@
                       </Group>
                   </Group>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="jButton6" min="-2" pref="95" max="-2" attributes="0"/>
-                      <Component id="jButton5" min="-2" pref="95" max="-2" attributes="0"/>
-                      <Component id="jButton4" min="-2" pref="95" max="-2" attributes="0"/>
-                      <Component id="jButton3" min="-2" pref="95" max="-2" attributes="0"/>
-                      <Component id="jButton9" alignment="1" min="-2" pref="95" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                      <Component id="jButton6" pref="95" max="32767" attributes="0"/>
+                      <Component id="downloadBtn" pref="95" max="32767" attributes="0"/>
+                      <Component id="jButton4" pref="95" max="32767" attributes="0"/>
+                      <Component id="jButton3" pref="95" max="32767" attributes="0"/>
+                      <Component id="jButton9" alignment="0" pref="95" max="32767" attributes="0"/>
+                      <Component id="informtxt" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
@@ -139,12 +140,13 @@
                                   <EmptySpace type="separate" max="-2" attributes="0"/>
                                   <Component id="jButton4" min="-2" pref="25" max="-2" attributes="0"/>
                                   <EmptySpace type="separate" max="-2" attributes="0"/>
-                                  <Component id="jButton5" min="-2" pref="25" max="-2" attributes="0"/>
+                                  <Component id="downloadBtn" min="-2" pref="25" max="-2" attributes="0"/>
                                   <EmptySpace type="separate" max="-2" attributes="0"/>
                                   <Component id="jButton6" min="-2" pref="25" max="-2" attributes="0"/>
                                   <EmptySpace type="separate" max="-2" attributes="0"/>
                                   <Component id="jButton9" min="-2" pref="25" max="-2" attributes="0"/>
-                                  <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                                  <EmptySpace max="32767" attributes="0"/>
+                                  <Component id="informtxt" min="-2" pref="22" max="-2" attributes="0"/>
                               </Group>
                               <Component id="jScrollPane2" max="32767" attributes="0"/>
                           </Group>
@@ -282,7 +284,6 @@
                 <Property name="model" type="javax.swing.ListModel" editor="org.netbeans.modules.form.editors2.ListModelEditor">
                   <StringArray count="0"/>
                 </Property>
-                <Property name="selectionMode" type="int" value="0"/>
               </Properties>
               <Events>
                 <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jListDocumentoMouseClicked"/>
@@ -503,7 +504,7 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton4ActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JButton" name="jButton5">
+        <Component class="javax.swing.JButton" name="downloadBtn">
           <Properties>
             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="ff" green="ff" red="ff" type="rgb"/>
@@ -520,7 +521,7 @@
             </Property>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton5ActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="downloadBtnActionPerformed"/>
           </Events>
         </Component>
         <Component class="javax.swing.JButton" name="jButton6">
@@ -613,6 +614,8 @@
               <Border info="null"/>
             </Property>
           </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="informtxt">
         </Component>
       </SubComponents>
     </Container>

@@ -26,6 +26,9 @@ public class NovaContaJD extends javax.swing.JDialog {
 
     /**
      * Creates new form NovaContaJD
+     * @param parent set parent
+     * @param modal set modal
+     * @param c é preciso informar o Cliente para poder agregar a conta a ele
      */
     public NovaContaJD(java.awt.Frame parent, boolean modal, Cliente c) {
         super(parent, modal);

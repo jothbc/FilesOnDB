@@ -25,10 +25,10 @@ public class NovoTipoDocJD extends javax.swing.JDialog {
     /**
      * Creates new form NovoTipoDocJD
      *
-     * @param parent
-     * @param modal
-     * @param c
-     * @param p
+     * @param parent set parent
+     * @param modal set modal
+     * @param c informe o Cliente
+     * @param p informe o Processo
      */
     public NovoTipoDocJD(java.awt.Frame parent, boolean modal, Cliente c, Processo p) {
         super(parent, modal);

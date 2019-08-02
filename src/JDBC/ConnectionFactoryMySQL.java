@@ -33,7 +33,7 @@ public class ConnectionFactoryMySQL {
             Class.forName(DRIVER);
             return DriverManager.getConnection(URL, USER, PASS);
         } catch (ClassNotFoundException | SQLException ex) {
-            JOptionPane.showMessageDialog(null, "Erro na conexão com o Banco de dados.","Erro",JOptionPane.ERROR_MESSAGE);
+            //JOptionPane.showMessageDialog(null, "Erro na conexão com o Banco de dados.","Erro",JOptionPane.ERROR_MESSAGE);
             GerarLogErro.gerar(ex.getMessage());
             throw new RuntimeException("Erro na conexão MySQL", ex);
         }

@@ -25,6 +25,8 @@ public class SeletorDeClienteJD extends javax.swing.JDialog {
 
     /**
      * Creates new form SeletorDeClienteJD
+     * @param parent set parent
+     * @param modal set modal
      */
     public SeletorDeClienteJD(java.awt.Frame parent, boolean modal) {
         super(parent, modal);

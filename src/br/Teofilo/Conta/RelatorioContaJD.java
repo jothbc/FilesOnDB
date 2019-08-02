@@ -26,6 +26,8 @@ public class RelatorioContaJD extends javax.swing.JDialog {
 
     /**
      * Creates new form RelatorioContaJD
+     * @param parent set parent
+     * @param modal set modal
      */
     public RelatorioContaJD(java.awt.Frame parent, boolean modal) {
         super(parent, modal);

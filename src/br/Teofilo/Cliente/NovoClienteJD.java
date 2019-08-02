@@ -23,9 +23,9 @@ public class NovoClienteJD extends javax.swing.JDialog {
     /**
      * Creates new form NovoClienteJD
      *
-     * @param parent
-     * @param modal
-     * @param c
+     * @param parent set parent
+     * @param modal set modal
+     * @param c Caso o Cliente ja exista é preciso passa-lo para poder editar, caso seja um novo pode passar null
      */
     public NovoClienteJD(java.awt.Frame parent, boolean modal, Cliente c) {
         super(parent, modal);
