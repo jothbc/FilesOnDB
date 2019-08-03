@@ -12,6 +12,10 @@ import java.awt.Color;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -25,10 +29,10 @@ public class TimeLineJF extends javax.swing.JFrame {
 
     private final static int MAX_PORLINHA = 8;
     private final Point point = new Point();
-    List<Tarefa> tarefas;
-    private int linhas = 0;
+    private List<Tarefa> tarefas;
+    private int qtd_linhas = 0;
     private boolean redimensionavel = false;
-    private int height_inicial;
+    private final int height_inicial;
 
     /**
      * Creates new form TimeLineJF
@@ -36,8 +40,9 @@ public class TimeLineJF extends javax.swing.JFrame {
     public TimeLineJF() {
         initComponents();
         height_inicial = this.getSize().height;
+        jSliderOption.setValue(Calendar.getInstance().get(Calendar.MONTH)+1);
         jSliderOptionStateChanged(null);
-        atualizarTarefas();
+        //atualizarTarefas();
     }
 
     /**
@@ -55,13 +60,11 @@ public class TimeLineJF extends javax.swing.JFrame {
         jsp = new javax.swing.JScrollPane();
         jp = new javax.swing.JPanel();
         jSliderOption = new javax.swing.JSlider();
-        jLabeldias = new javax.swing.JLabel();
+        jLabelMes = new javax.swing.JLabel();
         concluidosCBox = new javax.swing.JCheckBox();
-        jPanel4 = new javax.swing.JPanel();
         jPanelMenu = new javax.swing.JPanel();
         jButton3 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
-        jButton5 = new javax.swing.JButton();
         jButton6 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -94,17 +97,18 @@ public class TimeLineJF extends javax.swing.JFrame {
 
         jsp.setViewportView(jp);
 
-        jSliderOption.setMaximum(365);
+        jSliderOption.setMaximum(12);
         jSliderOption.setMinimum(1);
+        jSliderOption.setPaintLabels(true);
+        jSliderOption.setPaintTicks(true);
         jSliderOption.setSnapToTicks(true);
-        jSliderOption.setValue(30);
         jSliderOption.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 jSliderOptionStateChanged(evt);
             }
         });
 
-        jLabeldias.setText("Dias");
+        jLabelMes.setText("Mês");
 
         concluidosCBox.setBackground(new java.awt.Color(255, 255, 255));
         concluidosCBox.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
@@ -120,15 +124,15 @@ public class TimeLineJF extends javax.swing.JFrame {
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(desc)
-            .addComponent(jsp)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabeldias, javax.swing.GroupLayout.DEFAULT_SIZE, 51, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jSliderOption, javax.swing.GroupLayout.PREFERRED_SIZE, 516, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(27, 27, 27)
+                .addComponent(jLabelMes, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 35, Short.MAX_VALUE)
+                .addComponent(jSliderOption, javax.swing.GroupLayout.PREFERRED_SIZE, 465, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addComponent(concluidosCBox)
-                .addGap(90, 90, 90))
+                .addGap(16, 16, 16))
+            .addComponent(jsp)
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -136,14 +140,12 @@ public class TimeLineJF extends javax.swing.JFrame {
                 .addComponent(desc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jSliderOption, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabeldias)
-                    .addComponent(concluidosCBox))
-                .addGap(15, 15, 15)
-                .addComponent(jsp))
+                    .addComponent(jLabelMes)
+                    .addComponent(concluidosCBox)
+                    .addComponent(jSliderOption, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jsp, javax.swing.GroupLayout.DEFAULT_SIZE, 378, Short.MAX_VALUE))
         );
-
-        jPanel4.setBackground(new java.awt.Color(255, 255, 255));
 
         jPanelMenu.setBackground(new java.awt.Color(0, 0, 0));
         jPanelMenu.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 51, 153), 1, true));
@@ -181,20 +183,6 @@ public class TimeLineJF extends javax.swing.JFrame {
             }
         });
 
-        jButton5.setBackground(new java.awt.Color(0, 0, 0));
-        jButton5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/Teofilo/IMG/1x/ic_refresh_18px_white.png"))); // NOI18N
-        jButton5.setBorder(null);
-        jButton5.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                jButton5MouseEntered(evt);
-            }
-        });
-        jButton5.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton5ActionPerformed(evt);
-            }
-        });
-
         jButton6.setBackground(new java.awt.Color(0, 0, 0));
         jButton6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/Teofilo/IMG/1x/ic_fullscreen_exit_18px_white.png"))); // NOI18N
         jButton6.setBorder(null);
@@ -213,9 +201,8 @@ public class TimeLineJF extends javax.swing.JFrame {
         jPanelMenu.setLayout(jPanelMenuLayout);
         jPanelMenuLayout.setHorizontalGroup(
             jPanelMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jButton4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, 37, Short.MAX_VALUE)
-            .addComponent(jButton5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jButton4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 46, Short.MAX_VALUE)
+            .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(jButton6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         jPanelMenuLayout.setVerticalGroup(
@@ -224,25 +211,8 @@ public class TimeLineJF extends javax.swing.JFrame {
                 .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 39, Short.MAX_VALUE)
                 .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE))
-        );
-
-        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
-        jPanel4.setLayout(jPanel4Layout);
-        jPanel4Layout.setHorizontalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jPanelMenu, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        jPanel4Layout.setVerticalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel4Layout.createSequentialGroup()
-                .addComponent(jPanelMenu, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanelPrincipalLayout = new javax.swing.GroupLayout(jPanelPrincipal);
@@ -251,24 +221,22 @@ public class TimeLineJF extends javax.swing.JFrame {
             jPanelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelPrincipalLayout.createSequentialGroup()
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, 0)
-                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jPanelMenu, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         jPanelPrincipalLayout.setVerticalGroup(
             jPanelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(jPanelPrincipalLayout.createSequentialGroup()
-                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 327, Short.MAX_VALUE))
+                .addComponent(jPanelMenu, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 312, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanelPrincipal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(jPanelPrincipal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -301,16 +269,9 @@ public class TimeLineJF extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton4MouseEntered
 
-    private void jButton5MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton5MouseEntered
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton5MouseEntered
-
-    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-        atualizarTarefas();
-    }//GEN-LAST:event_jButton5ActionPerformed
-
     private void jSliderOptionStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jSliderOptionStateChanged
-        jLabeldias.setText("Dias " + jSliderOption.getValue());
+        jLabelMes.setText("Mês " + escritaMes());
+        atualizarTarefas();
     }//GEN-LAST:event_jSliderOptionStateChanged
 
     private void jButton6MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton6MouseEntered
@@ -370,11 +331,9 @@ public class TimeLineJF extends javax.swing.JFrame {
     private javax.swing.JTextField desc;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
-    private javax.swing.JLabel jLabeldias;
+    private javax.swing.JLabel jLabelMes;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanelMenu;
     private javax.swing.JPanel jPanelPrincipal;
     private javax.swing.JSlider jSliderOption;
@@ -398,45 +357,42 @@ public class TimeLineJF extends javax.swing.JFrame {
         desc.setText(b.getName());
     }
 
-    private void atualizarTarefas() {
+    private synchronized void atualizarTarefas() {
+        jp.removeAll();
         new Thread(() -> {
             if (concluidosCBox.isSelected()) {
                 tarefas = new TarefaDAO().findAllConcluidas();
             } else {
                 tarefas = new TarefaDAO().findAllNoConcluidas();
             }
-            jp.removeAll();
             if (tarefas.isEmpty()) {
                 return;
             }
-            int count = 0;
-            linhas = 0;
+            int qtd_botoes = 0;
+            qtd_linhas = 0;
             for (Tarefa t : tarefas) {
                 if (redimensionavel) {
                     redimensionarTela();
                 }
-                int[] dias = new int[2];
+                Date ini = null, fim = null;
                 try {
-                    dias[0] = (int) CDate.diasRestantes(t.getInicio());
-                    dias[1] = (int) CDate.diasRestantes(t.getFim());
-                    if (dias[0] < 0) {
-                        dias[0] *= -1;
-                    }
-                    if (dias[1] < 0) {
-                        dias[1] *= -1;
-                    }
-                    //System.out.println(dias[0] + " || " + dias[1] + " || " + jSliderOption.getValue());
-                } catch (Exception ex) {
+                    ini = new SimpleDateFormat("dd/MM/yyyy").parse(t.getInicio());
+                    fim = new SimpleDateFormat("dd/MM/yyyy").parse(t.getFim());
+                } catch (ParseException ex) {
                     Logger.getLogger(TimeLineJF.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                if (dias[0] <= jSliderOption.getValue() || dias[1] <= jSliderOption.getValue()) {
+                Calendar c = Calendar.getInstance();
+                Calendar c2 = Calendar.getInstance();
+                c.setTime(ini);
+                c2.setTime(fim);
+                if ((jSliderOption.getValue() - 1) >= c.get(Calendar.MONTH) && (jSliderOption.getValue() - 1) <= c2.get(Calendar.MONTH)) {
                     JButton b = new JButton("<html><center><b>" + t.getTitulo() + "<br>" + t.getInicio() + "</b></center></html>");
-                    if (t.isConcluido()){
+                    if (t.isConcluido()) {
                         b.setForeground(Color.RED);
                     }
                     b.setName(t.getId() + "@ Inicio " + t.getInicio() + " Fim " + t.getFim() + " Anotações: " + (t.getAnotacoes().length() > 100 ? t.getAnotacoes().substring(0, 100) : t.getAnotacoes()) + "..."); //nome do botao
                     b.setSize(100, 50); //tamanho do botao
-                    b.setLocation(count % MAX_PORLINHA * 100, linhas * 50); //seta o local que o botao deve aparecer
+                    b.setLocation(qtd_botoes % MAX_PORLINHA * 100, qtd_linhas * 50); //seta o local que o botao deve aparecer
                     b.addActionListener((java.awt.event.ActionEvent evt) -> { //expressao lambda para evento no botao
                         jbuttonsPressionados(evt, b); //chama a função criada passando também o proprio botao
                     });
@@ -447,21 +403,53 @@ public class TimeLineJF extends javax.swing.JFrame {
                         }
                     });
                     b.setBackground(t.getMarcador());
-                    count++;
-                    if (count == MAX_PORLINHA) {
-                        count = 0;
-                        linhas++;
+                    qtd_botoes++;
+                    if (qtd_botoes == MAX_PORLINHA) {
+                        qtd_botoes = 0;
+                        qtd_linhas++;
                     }
                     jp.add(b);
-                    jsp.setViewportView(jp);
                 }
             }
+            jsp.setViewportView(jp);
         }).start();
     }
 
     private void redimensionarTela() {
         int height = jsp.getLocation().y + 5 + 50;  //5 pixel extra, 50 tamanho y dos buttons
-        this.setSize(this.getWidth(), height + (linhas * 50));
+        this.setSize(this.getWidth(), height + (qtd_linhas * 50));
+    }
+
+    private String escritaMes() {
+        int mes = jSliderOption.getValue();
+        switch (mes) {
+            case 1:
+                return "Janeiro";
+            case 2:
+                return "Fevereiro";
+            case 3:
+                return "Março";
+            case 4:
+                return "Abril";
+            case 5:
+                return "Maio";
+            case 6:
+                return "Junho";
+            case 7:
+                return "Julho";
+            case 8:
+                return "Agosto";
+            case 9:
+                return "Setembro";
+            case 10:
+                return "Outubro";
+            case 11:
+                return "Novembro";
+            case 12:
+                return "Dezembro";
+            default:
+                return "";
+        }
     }
 
 }
