@@ -14,10 +14,16 @@ import br.Teofilo.DAO.ComentarioDAO;
 import br.Teofilo.DAO.DocumentoDAO;
 import br.Teofilo.DAO.UserDAO;
 import funcoes.Conv;
+import funcoes.RSA;
+import static funcoes.RSA.PATH_CHAVE_PUBLICA;
 import java.awt.Desktop;
 import java.awt.Point;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.security.PublicKey;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
@@ -31,12 +37,13 @@ import javax.swing.JOptionPane;
 public class UploadJD extends javax.swing.JDialog {
 
     private static Point point = new Point();
-    DefaultListModel arquivos;
-    Cliente cliente;
-    DocumentoPessoal documentoPessoal;
-    Processo processo;
-    TipoDoc tipoDoc;
-    double tam = 0;
+    private DefaultListModel arquivos;
+    private Cliente cliente;
+    private DocumentoPessoal documentoPessoal;
+    private Processo processo;
+    private TipoDoc tipoDoc;
+    private double tam = 0;
+    private PublicKey pk;
 
     /**
      * Creates new form UploadJD
@@ -77,6 +84,7 @@ public class UploadJD extends javax.swing.JDialog {
         jButton3 = new javax.swing.JButton();
         jProgressBar1 = new javax.swing.JProgressBar();
         tamtxt = new javax.swing.JLabel();
+        jCherCrip = new javax.swing.JCheckBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setUndecorated(true);
@@ -180,6 +188,15 @@ public class UploadJD extends javax.swing.JDialog {
 
         tamtxt.setText("Tamanho Total");
 
+        jCherCrip.setBackground(new java.awt.Color(255, 255, 255));
+        jCherCrip.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jCherCrip.setText("Criptografar");
+        jCherCrip.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jCherCripActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -201,7 +218,8 @@ public class UploadJD extends javax.swing.JDialog {
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(jCheckBox2)
-                                .addGap(0, 0, Short.MAX_VALUE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jCherCrip, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(clientetxt, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(8, 8, 8)
@@ -225,7 +243,8 @@ public class UploadJD extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jCheckBox1)
-                    .addComponent(jCheckBox2))
+                    .addComponent(jCheckBox2)
+                    .addComponent(jCherCrip))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 238, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -285,6 +304,14 @@ public class UploadJD extends javax.swing.JDialog {
         buscar();
     }//GEN-LAST:event_jButton3ActionPerformed
 
+    private void jCherCripActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCherCripActionPerformed
+        if (jCherCrip.isSelected()){
+            selecionarPK();
+        }else{
+            pk = null;
+        }
+    }//GEN-LAST:event_jCherCripActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -336,6 +363,7 @@ public class UploadJD extends javax.swing.JDialog {
     private javax.swing.JButton jButton3;
     private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JCheckBox jCheckBox2;
+    private javax.swing.JCheckBox jCherCrip;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JList<String> jList1;
     private javax.swing.JPanel jPanel1;
@@ -403,8 +431,11 @@ public class UploadJD extends javax.swing.JDialog {
             int count = 0;
             while (arquivos.size() > 0) {
                 File f = (File) arquivos.getElementAt(arquivos.size() - 1);
+                if (jCherCrip.isSelected()){
+                    f = RSA.criptografa(f, pk);
+                }
                 if (processo != null) {
-                    if (!new DocumentoDAO().addDocumento(f, cliente.getId(), tipoDoc.getId(), processo.getId())) {
+                    if (!new DocumentoDAO().addDocumento(f, cliente.getId(), tipoDoc.getId(), processo.getId(),jCherCrip.isSelected())){
                         JOptionPane.showMessageDialog(null, "Erro ao tentar salvar o arquivo " + f.getName() + " no Banco de dados", "Erro", JOptionPane.ERROR_MESSAGE);
                         return;
                     } else {
@@ -417,7 +448,7 @@ public class UploadJD extends javax.swing.JDialog {
                         count++;
                     }
                 } else if (documentoPessoal != null) {
-                    if (!new DocumentoDAO().addDocumentoPessoal(f, cliente.getId())) {
+                    if (!new DocumentoDAO().addDocumentoPessoal(f, cliente.getId(),jCherCrip.isSelected())) {
                         JOptionPane.showMessageDialog(null, "Erro ao tentar salvar o arquivo " + f.getName() + " no Banco de dados", "Erro", JOptionPane.ERROR_MESSAGE);
                         return;
                     } else {
@@ -460,5 +491,32 @@ public class UploadJD extends javax.swing.JDialog {
 
     private void setTamtxt() {
         tamtxt.setText("Tamanho total "+Conv.CDblDuasCasas(((tam/1024)/1024)) +"MB");
+    }
+
+    private void selecionarPK() {
+        JFileChooser fl = new JFileChooser();
+        fl.setDialogTitle("Selecione a chave publica.");
+        fl.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        int op = fl.showOpenDialog(null);
+        if (op == JFileChooser.APPROVE_OPTION){
+            try {
+                //carrega a chave publica para variável pk
+                ObjectInputStream inputStream = null;
+                inputStream = new ObjectInputStream(new FileInputStream(fl.getSelectedFile()));
+                pk = (PublicKey) inputStream.readObject();
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(UploadJD.class.getName()).log(Level.SEVERE, null, ex);
+                GerarLogErro.gerar(ex.getMessage());
+                JOptionPane.showMessageDialog(null, "Algo deu errado, chave não carregada.");
+                pk =null;
+                jCherCrip.setSelected(false);
+            } catch (IOException | ClassNotFoundException ex) {
+                Logger.getLogger(UploadJD.class.getName()).log(Level.SEVERE, null, ex);
+                GerarLogErro.gerar(ex.getMessage());
+                JOptionPane.showMessageDialog(null, "Algo deu errado, chave não carregada.");
+                pk =null;
+                jCherCrip.setSelected(false);
+            }
+        }
     }
 }

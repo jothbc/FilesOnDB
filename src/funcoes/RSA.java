@@ -20,12 +20,15 @@ import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
 
 public class RSA {
 
     public static final String ALGORITHM = "RSA";
     public static final String PATH_CHAVE_PRIVADA = "C:/keys/private.key";      //Local da chave privada no sistema de arquivos.
     public static final String PATH_CHAVE_PUBLICA = "C:/keys/public.key";       //Local da chave pública no sistema de arquivos.
+    static String IV = "AAAAAAAAAAAAAAAA";
 
     //Gera a chave que contém um par de chave Privada e Pública usando 2048
     // bytes. Armazena o conjunto de chaves nos arquivos private.key e public.key
@@ -116,7 +119,7 @@ public class RSA {
         }
         return fileCrip;
     }
-    
+
     public static String decriptografa(byte[] texto, PrivateKey chave) {        // Criptografa o texto puro usando a chave Púlica
         byte[] dectyptedText = null;
         try {
@@ -127,6 +130,20 @@ public class RSA {
             ex.printStackTrace();
         }
         return new String(dectyptedText);
+    }
+
+    public static byte[] encryptAES(String textopuro, String chaveencriptacao) throws Exception {
+        Cipher encripta = Cipher.getInstance("AES/CBC/PKCS5Padding", "SunJCE");
+        SecretKeySpec key = new SecretKeySpec(chaveencriptacao.getBytes("UTF-8"), "AES");
+        encripta.init(Cipher.ENCRYPT_MODE, key, new IvParameterSpec(IV.getBytes("UTF-8")));
+        return encripta.doFinal(textopuro.getBytes("UTF-8"));
+    }
+
+    public static String decryptAES(byte[] textoencriptado, String chaveencriptacao) throws Exception {
+        Cipher decripta = Cipher.getInstance("AES/CBC/PKCS5Padding", "SunJCE");
+        SecretKeySpec key = new SecretKeySpec(chaveencriptacao.getBytes("UTF-8"), "AES");
+        decripta.init(Cipher.DECRYPT_MODE, key, new IvParameterSpec(IV.getBytes("UTF-8")));
+        return new String(decripta.doFinal(textoencriptado), "UTF-8");
     }
 
     public static void main(String[] args) {

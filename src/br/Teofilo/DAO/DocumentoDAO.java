@@ -41,7 +41,7 @@ public class DocumentoDAO {
         con = ConnectionFactoryMySQL.getConnection();
     }
 
-    public boolean addDocumento(File f, int idCliente, int tipo, int processo) {
+    public boolean addDocumento(File f, int idCliente, int tipo, int processo,boolean crip) {
         sql = "INSERT INTO documentos (nome,ID_CLIENTE,modificacao,ID_TIPO,ID_PROCESSO) values (?,?,?,?,?)";
         try {
             InputStream is = new FileInputStream(f);
@@ -57,9 +57,10 @@ public class DocumentoDAO {
             sql = "SELECT LAST_INSERT_ID() INTO @id";
             stmt = con.prepareStatement(sql);
             stmt.execute();
-            sql = "INSERT INTO documentos_arq (id,arq) VALUES (@id,?)";
+            sql = "INSERT INTO documentos_arq (id,arq,crip) VALUES (@id,?,?)";
             stmt = con.prepareStatement(sql);
             stmt.setBlob(1, is);
+            stmt.setBoolean(2, crip);
             stmt.execute();
             return true;
         } catch (SQLException | FileNotFoundException ex) {
@@ -72,7 +73,7 @@ public class DocumentoDAO {
         }
     }
 
-    public boolean addDocumentoPessoal(File f, int idCliente) {
+    public boolean addDocumentoPessoal(File f, int idCliente,boolean crip) {
         sql = "INSERT INTO documentos_pessoais (nome,ID_CLIENTE,alteracao) values (?,?,?)";
         try {
             InputStream is = new FileInputStream(f);
@@ -85,9 +86,10 @@ public class DocumentoDAO {
             sql = "SELECT LAST_INSERT_ID() INTO @id";
             stmt = con.prepareStatement(sql);
             stmt.execute();
-            sql = "INSERT INTO documentos_pessoais_arq (id,arq) VALUES (@id,?)";
+            sql = "INSERT INTO documentos_pessoais_arq (id,arq,crip) VALUES (@id,?,?)";
             stmt = con.prepareStatement(sql);
             stmt.setBlob(1, is);
+            stmt.setBoolean(2, crip);
             stmt.execute();
             return true;
         } catch (SQLException | FileNotFoundException ex) {

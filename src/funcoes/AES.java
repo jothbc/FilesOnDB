@@ -3,51 +3,24 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package br.Teofilo.DAO;
+package funcoes;
 
-import br.Teofilo.Bean.GerarLogErro;
-import funcoes.CDate;
-import static funcoes.RSA.PATH_CHAVE_PUBLICA;
-import java.io.BufferedOutputStream;
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutput;
-import java.io.ObjectOutputStream;
-import java.io.OutputStream;
 import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.List;
 import javax.crypto.Cipher;
-import javax.crypto.KeyGenerator;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import javax.swing.JFileChooser;
-import org.junit.Test;
-import static org.junit.Assert.*;
-import org.junit.Ignore;
 
 /**
  *
  * @author User
  */
-public class ValorClienteDAOTest {
-
+public class AES {
     static String IV = "AAAAAAAAAAAAAAAA";
     static String chaveencriptacao = "0123456789abcdef";
-
-    @Test
-    @Ignore
-    public void testSomeMethod() {
-        GerarLogErro.gerar("um teste ja q ainda nao foi nada");
-    }
-
-    @Test
+    
     public void testAES() {
         JFileChooser fl = new JFileChooser();
         fl.setDialogTitle("Escolha o arquivo para encriptar");
@@ -93,5 +66,4 @@ public class ValorClienteDAOTest {
         decripta.init(Cipher.DECRYPT_MODE, key, new IvParameterSpec(IV.getBytes("UTF-8")));
         return decripta.doFinal(Files.readAllBytes(textoencriptado.toPath()));
     }
-
 }

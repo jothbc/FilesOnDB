@@ -43,7 +43,7 @@ public class DocumentoJF extends javax.swing.JFrame {
     DefaultListModel listProcessos = new DefaultListModel();
     DefaultListModel listTipo = new DefaultListModel();
     DefaultListModel listDocumentos = new DefaultListModel();
-
+    private boolean btnPessoal = false;
     /**
      * Creates new form DocumentoJF
      */
@@ -75,8 +75,6 @@ public class DocumentoJF extends javax.swing.JFrame {
         jLabel7 = new javax.swing.JLabel();
         statustxt = new javax.swing.JTextField();
         modiftxt = new javax.swing.JFormattedTextField();
-        jScrollPane3 = new javax.swing.JScrollPane();
-        jListProcessoDadosPessoais = new javax.swing.JList<>();
         jScrollPane4 = new javax.swing.JScrollPane();
         jListProcessos = new javax.swing.JList<>();
         jScrollPane5 = new javax.swing.JScrollPane();
@@ -95,6 +93,8 @@ public class DocumentoJF extends javax.swing.JFrame {
         jLabel8 = new javax.swing.JLabel();
         abertoEmtxt = new javax.swing.JTextField();
         informtxt = new javax.swing.JLabel();
+        processoBtn = new javax.swing.JButton();
+        dadosPessoaisBtn = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setUndecorated(true);
@@ -187,14 +187,6 @@ public class DocumentoJF extends javax.swing.JFrame {
         }
         modiftxt.setFocusLostBehavior(javax.swing.JFormattedTextField.COMMIT);
         modiftxt.setFont(new java.awt.Font("Tahoma", 3, 12)); // NOI18N
-
-        jListProcessoDadosPessoais.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        jListProcessoDadosPessoais.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jListProcessoDadosPessoaisMouseClicked(evt);
-            }
-        });
-        jScrollPane3.setViewportView(jListProcessoDadosPessoais);
 
         jListProcessos.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         jListProcessos.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -312,6 +304,26 @@ public class DocumentoJF extends javax.swing.JFrame {
         abertoEmtxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         abertoEmtxt.setBorder(null);
 
+        processoBtn.setBackground(new java.awt.Color(255, 255, 255));
+        processoBtn.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        processoBtn.setText("Processos");
+        processoBtn.setBorder(null);
+        processoBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                processoBtnActionPerformed(evt);
+            }
+        });
+
+        dadosPessoaisBtn.setBackground(new java.awt.Color(255, 255, 255));
+        dadosPessoaisBtn.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        dadosPessoaisBtn.setText("Dados Pessoais");
+        dadosPessoaisBtn.setBorder(null);
+        dadosPessoaisBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                dadosPessoaisBtnActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -324,13 +336,10 @@ public class DocumentoJF extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 306, Short.MAX_VALUE)
-                                .addComponent(jLabelRelacionadoCliente, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jLabelProcessos, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jScrollPane4)
-                                .addComponent(jLabelTiposDocumentos, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jLabelRelacionadoCliente, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabelProcessos, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabelTiposDocumentos, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(jButton1)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -344,7 +353,10 @@ public class DocumentoJF extends javax.swing.JFrame {
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                         .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(statustxt, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                        .addComponent(statustxt, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(processoBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(dadosPessoaisBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jScrollPane4))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jScrollPane2)
@@ -402,8 +414,10 @@ public class DocumentoJF extends javax.swing.JFrame {
                             .addComponent(jLabel7)
                             .addComponent(modiftxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(13, 13, 13)
+                        .addComponent(processoBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(dadosPessoaisBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(19, 19, 19)
                         .addComponent(jLabelProcessos)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -463,13 +477,6 @@ public class DocumentoJF extends javax.swing.JFrame {
         atualizarInfos();
     }//GEN-LAST:event_jListDocumentoMouseClicked
 
-    private void jListProcessoDadosPessoaisMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jListProcessoDadosPessoaisMouseClicked
-        statustxt.setText("");
-        modiftxt.setText("");
-        abertoEmtxt.setText("");
-        verificarJListProcessoPessoal();
-    }//GEN-LAST:event_jListProcessoDadosPessoaisMouseClicked
-
     private void jListProcessosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jListProcessosMouseClicked
         statusDoProcesso();
         carregarDocumentosDoProcessoSelecionado();
@@ -518,6 +525,24 @@ public class DocumentoJF extends javax.swing.JFrame {
         deletarDocumento();
     }//GEN-LAST:event_jButton9ActionPerformed
 
+    private void processoBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_processoBtnActionPerformed
+        if (jListCliente.getSelectedIndex()<0){
+            return;
+        }
+        limparListas();
+        carregarProcessosDoClienteSelecionado((Cliente) listClientes.getElementAt(jListCliente.getSelectedIndex()));
+        btnPessoal=false;
+    }//GEN-LAST:event_processoBtnActionPerformed
+
+    private void dadosPessoaisBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dadosPessoaisBtnActionPerformed
+        if (jListCliente.getSelectedIndex()<0){
+            return;
+        }
+        limparListas();
+        carregarDadosPessoaisDoClienteSelecionado((Cliente) listClientes.getElementAt(jListCliente.getSelectedIndex()));
+        btnPessoal=true;
+    }//GEN-LAST:event_dadosPessoaisBtnActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -555,6 +580,7 @@ public class DocumentoJF extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField abertoEmtxt;
+    private javax.swing.JButton dadosPessoaisBtn;
     private javax.swing.JButton downloadBtn;
     private javax.swing.JLabel informtxt;
     private javax.swing.JButton jButton1;
@@ -576,24 +602,22 @@ public class DocumentoJF extends javax.swing.JFrame {
     private javax.swing.JLabel jLabelTiposDocumentos;
     private javax.swing.JList<String> jListCliente;
     private javax.swing.JList<String> jListDocumento;
-    private javax.swing.JList<String> jListProcessoDadosPessoais;
     private javax.swing.JList<String> jListProcessos;
     private javax.swing.JList<String> jListTipos;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JFormattedTextField modiftxt;
+    private javax.swing.JButton processoBtn;
     private javax.swing.JTextField statustxt;
     // End of variables declaration//GEN-END:variables
 
     private void init() {
         jListCliente.setModel(listClientes);
         jListDocumento.setModel(listDocumentos);
-        jListProcessoDadosPessoais.setModel(listProcessoPessoal);
         jListProcessos.setModel(listProcessos);
         jListTipos.setModel(listTipo);
         popularListClientes();
@@ -619,19 +643,6 @@ public class DocumentoJF extends javax.swing.JFrame {
             listProcessoPessoal.addElement("Dados Pessoais");
             jLabelRelacionadoCliente.setForeground(Color.BLACK);
         }).start();
-    }
-
-    private void verificarJListProcessoPessoal() {
-        if (listProcessoPessoal.isEmpty()) {
-            return;
-        }
-        limparListas();
-        Cliente c = (Cliente) listClientes.getElementAt(jListCliente.getSelectedIndex());
-        if (listProcessoPessoal.getElementAt(jListProcessoDadosPessoais.getSelectedIndex()) == "Processos") {
-            carregarProcessosDoClienteSelecionado(c);
-        } else if (listProcessoPessoal.getElementAt(jListProcessoDadosPessoais.getSelectedIndex()) == "Dados Pessoais") {
-            carregarDadosPessoaisDoClienteSelecionado(c);
-        }
     }
 
     private synchronized void carregarProcessosDoClienteSelecionado(Cliente c) {
@@ -722,7 +733,7 @@ public class DocumentoJF extends javax.swing.JFrame {
             return;
         }
         try {
-            if (listProcessoPessoal.getElementAt(jListProcessoDadosPessoais.getSelectedIndex()) == "Processos") {
+            if (!btnPessoal) { //processo
                 try {
                     p = (Processo) listProcessos.getElementAt(jListProcessos.getSelectedIndex());
                 } catch (Exception e) {
@@ -739,7 +750,7 @@ public class DocumentoJF extends javax.swing.JFrame {
                     JOptionPane.showMessageDialog(this, erro, "Tipo de Documento", JOptionPane.INFORMATION_MESSAGE);
                     return;
                 }
-            } else if (listProcessoPessoal.getElementAt(jListProcessoDadosPessoais.getSelectedIndex()) == "Dados Pessoais") {
+            } else if (btnPessoal) { //dados pessoais
                 dp = new DocumentoPessoal();
                 dp.setID_CLIENTE(c.getId());
             }
@@ -762,7 +773,7 @@ public class DocumentoJF extends javax.swing.JFrame {
             JFileChooser fl = new JFileChooser();
             fl.setDialogTitle("Selecionar diretório");
             fl.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-            int op = fl.showOpenDialog(null);
+            int op = fl.showSaveDialog(null);
             if (op == JFileChooser.APPROVE_OPTION) {
                 //desabilitei o botao de download enquanto realiza um download para não acontecer te clicar para baixar duas vezes
                 downloadBtn.setEnabled(false);
@@ -812,7 +823,7 @@ public class DocumentoJF extends javax.swing.JFrame {
     }
 
     private void editar() {
-        if (jListDocumento.getSelectedIndices().length>1){
+        if (jListDocumento.getSelectedIndices().length > 1) {
             JOptionPane.showMessageDialog(null, "Edite um documento por vez.");
             return;
         }
@@ -929,8 +940,7 @@ public class DocumentoJF extends javax.swing.JFrame {
             Cliente c = (Cliente) listClientes.getElementAt(jListCliente.getSelectedIndex());
             NovoProcessoJD jd = new NovoProcessoJD(null, true, c);
             jd.setVisible(true);
-            jListProcessoDadosPessoais.setSelectedIndex(0);
-            verificarJListProcessoPessoal();
+            processoBtnActionPerformed(null);
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, "Sem cliente selecionado.\n" + ex, "Erro", JOptionPane.INFORMATION_MESSAGE);
         }

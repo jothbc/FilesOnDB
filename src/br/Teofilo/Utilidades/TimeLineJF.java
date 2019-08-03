@@ -42,7 +42,6 @@ public class TimeLineJF extends javax.swing.JFrame {
         height_inicial = this.getSize().height;
         jSliderOption.setValue(Calendar.getInstance().get(Calendar.MONTH)+1);
         jSliderOptionStateChanged(null);
-        //atualizarTarefas();
     }
 
     /**
@@ -63,15 +62,15 @@ public class TimeLineJF extends javax.swing.JFrame {
         jLabelMes = new javax.swing.JLabel();
         concluidosCBox = new javax.swing.JCheckBox();
         jPanelMenu = new javax.swing.JPanel();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
-        jButton6 = new javax.swing.JButton();
+        closeBtn = new javax.swing.JButton();
+        addTarefaBtn = new javax.swing.JButton();
+        redimensionarBtn = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setUndecorated(true);
 
         jPanelPrincipal.setBackground(new java.awt.Color(255, 255, 255));
-        jPanelPrincipal.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jPanelPrincipal.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -144,7 +143,8 @@ public class TimeLineJF extends javax.swing.JFrame {
                     .addComponent(concluidosCBox)
                     .addComponent(jSliderOption, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jsp, javax.swing.GroupLayout.DEFAULT_SIZE, 378, Short.MAX_VALUE))
+                .addComponent(jsp)
+                .addContainerGap())
         );
 
         jPanelMenu.setBackground(new java.awt.Color(0, 0, 0));
@@ -160,40 +160,40 @@ public class TimeLineJF extends javax.swing.JFrame {
             }
         });
 
-        jButton3.setBackground(new java.awt.Color(0, 0, 0));
-        jButton3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/Teofilo/IMG/1x/ic_cancel_white_24px.png"))); // NOI18N
-        jButton3.setBorder(null);
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
+        closeBtn.setBackground(new java.awt.Color(0, 0, 0));
+        closeBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/Teofilo/IMG/1x/ic_cancel_white_24px.png"))); // NOI18N
+        closeBtn.setBorder(null);
+        closeBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
+                closeBtnActionPerformed(evt);
             }
         });
 
-        jButton4.setBackground(new java.awt.Color(0, 0, 0));
-        jButton4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/Teofilo/IMG/1x/ic_add_alarm_24px_white.png"))); // NOI18N
-        jButton4.setBorder(null);
-        jButton4.addMouseListener(new java.awt.event.MouseAdapter() {
+        addTarefaBtn.setBackground(new java.awt.Color(0, 0, 0));
+        addTarefaBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/Teofilo/IMG/1x/ic_add_alarm_24px_white.png"))); // NOI18N
+        addTarefaBtn.setBorder(null);
+        addTarefaBtn.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                jButton4MouseEntered(evt);
+                addTarefaBtnMouseEntered(evt);
             }
         });
-        jButton4.addActionListener(new java.awt.event.ActionListener() {
+        addTarefaBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton4ActionPerformed(evt);
+                addTarefaBtnActionPerformed(evt);
             }
         });
 
-        jButton6.setBackground(new java.awt.Color(0, 0, 0));
-        jButton6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/Teofilo/IMG/1x/ic_fullscreen_exit_18px_white.png"))); // NOI18N
-        jButton6.setBorder(null);
-        jButton6.addMouseListener(new java.awt.event.MouseAdapter() {
+        redimensionarBtn.setBackground(new java.awt.Color(0, 0, 0));
+        redimensionarBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/Teofilo/IMG/1x/ic_fullscreen_exit_18px_white.png"))); // NOI18N
+        redimensionarBtn.setBorder(null);
+        redimensionarBtn.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                jButton6MouseEntered(evt);
+                redimensionarBtnMouseEntered(evt);
             }
         });
-        jButton6.addActionListener(new java.awt.event.ActionListener() {
+        redimensionarBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton6ActionPerformed(evt);
+                redimensionarBtnActionPerformed(evt);
             }
         });
 
@@ -201,18 +201,18 @@ public class TimeLineJF extends javax.swing.JFrame {
         jPanelMenu.setLayout(jPanelMenuLayout);
         jPanelMenuLayout.setHorizontalGroup(
             jPanelMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jButton4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 46, Short.MAX_VALUE)
-            .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jButton6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(addTarefaBtn, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 46, Short.MAX_VALUE)
+            .addComponent(closeBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(redimensionarBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         jPanelMenuLayout.setVerticalGroup(
             jPanelMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelMenuLayout.createSequentialGroup()
-                .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(closeBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 30, Short.MAX_VALUE)
+                .addComponent(addTarefaBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 39, Short.MAX_VALUE)
-                .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(redimensionarBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         javax.swing.GroupLayout jPanelPrincipalLayout = new javax.swing.GroupLayout(jPanelPrincipal);
@@ -229,7 +229,7 @@ public class TimeLineJF extends javax.swing.JFrame {
             .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(jPanelPrincipalLayout.createSequentialGroup()
                 .addComponent(jPanelMenu, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 312, Short.MAX_VALUE))
+                .addGap(0, 330, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -247,9 +247,9 @@ public class TimeLineJF extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+    private void closeBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_closeBtnActionPerformed
         dispose();
-    }//GEN-LAST:event_jButton3ActionPerformed
+    }//GEN-LAST:event_closeBtnActionPerformed
 
     private void jPanelMenuMouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanelMenuMouseDragged
         Point p = this.getLocation();
@@ -261,31 +261,31 @@ public class TimeLineJF extends javax.swing.JFrame {
         point.y = evt.getY();
     }//GEN-LAST:event_jPanelMenuMousePressed
 
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+    private void addTarefaBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addTarefaBtnActionPerformed
         incluir();
-    }//GEN-LAST:event_jButton4ActionPerformed
+    }//GEN-LAST:event_addTarefaBtnActionPerformed
 
-    private void jButton4MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton4MouseEntered
+    private void addTarefaBtnMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_addTarefaBtnMouseEntered
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton4MouseEntered
+    }//GEN-LAST:event_addTarefaBtnMouseEntered
 
     private void jSliderOptionStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jSliderOptionStateChanged
         jLabelMes.setText("Mês " + escritaMes());
         atualizarTarefas();
     }//GEN-LAST:event_jSliderOptionStateChanged
 
-    private void jButton6MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton6MouseEntered
+    private void redimensionarBtnMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_redimensionarBtnMouseEntered
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton6MouseEntered
+    }//GEN-LAST:event_redimensionarBtnMouseEntered
 
-    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
+    private void redimensionarBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_redimensionarBtnActionPerformed
         redimensionavel = !redimensionavel;
         if (redimensionavel)
             atualizarTarefas();
         else {
             this.setSize(this.getWidth(), height_inicial);
         }
-    }//GEN-LAST:event_jButton6ActionPerformed
+    }//GEN-LAST:event_redimensionarBtnActionPerformed
 
     private void concluidosCBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_concluidosCBoxActionPerformed
         atualizarTarefas();
@@ -327,11 +327,10 @@ public class TimeLineJF extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton addTarefaBtn;
+    private javax.swing.JButton closeBtn;
     private javax.swing.JCheckBox concluidosCBox;
     private javax.swing.JTextField desc;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton6;
     private javax.swing.JLabel jLabelMes;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanelMenu;
@@ -339,6 +338,7 @@ public class TimeLineJF extends javax.swing.JFrame {
     private javax.swing.JSlider jSliderOption;
     private javax.swing.JPanel jp;
     private javax.swing.JScrollPane jsp;
+    private javax.swing.JButton redimensionarBtn;
     // End of variables declaration//GEN-END:variables
 
     private void incluir() {
@@ -418,6 +418,7 @@ public class TimeLineJF extends javax.swing.JFrame {
     private void redimensionarTela() {
         int height = jsp.getLocation().y + 5 + 50;  //5 pixel extra, 50 tamanho y dos buttons
         this.setSize(this.getWidth(), height + (qtd_linhas * 50));
+        jPanelPrincipal.setSize(this.getSize());
     }
 
     private String escritaMes() {
