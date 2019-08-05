@@ -15,7 +15,6 @@ import br.Teofilo.DAO.DocumentoDAO;
 import br.Teofilo.DAO.UserDAO;
 import funcoes.Conv;
 import funcoes.RSA;
-import static funcoes.RSA.PATH_CHAVE_PUBLICA;
 import java.awt.Desktop;
 import java.awt.Point;
 import java.io.File;
@@ -47,6 +46,12 @@ public class UploadJD extends javax.swing.JDialog {
 
     /**
      * Creates new form UploadJD
+     * @param parent
+     * @param modal
+     * @param c
+     * @param t
+     * @param dp
+     * @param p
      */
     public UploadJD(java.awt.Frame parent, boolean modal, Cliente c, TipoDoc t, DocumentoPessoal dp, Processo p) {
         super(parent, modal);

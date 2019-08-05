@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: 02-Ago-2019 às 21:36
+-- Generation Time: 05-Ago-2019 às 21:41
 -- Versão do servidor: 10.1.36-MariaDB
 -- versão do PHP: 7.2.11
 
@@ -159,7 +159,9 @@ CREATE TABLE `documentos` (
 
 CREATE TABLE `documentos_arq` (
   `id` int(11) NOT NULL,
-  `arq` longblob
+  `arq` longblob,
+  `crip` tinyint(4) DEFAULT '0',
+  `crip2` varchar(256) DEFAULT 'null'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -183,7 +185,9 @@ CREATE TABLE `documentos_pessoais` (
 
 CREATE TABLE `documentos_pessoais_arq` (
   `id` int(11) NOT NULL,
-  `arq` longblob
+  `arq` longblob,
+  `crip` tinyint(4) DEFAULT '0',
+  `crip2` varchar(256) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------

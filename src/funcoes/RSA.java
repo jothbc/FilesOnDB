@@ -8,8 +8,6 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.nio.file.Files;
-import java.nio.file.OpenOption;
-import java.nio.file.StandardOpenOption;
 import java.security.InvalidKeyException;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
@@ -29,7 +27,7 @@ public class RSA {
     public static final String PATH_CHAVE_PRIVADA = "C:/keys/private.key";      //Local da chave privada no sistema de arquivos.
     public static final String PATH_CHAVE_PUBLICA = "C:/keys/public.key";       //Local da chave pública no sistema de arquivos.
     static String IV = "AAAAAAAAAAAAAAAA";
-
+    
     //Gera a chave que contém um par de chave Privada e Pública usando 2048
     // bytes. Armazena o conjunto de chaves nos arquivos private.key e public.key
     public static void geraChave() {
@@ -112,7 +110,7 @@ public class RSA {
             dectyptedText = cipher.doFinal(fileContent);
             fileCrip = new File(f.getPath());                            //Criamos um nome para o arquivo
             BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(fileCrip)); //Criamos o arquivo
-            bos.write(fileContent); //Gravamos os bytes lá
+            bos.write(dectyptedText); //Gravamos os bytes lá
             bos.close(); //Fechamos o stream.
         } catch (IOException | InvalidKeyException | NoSuchAlgorithmException | BadPaddingException | IllegalBlockSizeException | NoSuchPaddingException ex) {
             System.err.println(ex);
@@ -132,20 +130,20 @@ public class RSA {
         return new String(dectyptedText);
     }
 
-    public static byte[] encryptAES(String textopuro, String chaveencriptacao) throws Exception {
+     public static byte[] encrypt(File bytes_puros, String chaveencriptacao) throws Exception {
         Cipher encripta = Cipher.getInstance("AES/CBC/PKCS5Padding", "SunJCE");
         SecretKeySpec key = new SecretKeySpec(chaveencriptacao.getBytes("UTF-8"), "AES");
         encripta.init(Cipher.ENCRYPT_MODE, key, new IvParameterSpec(IV.getBytes("UTF-8")));
-        return encripta.doFinal(textopuro.getBytes("UTF-8"));
+        return encripta.doFinal(Files.readAllBytes(bytes_puros.toPath()));
     }
 
-    public static String decryptAES(byte[] textoencriptado, String chaveencriptacao) throws Exception {
+    public static byte[] decrypt(File bytes_encriptados, String chaveencriptacao) throws Exception {
         Cipher decripta = Cipher.getInstance("AES/CBC/PKCS5Padding", "SunJCE");
         SecretKeySpec key = new SecretKeySpec(chaveencriptacao.getBytes("UTF-8"), "AES");
         decripta.init(Cipher.DECRYPT_MODE, key, new IvParameterSpec(IV.getBytes("UTF-8")));
-        return new String(decripta.doFinal(textoencriptado), "UTF-8");
+        return decripta.doFinal(Files.readAllBytes(bytes_encriptados.toPath()));
     }
-
+    
     public static void main(String[] args) {
         try {
             if (!verificaSeExisteChavesNoSO()) {                                //// Verifica se já existe um par de chaves, caso contrário gera as chaves..
