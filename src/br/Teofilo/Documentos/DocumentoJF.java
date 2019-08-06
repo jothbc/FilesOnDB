@@ -795,89 +795,23 @@ public class DocumentoJF extends javax.swing.JFrame {
                 informtxt.setText("Baixando...");
                 informtxt.setForeground(Color.red);
                 File arquivo = null;
-                PrivateKey CHAVE_RSA_PRIVADA = null;
+                //PrivateKey CHAVE_RSA_PRIVADA = null;
                 if (listDocumentos.getElementAt(jListDocumento.getSelectedIndices()[0]) instanceof Documento) {
                     Documento[] d = new Documento[jListDocumento.getSelectedIndices().length];
                     for (int x = 0; x < d.length; x++) {
                         d[x] = (Documento) listDocumentos.getElementAt(jListDocumento.getSelectedIndices()[x]);
-                        if (d[x].isCrip()) {
-                            if (CHAVE_RSA_PRIVADA == null) { //obtem a chave privada
-                                JFileChooser chooser = new JFileChooser();
-                                chooser.setDialogTitle("Selecione a chave privada para descriptografar o(s) arquivo(s)");
-                                chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-                                int op2 = chooser.showOpenDialog(null);
-                                if (op2 == JFileChooser.APPROVE_OPTION) {
-                                    try {
-                                        ObjectInputStream inputStream = null;
-                                        inputStream = new ObjectInputStream(new FileInputStream(chooser.getSelectedFile()));
-                                        CHAVE_RSA_PRIVADA = (PrivateKey) inputStream.readObject();
-                                    } catch (FileNotFoundException ex) {
-                                        Logger.getLogger(DocumentoJF.class.getName()).log(Level.SEVERE, null, ex);
-                                    } catch (IOException | ClassNotFoundException ex) {
-                                        Logger.getLogger(DocumentoJF.class.getName()).log(Level.SEVERE, null, ex);
-                                    }
-                                } else {
-                                    JOptionPane.showMessageDialog(null, "Operação abortada");
-                                    return;
-                                }
-                            }
-                            try {
-                                byte[] chave_AES_cripDB = d[x].getCrip2();
-                                System.out.println(chave_AES_cripDB.length);
-                                
-                                String decrip = RSA.decriptografa(chave_AES_cripDB, CHAVE_RSA_PRIVADA);
-                                //CONVERTER ESSE HEXA EM BYTES DE NOVO!!!!!!!!!!
-                                System.out.println(decrip);
-                                SecretKey chaveAES = new SecretKeySpec(decrip.getBytes("UTF-8"), "AES");
-                                arquivo = new DocumentoDAO().getArquivo(d[x].getId(), fl.getSelectedFile().getPath() + "\\", "documentos");
-                                arquivo = AES.decrypt(arquivo.getPath(), arquivo.getParent()+ arquivo.getName().substring(8), chaveAES);
-//                                ObjectInputStream inputStream = null;
-//                                inputStream = new ObjectInputStream(new FileInputStream("C:\\Users\\User\\Desktop\\chaves\\public.key"));
-//                                PublicKey CHAVE_RSA_PUBLICA = (PublicKey) inputStream.readObject();
-//
-//                                System.out.println(RSA.criptografa(AES.bytesToHex(chaveAES.getEncoded()), CHAVE_RSA_PUBLICA));
-                            } catch (Exception e) {
-                                System.out.println(e);
-                            }
-                        } else { //arquivo não criptografado
-                            arquivo = new DocumentoDAO().getArquivo(d[x].getId(), fl.getSelectedFile().getPath() + "\\", "documentos");
-                        }
+                        arquivo = new DocumentoDAO().getArquivo(d[x].getId(), fl.getSelectedFile().getPath() + "\\", "documentos");
                     }
                 } else if (listDocumentos.getElementAt(jListDocumento.getSelectedIndex()) instanceof DocumentoPessoal) {
                     DocumentoPessoal[] dp = new DocumentoPessoal[jListDocumento.getSelectedIndices().length];
                     for (int x = 0; x < dp.length; x++) {
                         dp[x] = (DocumentoPessoal) listDocumentos.getElementAt(jListDocumento.getSelectedIndices()[x]);
-                        if (dp[x].isCrip()) {
-                            if (CHAVE_RSA_PRIVADA == null) {
-                                JFileChooser chooser = new JFileChooser();
-                                chooser.setDialogTitle("Selecione a chave privada para descriptografar o(s) arquivo(s)");
-                                chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-                                int op2 = chooser.showOpenDialog(null);
-                                if (op2 == JFileChooser.APPROVE_OPTION) {
-                                    try {
-                                        ObjectInputStream inputStream = null;
-                                        inputStream = new ObjectInputStream(new FileInputStream(chooser.getSelectedFile()));
-                                        CHAVE_RSA_PRIVADA = (PrivateKey) inputStream.readObject();
-                                    } catch (FileNotFoundException ex) {
-                                        Logger.getLogger(DocumentoJF.class.getName()).log(Level.SEVERE, null, ex);
-                                    } catch (IOException | ClassNotFoundException ex) {
-                                        Logger.getLogger(DocumentoJF.class.getName()).log(Level.SEVERE, null, ex);
-                                    }
-                                } else {
-                                    JOptionPane.showMessageDialog(null, "Operação abortada");
-                                    return;
-                                }
-                            }
-
-                            //aqui
-                        } else {
-                            arquivo = new DocumentoDAO().getArquivo(dp[x].getId(), fl.getSelectedFile().getPath() + "\\", "documentos_pessoais");
-                        }
+                        arquivo = new DocumentoDAO().getArquivo(dp[x].getId(), fl.getSelectedFile().getPath() + "\\", "documentos_pessoais");
                     }
-                    downloadBtn.setEnabled(true);
-                    informtxt.setText("");
                 }
             }
+            downloadBtn.setEnabled(true);
+            informtxt.setText("");
         }).start();
     }
 

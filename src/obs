@@ -16,3 +16,48 @@ teofilo.*
 TO 
 'root'@'%' ;
 FLUSH PRIVILEGES;
+
+
+
+if (d[x].isCrip()) {
+                            if (CHAVE_RSA_PRIVADA == null) { //obtem a chave privada
+                                JFileChooser chooser = new JFileChooser();
+                                chooser.setDialogTitle("Selecione a chave privada para descriptografar o(s) arquivo(s)");
+                                chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+                                int op2 = chooser.showOpenDialog(null);
+                                if (op2 == JFileChooser.APPROVE_OPTION) {
+                                    try {
+                                        ObjectInputStream inputStream = null;
+                                        inputStream = new ObjectInputStream(new FileInputStream(chooser.getSelectedFile()));
+                                        CHAVE_RSA_PRIVADA = (PrivateKey) inputStream.readObject();
+                                    } catch (FileNotFoundException ex) {
+                                        Logger.getLogger(DocumentoJF.class.getName()).log(Level.SEVERE, null, ex);
+                                    } catch (IOException | ClassNotFoundException ex) {
+                                        Logger.getLogger(DocumentoJF.class.getName()).log(Level.SEVERE, null, ex);
+                                    }
+                                } else {
+                                    JOptionPane.showMessageDialog(null, "Operação abortada");
+                                    return;
+                                }
+                            }
+                            try {
+                                byte[] chave_AES_cripDB = d[x].getCrip2();
+                                System.out.println(chave_AES_cripDB.length);
+
+                                String decrip = RSA.decriptografa(chave_AES_cripDB, CHAVE_RSA_PRIVADA);
+                                //CONVERTER ESSE HEXA EM BYTES DE NOVO!!!!!!!!!!
+                                System.out.println(decrip);
+                                SecretKey chaveAES = new SecretKeySpec(decrip.getBytes("UTF-8"), "AES");
+                                arquivo = new DocumentoDAO().getArquivo(d[x].getId(), fl.getSelectedFile().getPath() + "\\", "documentos");
+                                arquivo = AES.decrypt(arquivo.getPath(), arquivo.getParent() + arquivo.getName().substring(8), chaveAES);
+//                                ObjectInputStream inputStream = null;
+//                                inputStream = new ObjectInputStream(new FileInputStream("C:\\Users\\User\\Desktop\\chaves\\public.key"));
+//                                PublicKey CHAVE_RSA_PUBLICA = (PublicKey) inputStream.readObject();
+//
+//                                System.out.println(RSA.criptografa(AES.bytesToHex(chaveAES.getEncoded()), CHAVE_RSA_PUBLICA));
+                            } catch (Exception e) {
+                                System.out.println(e);
+                            }
+                        } else { //arquivo não criptografado
+                            arquivo = new DocumentoDAO().getArquivo(d[x].getId(), fl.getSelectedFile().getPath() + "\\", "documentos");
+                        }

@@ -60,6 +60,7 @@ public class UploadJD extends javax.swing.JDialog {
         super(parent, modal);
         this.arquivos = new DefaultListModel<>();
         initComponents();
+        jCherCrip.setEnabled(false); /////////////// criado para inpedir de usar atualmente
         cliente = c;
         tipoDoc = t;
         documentoPessoal = dp;
