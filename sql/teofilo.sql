@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: 05-Ago-2019 às 21:41
+-- Generation Time: 06-Ago-2019 às 21:17
 -- Versão do servidor: 10.1.36-MariaDB
 -- versão do PHP: 7.2.11
 
@@ -148,7 +148,9 @@ CREATE TABLE `documentos` (
   `modificacao` date DEFAULT NULL,
   `status` varchar(45) DEFAULT NULL,
   `ID_TIPO` int(4) DEFAULT NULL,
-  `ID_PROCESSO` int(4) DEFAULT NULL
+  `ID_PROCESSO` int(4) DEFAULT NULL,
+  `crip` tinyint(4) DEFAULT '0',
+  `crip2` varbinary(2048) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -159,9 +161,7 @@ CREATE TABLE `documentos` (
 
 CREATE TABLE `documentos_arq` (
   `id` int(11) NOT NULL,
-  `arq` longblob,
-  `crip` tinyint(4) DEFAULT '0',
-  `crip2` varchar(256) DEFAULT 'null'
+  `arq` longblob
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -174,7 +174,9 @@ CREATE TABLE `documentos_pessoais` (
   `id` int(11) NOT NULL,
   `nome` varchar(200) DEFAULT NULL,
   `ID_CLIENTE` int(4) DEFAULT NULL,
-  `alteracao` date DEFAULT NULL
+  `alteracao` date DEFAULT NULL,
+  `crip` tinyint(4) DEFAULT '0',
+  `crip2` varbinary(2048) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -185,9 +187,7 @@ CREATE TABLE `documentos_pessoais` (
 
 CREATE TABLE `documentos_pessoais_arq` (
   `id` int(11) NOT NULL,
-  `arq` longblob,
-  `crip` tinyint(4) DEFAULT '0',
-  `crip2` varchar(256) DEFAULT NULL
+  `arq` longblob
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
