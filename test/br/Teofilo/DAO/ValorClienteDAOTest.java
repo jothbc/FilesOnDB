@@ -6,6 +6,7 @@
 package br.Teofilo.DAO;
 
 import br.Teofilo.Bean.GerarLogErro;
+import funcoes.AES;
 import funcoes.CDate;
 import funcoes.RSA;
 import static funcoes.RSA.ALGORITHM;
@@ -63,112 +64,64 @@ public class ValorClienteDAOTest {
 
     @Test
     public void main() {
-        OutputStream outStream = null;
         try {
             //Passa como parametro o tamanho da chave de 128, 192 ou 256 bits
-            SecretKey chaveAES = EncriptaDecriptaAES(256);
-            File chave = new File("C:\\JCR LOG\\AES.key");
-            outStream = new FileOutputStream(chave);
-            outStream.write(chaveAES.getEncoded());
-            encrypt("C:\\Users\\User\\Desktop\\chaves\\ex.png", "C:\\Users\\User\\Desktop\\chaves\\encrip.png",chaveAES);
-            decrypt("C:\\Users\\User\\Desktop\\chaves\\encrip.png", "C:\\Users\\User\\Desktop\\chaves\\decrip.png",chaveAES);
+            SecretKey chaveAES = AES.gerarChave(256);                      //a chave em si
+            System.out.println("Tamanho da chave: "+chaveAES.getEncoded().length);  //tamanho da chave
+            System.out.println(AES.bytesToHex(chaveAES.getEncoded()));          //escreve a chave
+            
+            File chave = new File("C:\\JCR LOG\\AES.key");                      //cria um arquivo para a chave
+            OutputStream outStream = new FileOutputStream(chave);               //
+            outStream.write(chaveAES.getEncoded());                             //
+            outStream.close();                                                  //escreve no arquivo a chave
+            
+            File chaveEntrada = new File("C:\\JCR LOG\\AES.key");               //cria um novo arquivo para recuperar a chave
+            InputStream inpStream = new FileInputStream(chaveEntrada);          //
+            byte[] chave_entrada_bytes = inpStream.readAllBytes();              //
+            System.out.println("Tamanho da chave obtida: "+chave_entrada_bytes.length); //escreve o tamanho da chave obtida
+            System.out.println(AES.bytesToHex(chave_entrada_bytes));            //escreve a chave obtida no arquivo
+            
+            SecretKey chaveAESResgatada = new SecretKeySpec(chave_entrada_bytes, "AES");
+            System.out.println("Chave AES resgatada:");
+            System.out.println(AES.bytesToHex(chaveAESResgatada.getEncoded()));
+            //testes com a escrita e obtenção da chave realizados com sucesso
+            //ambos resultaram na mesma chave sem nenhuma alteração.
+            
+            
+            
+            //tentando encriptar a chave com o algoritmo RSA
+            File RSA_CHAVE_PUBLICA = new File("C:\\Users\\User\\Desktop\\chaves\\public.key");  //carregar para arquivos as chaves RSA
+            File RSA_CHAVE_PRIVADA = new File("C:\\Users\\User\\Desktop\\chaves\\private.key"); 
+            
+            ObjectInputStream objInpPulic = new ObjectInputStream(new FileInputStream(RSA_CHAVE_PUBLICA)); //carregar para Classes as chaves RSA
+            PublicKey publicKey = (PublicKey) objInpPulic.readObject();
+            
+            ObjectInputStream objInpPrivate = new ObjectInputStream(new FileInputStream(RSA_CHAVE_PRIVADA)); //carregar para Classes as chaves RSA
+            PrivateKey privateKey = (PrivateKey) objInpPrivate.readObject();
+            
+            String chave_AES_em_String = AES.bytesToHex(chave_entrada_bytes);   //chave AES transformada em String
+            
+            byte[] crip = RSA.criptografa(chave_AES_em_String, publicKey);      //criptografa usando chave Publica
+            System.out.println("Chave AES criptografada com rsa, tamanho :"+crip.length*8);
+            System.out.println(AES.bytesToHex(crip));
+            
+            
+//            String decrip = RSA.decriptografa(crip, privateKey);                //descriptografa usando chave Privada
+//            System.out.println("Chave AES descriptografada com rsa, tamanho: "+decrip.length()*4);
+//            System.out.println(decrip);
+            
+            
+            
+            
         } catch (FileNotFoundException ex) {
             Logger.getLogger(ValorClienteDAOTest.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
             Logger.getLogger(ValorClienteDAOTest.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            try {
-                outStream.close();
-            } catch (IOException ex) {
-                Logger.getLogger(ValorClienteDAOTest.class.getName()).log(Level.SEVERE, null, ex);
-            }
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(ValorClienteDAOTest.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
-    public SecretKey EncriptaDecriptaAES(int valorKey) {
-        try {
-            KeyGenerator keygenerator = KeyGenerator.getInstance("AES");
-            keygenerator.init(valorKey);
-            return keygenerator.generateKey();
-        } catch (NoSuchAlgorithmException e) {
-            System.err.println(e);
-            return null;
-        }
-    }
-
-    public void encrypt(String srcPath, String destPath, SecretKey chaveAES) {
-        try {
-            File rawFile = new File(srcPath);
-            File imagemEncriptada = new File(destPath);
-            InputStream inStream = null;
-            OutputStream outStream = null;
-            Cipher cifraAES = Cipher.getInstance("AES/CBC/PKCS5Padding");
-            cifraAES.init(Cipher.ENCRYPT_MODE, chaveAES,
-                    //Inicializa a cifra para o processo de encriptacao
-                    new IvParameterSpec(IV.getBytes("UTF-8")));
-
-            //Inicializa o input e o output streams
-            inStream = new FileInputStream(rawFile);
-            outStream = new FileOutputStream(imagemEncriptada);
-
-            byte[] buffer = new byte[256];
-            int len;
-
-            while ((len = inStream.read(buffer)) > 0) {
-                //Para criptografar/descriptografar varios blocos usa-se o metodo update().
-                outStream.write(cifraAES.update(buffer, 0, len));
-                outStream.flush();
-            }
-
-            //Depois de tudo feito chamamos o metodo doFinal().
-            outStream.write(cifraAES.doFinal());
-            inStream.close();
-            outStream.close();
-        } catch (IOException | InvalidAlgorithmParameterException | InvalidKeyException | NoSuchAlgorithmException | BadPaddingException | IllegalBlockSizeException | NoSuchPaddingException e) {
-            System.err.println(e);
-        }
-    }
-
-    public void decrypt(String srcPath, String destPath, SecretKey chaveAES) {
-        try {
-            File encryptedFile = new File(srcPath);
-            File decryptedFile = new File(destPath);
-            InputStream inStream = null;
-            OutputStream outStream = null;
-
-            //Inicializa o cipher para decriptografar
-            Cipher cifraAES = Cipher.getInstance("AES/CBC/PKCS5Padding");
-            cifraAES.init(Cipher.DECRYPT_MODE, chaveAES, new IvParameterSpec(IV.getBytes("UTF-8")));
-
-            //Inicializa o input e o output streams
-            inStream = new FileInputStream(encryptedFile);
-            outStream = new FileOutputStream(decryptedFile);
-
-            byte[] buffer = new byte[256];
-            int len;
-
-            while ((len = inStream.read(buffer)) > 0) {
-                outStream.write(cifraAES.update(buffer, 0, len));
-                outStream.flush();
-            }
-
-            outStream.write(cifraAES.doFinal());
-            inStream.close();
-            outStream.close();
-        } catch (IOException | InvalidAlgorithmParameterException | InvalidKeyException | NoSuchAlgorithmException | BadPaddingException | IllegalBlockSizeException | NoSuchPaddingException e) {
-            System.err.println(e);
-        }
-    }
-
-    public static String bytesToHex(byte[] bytes) {
-        char[] hexChars = new char[bytes.length * 2];
-        for (int j = 0; j < bytes.length; j++) {
-            int v = bytes[j] & 0xFF;
-            hexChars[j * 2] = HEXARRAY[v >>> 4];
-            hexChars[j * 2 + 1] = HEXARRAY[v & 0x0F];
-        }
-        return new String(hexChars);
-    }
 
 //    @Test
 //    public void testRSAAES() {

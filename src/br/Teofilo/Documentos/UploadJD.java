@@ -13,6 +13,7 @@ import br.Teofilo.Bean.TipoDoc;
 import br.Teofilo.DAO.ComentarioDAO;
 import br.Teofilo.DAO.DocumentoDAO;
 import br.Teofilo.DAO.UserDAO;
+import funcoes.AES;
 import funcoes.Conv;
 import funcoes.RSA;
 import java.awt.Desktop;
@@ -25,6 +26,7 @@ import java.io.ObjectInputStream;
 import java.security.PublicKey;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.crypto.SecretKey;
 import javax.swing.DefaultListModel;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -42,10 +44,11 @@ public class UploadJD extends javax.swing.JDialog {
     private Processo processo;
     private TipoDoc tipoDoc;
     private double tam = 0;
-    private PublicKey pk;
+    private PublicKey rsaKey;
 
     /**
      * Creates new form UploadJD
+     *
      * @param parent
      * @param modal
      * @param c
@@ -310,10 +313,10 @@ public class UploadJD extends javax.swing.JDialog {
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jCherCripActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCherCripActionPerformed
-        if (jCherCrip.isSelected()){
+        if (jCherCrip.isSelected()) {
             selecionarPK();
-        }else{
-            pk = null;
+        } else {
+            rsaKey = null;
         }
     }//GEN-LAST:event_jCherCripActionPerformed
 
@@ -412,7 +415,7 @@ public class UploadJD extends javax.swing.JDialog {
                     File f_temp = new File(diretorio + "\\" + f);
                     if (f_temp.isFile()) {
                         arquivos.addElement(f_temp);
-                        tam+=f_temp.length();
+                        tam += f_temp.length();
                     }
                 }
             } else {                                //senao é arquivo
@@ -420,7 +423,7 @@ public class UploadJD extends javax.swing.JDialog {
                 File f_temp = fl.getSelectedFile();
                 if (f_temp.isFile()) {
                     arquivos.addElement(f_temp);
-                    tam+=f_temp.length();
+                    tam += f_temp.length();
                 }
             }
         }
@@ -436,11 +439,22 @@ public class UploadJD extends javax.swing.JDialog {
             int count = 0;
             while (arquivos.size() > 0) {
                 File f = (File) arquivos.getElementAt(arquivos.size() - 1);
-                if (jCherCrip.isSelected()){
-                    f = RSA.criptografa(f, pk);
+                
+                byte[] aes = null;
+                if (jCherCrip.isSelected()) {
+                    SecretKey aesKey = AES.gerarChave(256);
+                    byte[] aes_crip = RSA.criptografa(aesKey.getEncoded().toString(), rsaKey); //chave aes crip
+                    System.out.println("Tamanho da chave aes crip em rsa: "+aes_crip.length);
+                    System.out.println("Chave aes crip em rsa: "+aes_crip); 
+                    
+                    
+                    f = AES.encrypt(f.getPath(), f.getParent()+"\\encrip - " + f.getName(), aesKey);             //arquivo crip
+                    aes = aes_crip;
+                    System.out.println("Chave aes original: " + aesKey.getEncoded().toString());
+
                 }
                 if (processo != null) {
-                    if (!new DocumentoDAO().addDocumento(f, cliente.getId(), tipoDoc.getId(), processo.getId(),jCherCrip.isSelected())){
+                    if (!new DocumentoDAO().addDocumento(f, cliente.getId(), tipoDoc.getId(), processo.getId(), jCherCrip.isSelected(), aes)) {
                         JOptionPane.showMessageDialog(null, "Erro ao tentar salvar o arquivo " + f.getName() + " no Banco de dados", "Erro", JOptionPane.ERROR_MESSAGE);
                         return;
                     } else {
@@ -453,7 +467,7 @@ public class UploadJD extends javax.swing.JDialog {
                         count++;
                     }
                 } else if (documentoPessoal != null) {
-                    if (!new DocumentoDAO().addDocumentoPessoal(f, cliente.getId(),jCherCrip.isSelected())) {
+                    if (!new DocumentoDAO().addDocumentoPessoal(f, cliente.getId(), jCherCrip.isSelected(), aes)) {
                         JOptionPane.showMessageDialog(null, "Erro ao tentar salvar o arquivo " + f.getName() + " no Banco de dados", "Erro", JOptionPane.ERROR_MESSAGE);
                         return;
                     } else {
@@ -466,7 +480,7 @@ public class UploadJD extends javax.swing.JDialog {
                         count++;
                     }
                 }
-                tam-=f.length();
+                tam -= f.length();
                 setTamtxt();
             }
             jProgressBar1.setVisible(false);
@@ -478,7 +492,7 @@ public class UploadJD extends javax.swing.JDialog {
             return;
         }
         File f = (File) arquivos.getElementAt(jList1.getSelectedIndex());
-        tam -=f.length();
+        tam -= f.length();
         arquivos.remove(jList1.getSelectedIndex());
         setTamtxt();
     }
@@ -495,7 +509,7 @@ public class UploadJD extends javax.swing.JDialog {
     }
 
     private void setTamtxt() {
-        tamtxt.setText("Tamanho total "+Conv.CDblDuasCasas(((tam/1024)/1024)) +"MB");
+        tamtxt.setText("Tamanho total " + Conv.CDblDuasCasas(((tam / 1024) / 1024)) + "MB");
     }
 
     private void selecionarPK() {
@@ -503,23 +517,23 @@ public class UploadJD extends javax.swing.JDialog {
         fl.setDialogTitle("Selecione a chave publica.");
         fl.setFileSelectionMode(JFileChooser.FILES_ONLY);
         int op = fl.showOpenDialog(null);
-        if (op == JFileChooser.APPROVE_OPTION){
+        if (op == JFileChooser.APPROVE_OPTION) {
             try {
                 //carrega a chave publica para variável pk
                 ObjectInputStream inputStream = null;
                 inputStream = new ObjectInputStream(new FileInputStream(fl.getSelectedFile()));
-                pk = (PublicKey) inputStream.readObject();
+                rsaKey = (PublicKey) inputStream.readObject();
             } catch (FileNotFoundException ex) {
                 Logger.getLogger(UploadJD.class.getName()).log(Level.SEVERE, null, ex);
                 GerarLogErro.gerar(ex.getMessage());
                 JOptionPane.showMessageDialog(null, "Algo deu errado, chave não carregada.");
-                pk =null;
+                rsaKey = null;
                 jCherCrip.setSelected(false);
             } catch (IOException | ClassNotFoundException ex) {
                 Logger.getLogger(UploadJD.class.getName()).log(Level.SEVERE, null, ex);
                 GerarLogErro.gerar(ex.getMessage());
                 JOptionPane.showMessageDialog(null, "Algo deu errado, chave não carregada.");
-                pk =null;
+                rsaKey = null;
                 jCherCrip.setSelected(false);
             }
         }

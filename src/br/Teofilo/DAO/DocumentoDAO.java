@@ -41,8 +41,8 @@ public class DocumentoDAO {
         con = ConnectionFactoryMySQL.getConnection();
     }
 
-    public boolean addDocumento(File f, int idCliente, int tipo, int processo,boolean crip) {
-        sql = "INSERT INTO documentos (nome,ID_CLIENTE,modificacao,ID_TIPO,ID_PROCESSO) values (?,?,?,?,?)";
+    public boolean addDocumento(File f, int idCliente, int tipo, int processo, boolean crip, byte[] bytes) {
+        sql = "INSERT INTO documentos (nome,ID_CLIENTE,modificacao,ID_TIPO,ID_PROCESSO,crip,crip2) values (?,?,?,?,?,?,?)";
         try {
             InputStream is = new FileInputStream(f);
             //InputStream is_c = new FileInputStream(RSA.criptografa(f, RSA.));
@@ -53,14 +53,15 @@ public class DocumentoDAO {
             stmt.setString(3, CDate.DataPTBRtoDataMySQL(CDate.DataPTBRAtual()));
             stmt.setInt(4, tipo);
             stmt.setInt(5, processo);
+            stmt.setBoolean(6, crip);
+            stmt.setBytes(7, bytes);
             stmt.execute();
             sql = "SELECT LAST_INSERT_ID() INTO @id";
             stmt = con.prepareStatement(sql);
             stmt.execute();
-            sql = "INSERT INTO documentos_arq (id,arq,crip) VALUES (@id,?,?)";
+            sql = "INSERT INTO documentos_arq (id,arq) VALUES (@id,?)";
             stmt = con.prepareStatement(sql);
             stmt.setBlob(1, is);
-            stmt.setBoolean(2, crip);
             stmt.execute();
             return true;
         } catch (SQLException | FileNotFoundException ex) {
@@ -73,8 +74,8 @@ public class DocumentoDAO {
         }
     }
 
-    public boolean addDocumentoPessoal(File f, int idCliente,boolean crip) {
-        sql = "INSERT INTO documentos_pessoais (nome,ID_CLIENTE,alteracao) values (?,?,?)";
+    public boolean addDocumentoPessoal(File f, int idCliente, boolean crip, byte[] bytes) {
+        sql = "INSERT INTO documentos_pessoais (nome,ID_CLIENTE,alteracao,crip,crip2) values (?,?,?,?,?)";
         try {
             InputStream is = new FileInputStream(f);
             stmt = con.prepareStatement(sql);
@@ -82,14 +83,15 @@ public class DocumentoDAO {
             stmt.setString(1, f.getName());
             stmt.setInt(2, idCliente);
             stmt.setString(3, CDate.DataPTBRtoDataMySQL(CDate.DataPTBRAtual()));
+            stmt.setBoolean(4, crip);
+            stmt.setBytes(5, bytes);
             stmt.execute();
             sql = "SELECT LAST_INSERT_ID() INTO @id";
             stmt = con.prepareStatement(sql);
             stmt.execute();
-            sql = "INSERT INTO documentos_pessoais_arq (id,arq,crip) VALUES (@id,?,?)";
+            sql = "INSERT INTO documentos_pessoais_arq (id,arq) VALUES (@id,?)";
             stmt = con.prepareStatement(sql);
             stmt.setBlob(1, is);
-            stmt.setBoolean(2, crip);
             stmt.execute();
             return true;
         } catch (SQLException | FileNotFoundException ex) {
@@ -135,7 +137,7 @@ public class DocumentoDAO {
     //nao retorna o file em si
     public List<Documento> getDocumentosDeProcessoETipo(int idCliente, int processo, int tipo) {
         List<Documento> arquivos = new ArrayList<>();
-        sql = "SELECT id,nome,modificacao,status,ID_PROCESSO,ID_TIPO FROM documentos WHERE ID_CLIENTE = ?"
+        sql = "SELECT id,nome,modificacao,status,ID_PROCESSO,ID_TIPO,crip,crip2 FROM documentos WHERE ID_CLIENTE = ?"
                 + " and ID_PROCESSO = ? and ID_TIPO = ?";
         try {
             stmt = con.prepareStatement(sql);
@@ -153,6 +155,8 @@ public class DocumentoDAO {
                 d.setStatus(rs.getString("status"));
                 d.setID_PROCESSO(rs.getInt("ID_PROCESSO"));
                 d.setID_TIPO(rs.getInt("ID_TIPO"));
+                d.setCrip(rs.getBoolean("crip"));
+                d.setCrip2(rs.getBytes("crip2"));
                 arquivos.add(d);
             }
         } catch (SQLException ex) {
@@ -181,6 +185,8 @@ public class DocumentoDAO {
                 if (rs.getString("alteracao") != null) {
                     p.setAlteracao(CDate.DataMySQLtoDataStringPT(rs.getString("alteracao")));
                 }
+                p.setCrip(rs.getBoolean("crip"));
+                p.setCrip2(rs.getBytes("crip2"));
                 pessoal.add(p);
             }
         } catch (SQLException ex) {
@@ -245,7 +251,7 @@ public class DocumentoDAO {
             ConnectionFactoryMySQL.closeConnection(con, stmt);
         }
     }
-    
+
     public boolean removeDocumento(Documento d) {
         sql = "DELETE FROM documentos WHERE id = ?";
         try {

@@ -6,64 +6,150 @@
 package funcoes;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.nio.file.Files;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.KeyGenerator;
+import javax.crypto.NoSuchPaddingException;
+import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
-import javax.crypto.spec.SecretKeySpec;
-import javax.swing.JFileChooser;
 
 /**
  *
  * @author User
  */
 public class AES {
+
+    final protected static char[] HEXARRAY = "0123456789ABCDEF".toCharArray();
     static String IV = "AAAAAAAAAAAAAAAA";
-    static String chaveencriptacao = "0123456789abcdef";
-    
-    public void testAES() {
-        JFileChooser fl = new JFileChooser();
-        fl.setDialogTitle("Escolha o arquivo para encriptar");
-        fl.setFileSelectionMode(JFileChooser.FILES_ONLY);
-        int op = fl.showOpenDialog(null);
-        if (op == JFileChooser.APPROVE_OPTION) {
-            String local = fl.getSelectedFile().getParent()+"\\";
-            String arquivo = fl.getSelectedFile().getName();
-            try {
-                //arquivo original
-                File f = new File(local + arquivo);
-                byte[] file_bytes = Files.readAllBytes(f.toPath());
 
-                //cript
-                byte[] file_encrip_byte = encrypt(f, chaveencriptacao);
-                File file_encrip_FILE = new File(local + "cript" + arquivo);
-                FileOutputStream ins = new FileOutputStream(file_encrip_FILE);
-                ins.write(file_encrip_byte);
-                ins.close();
-
-                //decrip
-                File file_descr_FILE = new File(local + "desc" + arquivo);
-                FileOutputStream ind = new FileOutputStream(file_descr_FILE);
-                ind.write(decrypt(file_encrip_FILE, chaveencriptacao));
-                ind.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+    //exemplo de instanciação
+//    public void main() {
+//        try {
+//            //Passa como parametro o tamanho da chave de 128, 192 ou 256 bits
+//            SecretKey chaveAES = gerarChave(256);
+//            File chave = new File("C:\\JCR LOG\\AES.key");
+//            OutputStream outStream = new FileOutputStream(chave);
+//            outStream.write(chaveAES.getEncoded());
+//            outStream.close();
+//            encrypt("C:\\Users\\User\\Desktop\\chaves\\ex.png", "C:\\Users\\User\\Desktop\\chaves\\encrip.png", chaveAES);
+//            decrypt("C:\\Users\\User\\Desktop\\chaves\\encrip.png", "C:\\Users\\User\\Desktop\\chaves\\decrip.png", chaveAES);
+//        } catch (FileNotFoundException ex) {
+//        } catch (IOException ex) {
+//        }
+//    }
+    public final static File salvarChaveAES(String local, SecretKey aes) {
+        try {
+            File chave = new File(local + "AES.key");
+            OutputStream outStream = new FileOutputStream(chave);
+            outStream.write(aes.getEncoded());
+            outStream.close();
+            return chave;
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(AES.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(AES.class.getName()).log(Level.SEVERE, null, ex);
         }
-
+        return null;
     }
 
-    public static byte[] encrypt(File textopuro, String chaveencriptacao) throws Exception {
-        Cipher encripta = Cipher.getInstance("AES/CBC/PKCS5Padding", "SunJCE");
-        SecretKeySpec key = new SecretKeySpec(chaveencriptacao.getBytes("UTF-8"), "AES");
-        encripta.init(Cipher.ENCRYPT_MODE, key, new IvParameterSpec(IV.getBytes("UTF-8")));
-        return encripta.doFinal(Files.readAllBytes(textopuro.toPath()));
+    public final static SecretKey gerarChave(int valorKey) {
+        try {
+            KeyGenerator keygenerator = KeyGenerator.getInstance("AES");
+            keygenerator.init(valorKey);
+            return keygenerator.generateKey();
+        } catch (NoSuchAlgorithmException e) {
+            System.err.println(e);
+            return null;
+        }
     }
 
-    public static byte[] decrypt(File textoencriptado, String chaveencriptacao) throws Exception {
-        Cipher decripta = Cipher.getInstance("AES/CBC/PKCS5Padding", "SunJCE");
-        SecretKeySpec key = new SecretKeySpec(chaveencriptacao.getBytes("UTF-8"), "AES");
-        decripta.init(Cipher.DECRYPT_MODE, key, new IvParameterSpec(IV.getBytes("UTF-8")));
-        return decripta.doFinal(Files.readAllBytes(textoencriptado.toPath()));
+    public final static File encrypt(String srcPath, String destPath, SecretKey chaveAES) {
+        try {
+            File rawFile = new File(srcPath);
+            File imagemEncriptada = new File(destPath);
+            InputStream inStream = null;
+            OutputStream outStream = null;
+            Cipher cifraAES = Cipher.getInstance("AES/CBC/PKCS5Padding");
+            cifraAES.init(Cipher.ENCRYPT_MODE, chaveAES,
+                    //Inicializa a cifra para o processo de encriptacao
+                    new IvParameterSpec(IV.getBytes("UTF-8")));
+
+            //Inicializa o input e o output streams
+            inStream = new FileInputStream(rawFile);
+            outStream = new FileOutputStream(imagemEncriptada);
+
+            byte[] buffer = new byte[256];
+            int len;
+
+            while ((len = inStream.read(buffer)) > 0) {
+                //Para criptografar/descriptografar varios blocos usa-se o metodo update().
+                outStream.write(cifraAES.update(buffer, 0, len));
+                outStream.flush();
+            }
+
+            //Depois de tudo feito chamamos o metodo doFinal().
+            outStream.write(cifraAES.doFinal());
+            inStream.close();
+            outStream.close();
+            return imagemEncriptada;
+        } catch (IOException | InvalidAlgorithmParameterException | InvalidKeyException | NoSuchAlgorithmException | BadPaddingException | IllegalBlockSizeException | NoSuchPaddingException e) {
+            System.err.println(e);
+            return null;
+        }
+    }
+
+    public final static File decrypt(String srcPath, String destPath, SecretKey chaveAES) {
+        try {
+            File encryptedFile = new File(srcPath);
+            File decryptedFile = new File(destPath);
+            InputStream inStream = null;
+            OutputStream outStream = null;
+
+            //Inicializa o cipher para decriptografar
+            Cipher cifraAES = Cipher.getInstance("AES/CBC/PKCS5Padding");
+            cifraAES.init(Cipher.DECRYPT_MODE, chaveAES, new IvParameterSpec(IV.getBytes("UTF-8")));
+
+            //Inicializa o input e o output streams
+            inStream = new FileInputStream(encryptedFile);
+            outStream = new FileOutputStream(decryptedFile);
+
+            byte[] buffer = new byte[256];
+            int len;
+
+            while ((len = inStream.read(buffer)) > 0) {
+                outStream.write(cifraAES.update(buffer, 0, len));
+                outStream.flush();
+            }
+
+            outStream.write(cifraAES.doFinal());
+            inStream.close();
+            outStream.close();
+            return decryptedFile;
+        } catch (IOException | InvalidAlgorithmParameterException | InvalidKeyException | NoSuchAlgorithmException | BadPaddingException | IllegalBlockSizeException | NoSuchPaddingException e) {
+            System.err.println(e);
+            return null;
+        }
+    }
+
+    public static String bytesToHex(byte[] bytes) {
+        char[] hexChars = new char[bytes.length * 2];
+        for (int x = 0; x < bytes.length; x++) {
+            int i = bytes[x] & 0xFF;
+            hexChars[x * 2] = HEXARRAY[i >>> 4];
+            hexChars[x * 2 + 1] = HEXARRAY[i & 0x0F];
+        }
+        return new String(hexChars);
     }
 }

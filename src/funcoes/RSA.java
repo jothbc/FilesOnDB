@@ -124,7 +124,7 @@ public class RSA {
             final Cipher cipher = Cipher.getInstance(ALGORITHM);
             cipher.init(Cipher.DECRYPT_MODE, chave);                            // Decriptografa o texto puro usando a chave Privada
             dectyptedText = cipher.doFinal(texto);
-        } catch (Exception ex) {
+        } catch (InvalidKeyException | NoSuchAlgorithmException | BadPaddingException | IllegalBlockSizeException | NoSuchPaddingException ex) {
             ex.printStackTrace();
         }
         return new String(dectyptedText);
@@ -171,18 +171,21 @@ public class RSA {
             if (!verificaSeExisteChavesNoSO()) {                                //// Verifica se já existe um par de chaves, caso contrário gera as chaves..
                 geraChave();
             }
-            final String msgOriginal = "Quem estiver lendo é gay";
+            final String msgOriginal = "DCCF0238709BA98E1EBDC8B2DF5193FF47B8D30C740A16A327CF214DCDD3D986";
             ObjectInputStream inputStream = null;
+            
             inputStream = new ObjectInputStream(new FileInputStream(PATH_CHAVE_PUBLICA)); // Criptografa a Mensagem usando a Chave Pública
             final PublicKey chavePublica = (PublicKey) inputStream.readObject();
             final byte[] textoCriptografado = criptografa(msgOriginal, chavePublica);
-
+            
             inputStream = new ObjectInputStream(new FileInputStream(PATH_CHAVE_PRIVADA));   // Decriptografa a Mensagem usando a Chave Pirvada
             final PrivateKey chavePrivada = (PrivateKey) inputStream.readObject();
             final String textoPuro = decriptografa(textoCriptografado, chavePrivada);
 
             System.out.println("Mensagem Original: " + msgOriginal);            //texto original
+            System.out.println("Tamanho do texto crip:" +textoCriptografado.length);
             System.out.println("Mensagem Criptografada: " + textoCriptografado.toString()); //texto criptografado
+            System.out.println("Tamanho do texto decrip:" +textoPuro.length());
             System.out.println("Mensagem Decriptografada: " + textoPuro);       //texto descriptografado
 
         } catch (Exception e) {

@@ -10,15 +10,17 @@ package br.Teofilo.Bean;
  * @author User
  */
 public class DocumentoPessoal {
+
     private int id;
     private String nome;
     private int ID_CLIENTE;
     private String alteracao;
-    
+    private boolean crip;
+    private byte[] crip2;
+
     public DocumentoPessoal() {
     }
 
-    
     /**
      * @return the id
      */
@@ -60,7 +62,8 @@ public class DocumentoPessoal {
     public void setID_CLIENTE(int ID_CLIENTE) {
         this.ID_CLIENTE = ID_CLIENTE;
     }
-    public String toString(){
+
+    public String toString() {
         return this.nome;
     }
 
@@ -77,4 +80,21 @@ public class DocumentoPessoal {
     public void setAlteracao(String alteracao) {
         this.alteracao = alteracao;
     }
+
+    public void setCrip(boolean crip) {
+        this.crip = crip;
+    }
+
+    public boolean isCrip() {
+        return crip;
+    }
+
+    public byte[] getCrip2() {
+        return crip2;
+    }
+
+    public void setCrip2(byte[] crip2) {
+        this.crip2 = crip2;
+    }
+
 }

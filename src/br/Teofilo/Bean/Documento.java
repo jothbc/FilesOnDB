@@ -10,6 +10,7 @@ package br.Teofilo.Bean;
  * @author User
  */
 public class Documento {
+
     private int id;
     private String nome;
     private int ID_CLIENTE;
@@ -17,6 +18,8 @@ public class Documento {
     private String status;
     private int ID_TIPO;
     private int ID_PROCESSO;
+    private boolean crip;
+    private byte[] crip2;
 
     /**
      * @return the id
@@ -102,7 +105,7 @@ public class Documento {
         this.ID_TIPO = ID_TIPO;
     }
 
-    public String toString(){
+    public String toString() {
         return this.getNome();
     }
 
@@ -118,6 +121,22 @@ public class Documento {
      */
     public void setID_PROCESSO(int ID_PROCESSO) {
         this.ID_PROCESSO = ID_PROCESSO;
+    }
+
+    public boolean isCrip() {
+        return crip;
+    }
+
+    public void setCrip(boolean crip) {
+        this.crip = crip;
+    }
+
+    public void setCrip2(byte[] crip2) {
+        this.crip2 = crip2;
+    }
+
+    public byte[] getCrip2() {
+        return crip2;
     }
 
     
