@@ -20,6 +20,7 @@ public class Documento {
     private int ID_PROCESSO;
     private boolean crip;
     private byte[] crip2;
+    private double tamanho;
 
     /**
      * @return the id
@@ -137,6 +138,20 @@ public class Documento {
 
     public byte[] getCrip2() {
         return crip2;
+    }
+
+    /**
+     * @return the tamanho
+     */
+    public double getTamanho() {
+        return tamanho;
+    }
+
+    /**
+     * @param tamanho the tamanho to set
+     */
+    public void setTamanho(double tamanho) {
+        this.tamanho = tamanho;
     }
 
     

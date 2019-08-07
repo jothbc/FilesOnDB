@@ -57,7 +57,7 @@
                   </Group>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" alignment="0" attributes="0">
+                      <Group type="102" attributes="0">
                           <Group type="103" groupAlignment="0" max="-2" attributes="0">
                               <Component id="jLabelRelacionadoCliente" max="32767" attributes="0"/>
                               <Component id="jLabelProcessos" max="32767" attributes="0"/>
@@ -86,36 +86,44 @@
                           </Group>
                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="jScrollPane2" max="32767" attributes="0"/>
+                              <Component id="jScrollPane2" pref="500" max="32767" attributes="0"/>
                               <Component id="jLabelDocumentos" max="32767" attributes="0"/>
+                          </Group>
+                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                              <Component id="jButton6" pref="95" max="32767" attributes="0"/>
+                              <Component id="downloadBtn" pref="95" max="32767" attributes="0"/>
+                              <Component id="jButton4" pref="95" max="32767" attributes="0"/>
+                              <Component id="jButton3" pref="95" max="32767" attributes="0"/>
+                              <Component id="jButton9" alignment="0" pref="95" max="32767" attributes="0"/>
+                              <Component id="informtxt" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                       <Group type="102" attributes="0">
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Group type="102" attributes="0">
-                                  <Component id="jScrollPane5" min="-2" pref="306" max="-2" attributes="0"/>
-                                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                              <Component id="jScrollPane5" alignment="0" min="-2" pref="306" max="-2" attributes="0"/>
+                              <Component id="jButton7" alignment="0" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Group type="102" alignment="0" attributes="0">
+                                  <EmptySpace min="10" pref="10" max="-2" attributes="0"/>
+                                  <Component id="cripLabel" min="-2" pref="242" max="-2" attributes="0"/>
+                                  <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                              </Group>
+                              <Group type="102" alignment="0" attributes="0">
                                   <Component id="jLabel7" min="-2" pref="103" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Component id="modiftxt" min="-2" pref="99" max="-2" attributes="0"/>
+                                  <EmptySpace max="32767" attributes="0"/>
+                                  <Component id="tamlbl" min="-2" pref="132" max="-2" attributes="0"/>
                               </Group>
-                              <Component id="jButton7" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                       </Group>
-                  </Group>
-                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                      <Component id="jButton6" pref="95" max="32767" attributes="0"/>
-                      <Component id="downloadBtn" pref="95" max="32767" attributes="0"/>
-                      <Component id="jButton4" pref="95" max="32767" attributes="0"/>
-                      <Component id="jButton3" pref="95" max="32767" attributes="0"/>
-                      <Component id="jButton9" alignment="0" pref="95" max="32767" attributes="0"/>
-                      <Component id="informtxt" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
-              <Component id="jPanel2" min="-2" max="-2" attributes="0"/>
+              <Component id="jPanel2" alignment="0" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
         <DimensionLayout dim="1">
@@ -132,7 +140,43 @@
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" attributes="0">
+                      <Group type="102" alignment="0" attributes="0">
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Group type="102" attributes="0">
+                                  <Component id="processoBtn" min="-2" pref="20" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="dadosPessoaisBtn" min="-2" pref="20" max="-2" attributes="0"/>
+                                  <EmptySpace min="-2" pref="19" max="-2" attributes="0"/>
+                                  <Component id="jLabelProcessos" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="jScrollPane4" min="-2" pref="82" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                      <Component id="jButton8" max="32767" attributes="0"/>
+                                      <Component id="jButton1" max="32767" attributes="0"/>
+                                      <Component id="jLabel6" alignment="0" max="32767" attributes="0"/>
+                                      <Component id="statustxt" alignment="0" min="-2" pref="25" max="-2" attributes="0"/>
+                                  </Group>
+                                  <EmptySpace max="32767" attributes="0"/>
+                                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                      <Component id="jLabel8" alignment="0" max="32767" attributes="0"/>
+                                      <Component id="abertoEmtxt" alignment="0" min="-2" pref="25" max="-2" attributes="0"/>
+                                  </Group>
+                                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                  <Component id="jLabelTiposDocumentos" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                  <Component id="jScrollPane5" min="-2" pref="90" max="-2" attributes="0"/>
+                              </Group>
+                              <Component id="jScrollPane1" max="32767" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="jButton7" min="-2" max="-2" attributes="0"/>
+                              <Component id="cripLabel" min="-2" pref="20" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                      </Group>
+                      <Group type="102" alignment="0" attributes="0">
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" attributes="0">
                                   <Component id="jButton3" min="-2" pref="25" max="-2" attributes="0"/>
@@ -153,38 +197,11 @@
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="jLabel7" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="modiftxt" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="tamlbl" alignment="0" min="-2" pref="20" max="-2" attributes="0"/>
                           </Group>
+                          <EmptySpace min="-2" pref="37" max="-2" attributes="0"/>
                       </Group>
-                      <Group type="102" attributes="0">
-                          <Component id="processoBtn" min="-2" pref="20" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="dadosPessoaisBtn" min="-2" pref="20" max="-2" attributes="0"/>
-                          <EmptySpace min="-2" pref="19" max="-2" attributes="0"/>
-                          <Component id="jLabelProcessos" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="jScrollPane4" min="-2" pref="82" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                              <Component id="jButton8" max="32767" attributes="0"/>
-                              <Component id="jButton1" max="32767" attributes="0"/>
-                              <Component id="jLabel6" alignment="0" max="32767" attributes="0"/>
-                              <Component id="statustxt" alignment="0" min="-2" pref="25" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace max="32767" attributes="0"/>
-                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                              <Component id="jLabel8" alignment="0" max="32767" attributes="0"/>
-                              <Component id="abertoEmtxt" alignment="0" min="-2" pref="25" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                          <Component id="jLabelTiposDocumentos" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                          <Component id="jScrollPane5" min="-2" pref="90" max="-2" attributes="0"/>
-                      </Group>
-                      <Component id="jScrollPane1" max="32767" attributes="0"/>
                   </Group>
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Component id="jButton7" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace min="-2" pref="6" max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -206,7 +223,7 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace min="-2" pref="81" max="-2" attributes="0"/>
-                      <Component id="jLabel13" pref="935" max="32767" attributes="0"/>
+                      <Component id="jLabel13" max="32767" attributes="0"/>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
                       <Component id="jButton2" min="-2" max="-2" attributes="0"/>
                       <EmptySpace min="-2" pref="19" max="-2" attributes="0"/>
@@ -628,6 +645,24 @@
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="dadosPessoaisBtnActionPerformed"/>
           </Events>
+        </Component>
+        <Component class="javax.swing.JLabel" name="cripLabel">
+          <Properties>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Tahoma" size="12" style="3"/>
+            </Property>
+            <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+              <Color blue="0" green="cc" red="33" type="rgb"/>
+            </Property>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="tamlbl">
+          <Properties>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Tahoma" size="12" style="1"/>
+            </Property>
+            <Property name="horizontalAlignment" type="int" value="4"/>
+          </Properties>
         </Component>
       </SubComponents>
     </Container>

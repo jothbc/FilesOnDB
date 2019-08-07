@@ -18,6 +18,7 @@ import br.Teofilo.DAO.ProcessoDAO;
 import br.Teofilo.DAO.TipoDocDAO;
 import br.Teofilo.DAO.UserDAO;
 import funcoes.AES;
+import funcoes.Conv;
 import funcoes.RSA;
 import java.awt.Color;
 import java.awt.Desktop;
@@ -110,6 +111,8 @@ public class DocumentoJF extends javax.swing.JFrame {
         informtxt = new javax.swing.JLabel();
         processoBtn = new javax.swing.JButton();
         dadosPessoaisBtn = new javax.swing.JButton();
+        cripLabel = new javax.swing.JLabel();
+        tamlbl = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setUndecorated(true);
@@ -146,7 +149,7 @@ public class DocumentoJF extends javax.swing.JFrame {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(81, 81, 81)
-                .addComponent(jLabel13, javax.swing.GroupLayout.DEFAULT_SIZE, 935, Short.MAX_VALUE)
+                .addComponent(jLabel13, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(18, 18, 18)
                 .addComponent(jButton2)
                 .addGap(19, 19, 19))
@@ -339,6 +342,12 @@ public class DocumentoJF extends javax.swing.JFrame {
             }
         });
 
+        cripLabel.setFont(new java.awt.Font("Tahoma", 3, 12)); // NOI18N
+        cripLabel.setForeground(new java.awt.Color(51, 204, 0));
+
+        tamlbl.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        tamlbl.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -374,28 +383,34 @@ public class DocumentoJF extends javax.swing.JFrame {
                             .addComponent(jScrollPane4))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane2)
-                            .addComponent(jLabelDocumentos, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 500, Short.MAX_VALUE)
+                            .addComponent(jLabelDocumentos, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jButton6, javax.swing.GroupLayout.DEFAULT_SIZE, 95, Short.MAX_VALUE)
+                            .addComponent(downloadBtn, javax.swing.GroupLayout.DEFAULT_SIZE, 95, Short.MAX_VALUE)
+                            .addComponent(jButton4, javax.swing.GroupLayout.DEFAULT_SIZE, 95, Short.MAX_VALUE)
+                            .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, 95, Short.MAX_VALUE)
+                            .addComponent(jButton9, javax.swing.GroupLayout.DEFAULT_SIZE, 95, Short.MAX_VALUE)
+                            .addComponent(informtxt, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 306, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jButton7))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 306, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGap(10, 10, 10)
+                                .addComponent(cripLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 242, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(modiftxt, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jButton7))
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jButton6, javax.swing.GroupLayout.DEFAULT_SIZE, 95, Short.MAX_VALUE)
-                    .addComponent(downloadBtn, javax.swing.GroupLayout.DEFAULT_SIZE, 95, Short.MAX_VALUE)
-                    .addComponent(jButton4, javax.swing.GroupLayout.DEFAULT_SIZE, 95, Short.MAX_VALUE)
-                    .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, 95, Short.MAX_VALUE)
-                    .addComponent(jButton9, javax.swing.GroupLayout.DEFAULT_SIZE, 95, Short.MAX_VALUE)
-                    .addComponent(informtxt, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addComponent(modiftxt, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(tamlbl, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                 .addContainerGap())
-            .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -409,6 +424,36 @@ public class DocumentoJF extends javax.swing.JFrame {
                         .addComponent(jLabelRelacionadoCliente)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(processoBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(dadosPessoaisBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(19, 19, 19)
+                                .addComponent(jLabelProcessos)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(jButton8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(statustxt, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(abertoEmtxt, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jLabelTiposDocumentos)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jScrollPane1))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jButton7)
+                            .addComponent(cripLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addContainerGap())
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
@@ -427,33 +472,9 @@ public class DocumentoJF extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel7)
-                            .addComponent(modiftxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(processoBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(dadosPessoaisBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(19, 19, 19)
-                        .addComponent(jLabelProcessos)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jButton8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(statustxt, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(abertoEmtxt, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jLabelTiposDocumentos)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jScrollPane1))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton7)
-                .addGap(6, 6, 6))
+                            .addComponent(modiftxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(tamlbl, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(37, 37, 37))))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -595,6 +616,7 @@ public class DocumentoJF extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField abertoEmtxt;
+    private javax.swing.JLabel cripLabel;
     private javax.swing.JButton dadosPessoaisBtn;
     private javax.swing.JButton downloadBtn;
     private javax.swing.JLabel informtxt;
@@ -628,6 +650,7 @@ public class DocumentoJF extends javax.swing.JFrame {
     private javax.swing.JFormattedTextField modiftxt;
     private javax.swing.JButton processoBtn;
     private javax.swing.JTextField statustxt;
+    private javax.swing.JLabel tamlbl;
     // End of variables declaration//GEN-END:variables
 
     private void init() {
@@ -795,18 +818,102 @@ public class DocumentoJF extends javax.swing.JFrame {
                 informtxt.setText("Baixando...");
                 informtxt.setForeground(Color.red);
                 File arquivo = null;
-                //PrivateKey CHAVE_RSA_PRIVADA = null;
+                PrivateKey CHAVE_RSA_PRIVADA = null;
                 if (listDocumentos.getElementAt(jListDocumento.getSelectedIndices()[0]) instanceof Documento) {
                     Documento[] d = new Documento[jListDocumento.getSelectedIndices().length];
+                    //dividido em 2 for, um para carregamento rápido dos selecionados, e outro para efetuar o download
+                    //como é uma thread, acaba deixando livre para o usuário desselecionar os documentos, isso altera o getSelectedIndices
+                    //por isso o primeiro for pega rapidamente essas referencias enquanto o segundo só baixa(e é um pouco mais demorado)
                     for (int x = 0; x < d.length; x++) {
                         d[x] = (Documento) listDocumentos.getElementAt(jListDocumento.getSelectedIndices()[x]);
-                        arquivo = new DocumentoDAO().getArquivo(d[x].getId(), fl.getSelectedFile().getPath() + "\\", "documentos");
                     }
+                    /*
+                    inicio verificação de criptografia
+                     */
+                    for (Documento doc : d) {
+                        if (doc.isCrip()) {
+                            if (CHAVE_RSA_PRIVADA == null) {
+                                JFileChooser chooser = new JFileChooser();
+                                chooser.setDialogTitle("Selecione a chave privada para descriptografar o(s) arquivo(s)");
+                                chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+                                int op2 = chooser.showOpenDialog(null);
+                                if (op2 == JFileChooser.APPROVE_OPTION) {
+                                    try {
+                                        ObjectInputStream inputStream = null;
+                                        inputStream = new ObjectInputStream(new FileInputStream(chooser.getSelectedFile()));
+                                        CHAVE_RSA_PRIVADA = (PrivateKey) inputStream.readObject();
+                                    } catch (FileNotFoundException ex) {
+                                        Logger.getLogger(DocumentoJF.class.getName()).log(Level.SEVERE, null, ex);
+                                    } catch (IOException | ClassNotFoundException ex) {
+                                        Logger.getLogger(DocumentoJF.class.getName()).log(Level.SEVERE, null, ex);
+                                    }
+                                } else {
+                                    JOptionPane.showMessageDialog(null, "Operação abortada");
+                                    return;
+                                }
+                            }
+                            /* chave RSA privada ja esta carregada
+                             1* descriptografar chave aes vinda do banco (a chave vai ta em HEXA)
+                             2* descriptografar o arquivo com a chave aes
+                             */
+                            byte[] chaveAES = doc.getCrip2();
+                            String chaveAES_String = RSA.decriptografa(chaveAES, CHAVE_RSA_PRIVADA);
+                            chaveAES = AES.hexStringToByteArray(chaveAES_String);
+                            SecretKey AES_KEY = new SecretKeySpec(chaveAES, "AES");
+                            //System.out.println("CHAVE AES CAPTURADA EM FORMATO HEXA: "+AES.bytesToHex(AES_KEY.getEncoded()));
+                            arquivo = new DocumentoDAO().getArquivo(doc.getId(), fl.getSelectedFile().getPath() + "\\", "documentos");
+                            arquivo = AES.decrypt(arquivo.getPath(), arquivo.getParent() + "\\decrip" + arquivo.getName(), AES_KEY, true);
+                        } else {
+                            arquivo = new DocumentoDAO().getArquivo(doc.getId(), fl.getSelectedFile().getPath() + "\\", "documentos");
+                        }
+                    }
+                    /*
+                    fim verificação de criptografia
+                     */
                 } else if (listDocumentos.getElementAt(jListDocumento.getSelectedIndex()) instanceof DocumentoPessoal) {
                     DocumentoPessoal[] dp = new DocumentoPessoal[jListDocumento.getSelectedIndices().length];
+                    //dividido em 2 for, um para carregamento rápido dos selecionados, e outro para efetuar o download
+                    //como é uma thread, acaba deixando livre para o usuário desselecionar os documentos, isso altera o getSelectedIndices
+                    //por isso o primeiro for pega rapidamente essas referencias enquanto o segundo só baixa(e é um pouco mais demorado)
                     for (int x = 0; x < dp.length; x++) {
                         dp[x] = (DocumentoPessoal) listDocumentos.getElementAt(jListDocumento.getSelectedIndices()[x]);
-                        arquivo = new DocumentoDAO().getArquivo(dp[x].getId(), fl.getSelectedFile().getPath() + "\\", "documentos_pessoais");
+                    }
+                    for (DocumentoPessoal doc : dp) {
+                        if (doc.isCrip()) {
+                            if (CHAVE_RSA_PRIVADA == null) {
+                                JFileChooser chooser = new JFileChooser();
+                                chooser.setDialogTitle("Selecione a chave privada para descriptografar o(s) arquivo(s)");
+                                chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+                                int op2 = chooser.showOpenDialog(null);
+                                if (op2 == JFileChooser.APPROVE_OPTION) {
+                                    try {
+                                        ObjectInputStream inputStream = null;
+                                        inputStream = new ObjectInputStream(new FileInputStream(chooser.getSelectedFile()));
+                                        CHAVE_RSA_PRIVADA = (PrivateKey) inputStream.readObject();
+                                    } catch (FileNotFoundException ex) {
+                                        Logger.getLogger(DocumentoJF.class.getName()).log(Level.SEVERE, null, ex);
+                                    } catch (IOException | ClassNotFoundException ex) {
+                                        Logger.getLogger(DocumentoJF.class.getName()).log(Level.SEVERE, null, ex);
+                                    }
+                                } else {
+                                    JOptionPane.showMessageDialog(null, "Operação abortada");
+                                    return;
+                                }
+                            }
+                            /* chave RSA privada ja esta carregada
+                             1* descriptografar chave aes vinda do banco (a chave vai ta em HEXA)
+                             2* descriptografar o arquivo com a chave aes
+                             */
+                            byte[] chaveAES = doc.getCrip2();
+                            String chaveAES_String = RSA.decriptografa(chaveAES, CHAVE_RSA_PRIVADA);
+                            chaveAES = AES.hexStringToByteArray(chaveAES_String);
+                            SecretKey AES_KEY = new SecretKeySpec(chaveAES, "AES");
+                            System.out.println("CHAVE AES CAPTURADA EM FORMATO HEXA: " + AES.bytesToHex(AES_KEY.getEncoded()));
+                            arquivo = new DocumentoDAO().getArquivo(doc.getId(), fl.getSelectedFile().getPath() + "\\", "documentos_pessoais");
+                            arquivo = AES.decrypt(arquivo.getPath(), arquivo.getParent() + "\\decrip" + arquivo.getName(), AES_KEY, true);
+                        } else {
+                            arquivo = new DocumentoDAO().getArquivo(doc.getId(), fl.getSelectedFile().getPath() + "\\", "documentos_pessoais");
+                        }
                     }
                 }
             }
@@ -822,11 +929,23 @@ public class DocumentoJF extends javax.swing.JFrame {
         if (jListDocumento.getSelectedIndices().length == 1) {
             if (listDocumentos.getElementAt(jListDocumento.getSelectedIndex()) instanceof Documento) {
                 Documento d = (Documento) listDocumentos.getElementAt(jListDocumento.getSelectedIndex());
+                if (d.isCrip()) {
+                    cripLabel.setText("Criptografado.");
+                } else {
+                    cripLabel.setText("");
+                }
+                tamlbl.setText(Conv.CDblDuasCasas((d.getTamanho() / 1024) / 1024) + "MB");
                 statustxt.setText(d.getStatus());
                 modiftxt.setText(d.getModificacao());
                 abertoEmtxt.setText("");
             } else if (listDocumentos.getElementAt(jListDocumento.getSelectedIndex()) instanceof DocumentoPessoal) {
                 DocumentoPessoal dp = (DocumentoPessoal) listDocumentos.getElementAt(jListDocumento.getSelectedIndex());
+                if (dp.isCrip()) {
+                    cripLabel.setText("Criptografado.");
+                } else {
+                    cripLabel.setText("");
+                }
+                tamlbl.setText(Conv.CDblDuasCasas((dp.getTamanho() / 1024) / 1024) + "MB");
                 statustxt.setText("");
                 modiftxt.setText(dp.getAlteracao());
                 abertoEmtxt.setText("");
@@ -835,6 +954,23 @@ public class DocumentoJF extends javax.swing.JFrame {
             statustxt.setText("");
             modiftxt.setText("");
             abertoEmtxt.setText("");
+            cripLabel.setText("");
+            tamlbl.setText("");
+            Documento d;
+            DocumentoPessoal dp;
+            double tam = 0;
+            if (listDocumentos.getElementAt(0) instanceof Documento) {
+                for (int x = 0; x < jListDocumento.getSelectedIndices().length; x++) {
+                    d = (Documento) listDocumentos.getElementAt(jListDocumento.getSelectedIndices()[x]);
+                    tam+=d.getTamanho();
+                }
+            } else {
+                for (int x = 0; x < jListDocumento.getSelectedIndices().length; x++) {
+                    dp = (DocumentoPessoal) listDocumentos.getElementAt(jListDocumento.getSelectedIndices()[x]);
+                    tam+=dp.getTamanho();
+                }
+            }
+            tamlbl.setText(Conv.CDblDuasCasas((tam / 1024) / 1024) + "MB");
         }
     }
 
@@ -1000,44 +1136,54 @@ public class DocumentoJF extends javax.swing.JFrame {
     }
 
     private void deletarDocumento() {
-        if (jListDocumento.getSelectedIndex() < 0) {
+        if (jListDocumento.getSelectedIndices().length == 0) {
             return;
         }
         int op = -1;
-        op = JOptionPane.showOptionDialog(null, "Deseja realmente excluir esse arquivo?", "Confirmação de exclusão", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, null, null, null);
+        op = JOptionPane.showOptionDialog(null, "Deseja realmente excluir esse(s) arquivo(s)?", "Confirmação de exclusão", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, null, null, null);
         if (op != 0) {
             return;
         }
-        if (listDocumentos.getElementAt(jListDocumento.getSelectedIndex()) instanceof Documento) {
-            Documento d = (Documento) listDocumentos.getElementAt(jListDocumento.getSelectedIndex());
-            File f = new DocumentoDAO().getArquivo(d.getId(), "C:\\JCR LOG\\", "documentos");
-            boolean moveToTrash = Desktop.getDesktop().moveToTrash(f);
-            if (moveToTrash) {
-                if (!new DocumentoDAO().removeDocumento(d)) {
-                    JOptionPane.showMessageDialog(null, "Erro ao tentar remover o documento do Bando de Dados.", "Erro", JOptionPane.ERROR_MESSAGE);
-                } else {
-                    String coment = "@Removeu um Documento.\n" + d.getNome();
-                    if (!new ComentarioDAO().addComentario(coment, new UserDAO().getUser().getId())) {
-                        GerarLogErro.gerar("Erro ao tentar comentar a remoção de um documento " + d.getNome());
+        if (listDocumentos.getElementAt(jListDocumento.getSelectedIndices()[0]) instanceof Documento) {
+            Documento[] d = new Documento[jListDocumento.getSelectedIndices().length];
+            for (int x = 0; x < d.length; x++) {
+                d[x] = (Documento) listDocumentos.getElementAt(jListDocumento.getSelectedIndices()[x]);
+            }
+            for (int x = 0; x < d.length; x++) {
+                File f = new DocumentoDAO().getArquivo(d[x].getId(), "C:\\JCR LOG\\", "documentos");
+                boolean moveToTrash = Desktop.getDesktop().moveToTrash(f);
+                if (moveToTrash) {
+                    if (!new DocumentoDAO().removeDocumento(d[x])) {
+                        JOptionPane.showMessageDialog(null, "Erro ao tentar remover o documento do Bando de Dados.", "Erro", JOptionPane.ERROR_MESSAGE);
+                    } else {
+                        String coment = "@Removeu um Documento.\n" + d[x].getNome();
+                        if (!new ComentarioDAO().addComentario(coment, new UserDAO().getUser().getId())) {
+                            GerarLogErro.gerar("Erro ao tentar comentar a remoção de um documento " + d[x].getNome());
+                        }
                     }
-                    carregarDocumentosDoTipoEProcessoSelecionado();
                 }
             }
-        } else if (listDocumentos.getElementAt(jListDocumento.getSelectedIndex()) instanceof DocumentoPessoal) {
-            DocumentoPessoal dp = (DocumentoPessoal) listDocumentos.getElementAt(jListDocumento.getSelectedIndex());
-            File f = new DocumentoDAO().getArquivo(dp.getId(), "C:\\JCR LOG\\", "documentos_pessoais");
-            boolean moveToTrash = Desktop.getDesktop().moveToTrash(f);
-            if (moveToTrash) {
-                if (!new DocumentoDAO().removeDocumentoPessoal(dp)) {
-                    JOptionPane.showMessageDialog(null, "Erro ao tentar remover o documento pessoal do Bando de Dados.", "Erro", JOptionPane.ERROR_MESSAGE);
-                } else {
-                    String coment = "@Removeu um Documento`Pessoal.\n" + dp.getNome();
-                    if (!new ComentarioDAO().addComentario(coment, new UserDAO().getUser().getId())) {
-                        GerarLogErro.gerar("Erro ao tentar comentar a remoção de um Documento Pessoal " + dp.getNome());
+            carregarDocumentosDoTipoEProcessoSelecionado();
+        } else if (listDocumentos.getElementAt(jListDocumento.getSelectedIndices()[0]) instanceof DocumentoPessoal) {
+            DocumentoPessoal[] dp = new DocumentoPessoal[jListDocumento.getSelectedIndices().length];
+            for (int x = 0; x < dp.length; x++) {
+                dp[x] = (DocumentoPessoal) listDocumentos.getElementAt(jListDocumento.getSelectedIndices()[x]);
+            }
+            for (int x = 0; x < dp.length; x++) {
+                File f = new DocumentoDAO().getArquivo(dp[x].getId(), "C:\\JCR LOG\\", "documentos_pessoais");
+                boolean moveToTrash = Desktop.getDesktop().moveToTrash(f);
+                if (moveToTrash) {
+                    if (!new DocumentoDAO().removeDocumentoPessoal(dp[x])) {
+                        JOptionPane.showMessageDialog(null, "Erro ao tentar remover o documento pessoal do Bando de Dados.", "Erro", JOptionPane.ERROR_MESSAGE);
+                    } else {
+                        String coment = "@Removeu um Documento`Pessoal.\n" + dp[x].getNome();
+                        if (!new ComentarioDAO().addComentario(coment, new UserDAO().getUser().getId())) {
+                            GerarLogErro.gerar("Erro ao tentar comentar a remoção de um Documento Pessoal " + dp[x].getNome());
+                        }
                     }
-                    carregarDadosPessoaisDoClienteSelecionado((Cliente) listClientes.getElementAt(jListCliente.getSelectedIndex()));
                 }
             }
+            carregarDadosPessoaisDoClienteSelecionado((Cliente) listClientes.getElementAt(jListCliente.getSelectedIndex()));
         }
     }
 

@@ -110,7 +110,7 @@ public class AES {
         }
     }
 
-    public final static File decrypt(String srcPath, String destPath, SecretKey chaveAES) {
+    public final static File decrypt(String srcPath, String destPath, SecretKey chaveAES, boolean deletarCriptografado) {
         try {
             File encryptedFile = new File(srcPath);
             File decryptedFile = new File(destPath);
@@ -136,6 +136,9 @@ public class AES {
             outStream.write(cifraAES.doFinal());
             inStream.close();
             outStream.close();
+            if (deletarCriptografado) {
+                encryptedFile.delete();
+            }
             return decryptedFile;
         } catch (IOException | InvalidAlgorithmParameterException | InvalidKeyException | NoSuchAlgorithmException | BadPaddingException | IllegalBlockSizeException | NoSuchPaddingException e) {
             System.err.println(e);
@@ -151,5 +154,15 @@ public class AES {
             hexChars[x * 2 + 1] = HEXARRAY[i & 0x0F];
         }
         return new String(hexChars);
+    }
+
+    public static byte[] hexStringToByteArray(String s) {
+        int len = s.length();
+        byte[] dado = new byte[len / 2];
+        for (int i = 0; i < len; i += 2) {
+            dado[i / 2] = (byte) ((Character.digit(s.charAt(i), 16) << 4)
+                    + Character.digit(s.charAt(i + 1), 16));
+        }
+        return dado;
     }
 }

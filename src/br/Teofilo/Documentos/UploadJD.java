@@ -8,6 +8,7 @@ package br.Teofilo.Documentos;
 import br.Teofilo.Bean.Cliente;
 import br.Teofilo.Bean.DocumentoPessoal;
 import br.Teofilo.Bean.GerarLogErro;
+import static br.Teofilo.Bean.GerarLogErro.PATH;
 import br.Teofilo.Bean.Processo;
 import br.Teofilo.Bean.TipoDoc;
 import br.Teofilo.DAO.ComentarioDAO;
@@ -24,6 +25,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.security.PublicKey;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.crypto.SecretKey;
@@ -60,7 +63,7 @@ public class UploadJD extends javax.swing.JDialog {
         super(parent, modal);
         this.arquivos = new DefaultListModel<>();
         initComponents();
-        jCherCrip.setEnabled(false); /////////////// criado para inpedir de usar atualmente
+        //jCherCrip.setEnabled(false); /////////////// criado para inpedir de usar atualmente
         cliente = c;
         tipoDoc = t;
         documentoPessoal = dp;
@@ -438,21 +441,27 @@ public class UploadJD extends javax.swing.JDialog {
             jProgressBar1.setMaximum(arquivos.size());
             jProgressBar1.setStringPainted(true);
             int count = 0;
+            File pasta = new File("C:\\JCR LOG\\CRIP\\create.txt");
+            if (pasta.getParentFile()!=null){
+                pasta.getParentFile().mkdirs();
+            }
             while (arquivos.size() > 0) {
                 File f = (File) arquivos.getElementAt(arquivos.size() - 1);
-                
                 byte[] aes = null;
                 if (jCherCrip.isSelected()) {
+                    /*
+                    1 gera a chave aes
+                    2 encripta o arquivo com a chave aes
+                    3 encripta a chave aes com rsa
+                    4 manda para o db a chave aes encriptada
+                    */
+                    //1
                     SecretKey aesKey = AES.gerarChave(256);
-                    byte[] aes_crip = RSA.criptografa(aesKey.getEncoded().toString(), rsaKey); //chave aes crip
-                    System.out.println("Tamanho da chave aes crip em rsa: "+aes_crip.length);
-                    System.out.println("Chave aes crip em rsa: "+aes_crip); 
-                    
-                    
-                    f = AES.encrypt(f.getPath(), f.getParent()+"\\encrip - " + f.getName(), aesKey);             //arquivo crip
-                    aes = aes_crip;
-                    System.out.println("Chave aes original: " + aesKey.getEncoded().toString());
-
+                    //System.out.println("CHAVE AES UTILIZADA EM FORMATO HEXA: "+AES.bytesToHex(aesKey.getEncoded()));
+                    //2
+                    f = AES.encrypt(f.getPath(),"C:\\JCR LOG\\CRIP\\" + f.getName(), aesKey);
+                    //3 e 4
+                    aes = RSA.criptografa(AES.bytesToHex(aesKey.getEncoded()), rsaKey);
                 }
                 if (processo != null) {
                     if (!new DocumentoDAO().addDocumento(f, cliente.getId(), tipoDoc.getId(), processo.getId(), jCherCrip.isSelected(), aes)) {

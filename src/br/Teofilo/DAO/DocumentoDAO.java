@@ -42,10 +42,9 @@ public class DocumentoDAO {
     }
 
     public boolean addDocumento(File f, int idCliente, int tipo, int processo, boolean crip, byte[] bytes) {
-        sql = "INSERT INTO documentos (nome,ID_CLIENTE,modificacao,ID_TIPO,ID_PROCESSO,crip,crip2) values (?,?,?,?,?,?,?)";
+        sql = "INSERT INTO documentos (nome,ID_CLIENTE,modificacao,ID_TIPO,ID_PROCESSO,crip,crip2,tam) values (?,?,?,?,?,?,?,?)";
         try {
             InputStream is = new FileInputStream(f);
-            //InputStream is_c = new FileInputStream(RSA.criptografa(f, RSA.));
             stmt = con.prepareStatement(sql);
             //stmt.setBlob(1, is);
             stmt.setString(1, f.getName());
@@ -55,6 +54,7 @@ public class DocumentoDAO {
             stmt.setInt(5, processo);
             stmt.setBoolean(6, crip);
             stmt.setBytes(7, bytes);
+            stmt.setDouble(8, f.length()); //tamanho em bytes
             stmt.execute();
             sql = "SELECT LAST_INSERT_ID() INTO @id";
             stmt = con.prepareStatement(sql);
@@ -75,7 +75,7 @@ public class DocumentoDAO {
     }
 
     public boolean addDocumentoPessoal(File f, int idCliente, boolean crip, byte[] bytes) {
-        sql = "INSERT INTO documentos_pessoais (nome,ID_CLIENTE,alteracao,crip,crip2) values (?,?,?,?,?)";
+        sql = "INSERT INTO documentos_pessoais (nome,ID_CLIENTE,alteracao,crip,crip2,tam) values (?,?,?,?,?,?)";
         try {
             InputStream is = new FileInputStream(f);
             stmt = con.prepareStatement(sql);
@@ -85,6 +85,7 @@ public class DocumentoDAO {
             stmt.setString(3, CDate.DataPTBRtoDataMySQL(CDate.DataPTBRAtual()));
             stmt.setBoolean(4, crip);
             stmt.setBytes(5, bytes);
+            stmt.setDouble(6, f.length()); //tamanho em bytes
             stmt.execute();
             sql = "SELECT LAST_INSERT_ID() INTO @id";
             stmt = con.prepareStatement(sql);
@@ -137,7 +138,7 @@ public class DocumentoDAO {
     //nao retorna o file em si
     public List<Documento> getDocumentosDeProcessoETipo(int idCliente, int processo, int tipo) {
         List<Documento> arquivos = new ArrayList<>();
-        sql = "SELECT id,nome,modificacao,status,ID_PROCESSO,ID_TIPO,crip,crip2 FROM documentos WHERE ID_CLIENTE = ?"
+        sql = "SELECT id,nome,modificacao,status,ID_PROCESSO,ID_TIPO,crip,crip2,tam FROM documentos WHERE ID_CLIENTE = ?"
                 + " and ID_PROCESSO = ? and ID_TIPO = ?";
         try {
             stmt = con.prepareStatement(sql);
@@ -157,6 +158,7 @@ public class DocumentoDAO {
                 d.setID_TIPO(rs.getInt("ID_TIPO"));
                 d.setCrip(rs.getBoolean("crip"));
                 d.setCrip2(rs.getBytes("crip2"));
+                d.setTamanho(rs.getDouble("tam"));
                 arquivos.add(d);
             }
         } catch (SQLException ex) {
@@ -187,6 +189,7 @@ public class DocumentoDAO {
                 }
                 p.setCrip(rs.getBoolean("crip"));
                 p.setCrip2(rs.getBytes("crip2"));
+                p.setTamanho(rs.getDouble("tam"));
                 pessoal.add(p);
             }
         } catch (SQLException ex) {
@@ -199,16 +202,19 @@ public class DocumentoDAO {
     }
 
     public boolean updateDocumento(File f, int idArquivo, int tipo, int processo) {
-        sql = "UPDATE documentos SET nome = ?, modificacao = ? WHERE ID_TIPO = ? and ID_PROCESSO = ? and id = ?";
+        sql = "UPDATE documentos SET nome = ?, modificacao = ?, crip = ?, crip2 = ? , tam = ? WHERE ID_TIPO = ? and ID_PROCESSO = ? and id = ?";
         try {
             InputStream is = new FileInputStream(f);
             stmt = con.prepareStatement(sql);
             //stmt.setBlob(1, is);
             stmt.setString(1, f.getName());
             stmt.setString(2, CDate.DataPTBRtoDataMySQL(CDate.DataPTBRAtual()));
-            stmt.setInt(3, tipo);
-            stmt.setInt(4, processo);
-            stmt.setInt(5, idArquivo);
+            stmt.setBoolean(3, false);
+            stmt.setBytes(4, null);
+            stmt.setInt(5, tipo);
+            stmt.setInt(6, processo);
+            stmt.setDouble(7, f.length());
+            stmt.setInt(8, idArquivo);
             stmt.executeUpdate();
             sql = "UPDATE documentos_arq SET arq = ? WHERE id = ?";
             stmt = con.prepareStatement(sql);
@@ -227,14 +233,17 @@ public class DocumentoDAO {
     }
 
     public boolean updateDocumentoPessoal(File f, int idArquivo) {
-        sql = "UPDATE documentos_pessoais SET nome = ?, alteracao = ? WHERE id = ?";
+        sql = "UPDATE documentos_pessoais SET nome = ?, alteracao = ?, crip = ?, crip2 = ? ,tam = ? WHERE id = ?";
         try {
             InputStream is = new FileInputStream(f);
             stmt = con.prepareStatement(sql);
             //stmt.setBlob(1, is);
             stmt.setString(1, f.getName());
             stmt.setString(2, CDate.DataPTBRtoDataMySQL(CDate.DataPTBRAtual()));
-            stmt.setInt(3, idArquivo);
+            stmt.setBoolean(3, false);
+            stmt.setBytes(4, null);
+            stmt.setDouble(5, f.length());
+            stmt.setInt(6, idArquivo);
             stmt.executeUpdate();
             sql = "UPDATE documentos_pessoais_arq SET arq = ? WHERE id = ?";
             stmt = con.prepareStatement(sql);

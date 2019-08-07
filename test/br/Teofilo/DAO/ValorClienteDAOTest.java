@@ -102,15 +102,14 @@ public class ValorClienteDAOTest {
             String chave_AES_em_String = AES.bytesToHex(chave_entrada_bytes);   //chave AES transformada em String
             
             byte[] crip = RSA.criptografa(chave_AES_em_String, publicKey);      //criptografa usando chave Publica
-            System.out.println("Chave AES criptografada com rsa, tamanho :"+crip.length*8);
+            System.out.println("Chave AES criptografada com rsa, tamanho :"+crip.length);
             System.out.println(AES.bytesToHex(crip));
             
             
-//            String decrip = RSA.decriptografa(crip, privateKey);                //descriptografa usando chave Privada
-//            System.out.println("Chave AES descriptografada com rsa, tamanho: "+decrip.length()*4);
-//            System.out.println(decrip);
-            
-            
+            String decrip = RSA.decriptografa(crip, privateKey);                //descriptografa usando chave Privada
+            System.out.println("Chave AES descriptografada com rsa, tamanho: "+decrip.length()*4);
+            System.out.println(AES.bytesToHex(AES.hexStringToByteArray(decrip)));
+
             
             
         } catch (FileNotFoundException ex) {

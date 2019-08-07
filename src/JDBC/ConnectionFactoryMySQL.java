@@ -6,11 +6,20 @@
 package JDBC;
 
 import br.Teofilo.Bean.GerarLogErro;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 /**
@@ -18,13 +27,14 @@ import javax.swing.JOptionPane;
  *
  * Classe responsável pela conexão com o banco de dados MySQL
  *
- * Database: estoque User: root Password: ""
+ *  User: root Password: ""
  *
  */
 public class ConnectionFactoryMySQL {
 
+    private static final String DATABASE = "teofilo";
     private static final String DRIVER = "com.mysql.jdbc.Driver";
-    private static final String URL = "jdbc:mysql://localhost/teofilo";
+    private static final String URL = "jdbc:mysql://"+ip()+"/"+DATABASE;
     private static final String USER = "root";
     private static final String PASS = "";
 
@@ -69,5 +79,22 @@ public class ConnectionFactoryMySQL {
             }
         }
         closeConnection(con, stmt);
+    }
+    
+    private static String ip(){
+        File f = new File("src\\ip_db.txt");
+        try {
+            InputStream os = new FileInputStream(f);
+            byte[] dados = os.readAllBytes();
+            os.close();
+            String ipString = new String(dados);
+            System.out.print(ipString);
+            return ipString;
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(ConnectionFactoryMySQL.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(ConnectionFactoryMySQL.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return "localhost";
     }
 }

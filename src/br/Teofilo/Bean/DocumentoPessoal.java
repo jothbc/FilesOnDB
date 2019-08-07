@@ -17,6 +17,7 @@ public class DocumentoPessoal {
     private String alteracao;
     private boolean crip;
     private byte[] crip2;
+    private double tamanho;
 
     public DocumentoPessoal() {
     }
@@ -95,6 +96,20 @@ public class DocumentoPessoal {
 
     public void setCrip2(byte[] crip2) {
         this.crip2 = crip2;
+    }
+
+    /**
+     * @return the tamanho
+     */
+    public double getTamanho() {
+        return tamanho;
+    }
+
+    /**
+     * @param tamanho the tamanho to set
+     */
+    public void setTamanho(double tamanho) {
+        this.tamanho = tamanho;
     }
 
 }
