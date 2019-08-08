@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: 07-Ago-2019 às 20:48
+-- Generation Time: 08-Ago-2019 às 21:21
 -- Versão do servidor: 10.1.36-MariaDB
 -- versão do PHP: 7.2.11
 
@@ -195,6 +195,21 @@ CREATE TABLE `documentos_pessoais_arq` (
 -- --------------------------------------------------------
 
 --
+-- Estrutura da tabela `logpago`
+--
+
+CREATE TABLE `logpago` (
+  `id` int(11) NOT NULL,
+  `ID_CLIENTE` int(11) DEFAULT NULL,
+  `nome_cliente` varchar(100) DEFAULT NULL,
+  `descricao` varchar(100) DEFAULT NULL,
+  `valor_pago` double DEFAULT NULL,
+  `data_pago` date DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
 -- Estrutura da tabela `processos`
 --
 
@@ -329,6 +344,12 @@ ALTER TABLE `documentos_pessoais_arq`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `logpago`
+--
+ALTER TABLE `logpago`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `processos`
 --
 ALTER TABLE `processos`
@@ -404,6 +425,12 @@ ALTER TABLE `documentos`
 -- AUTO_INCREMENT for table `documentos_pessoais`
 --
 ALTER TABLE `documentos_pessoais`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `logpago`
+--
+ALTER TABLE `logpago`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --

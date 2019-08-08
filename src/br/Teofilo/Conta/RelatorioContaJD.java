@@ -7,11 +7,16 @@ package br.Teofilo.Conta;
 
 import br.Teofilo.Cliente.SeletorDeClienteJD;
 import br.Teofilo.Bean.Cliente;
+import br.Teofilo.Bean.Conta;
+import br.Teofilo.Bean.ContaSub;
+import br.Teofilo.DAO.ContaDAO;
 import funcoes.CDate;
 import java.awt.Point;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -23,9 +28,11 @@ import javax.swing.JOptionPane;
 public class RelatorioContaJD extends javax.swing.JDialog {
 
     private final Point point = new Point();
+    private Cliente cliente;
 
     /**
      * Creates new form RelatorioContaJD
+     *
      * @param parent set parent
      * @param modal set modal
      */
@@ -366,14 +373,33 @@ public class RelatorioContaJD extends javax.swing.JDialog {
             JOptionPane.showMessageDialog(null, "Preencha corretamente as datas.\ndd/mm/aaaa");
             return;
         }
-        if (opcliente.isSelected()){
+        if (opcliente.isSelected()) { //cliente especifico
             SeletorDeClienteJD jd = new SeletorDeClienteJD(null, true);
             jd.setVisible(true);
-            if (jd.getCliente()!=null){
-                Cliente c = jd.getCliente();
-                System.out.println(c);
+            if (jd.getCliente() != null) {
+                cliente = jd.getCliente();
+            } else {
+                JOptionPane.showMessageDialog(null, "Selecione o cliente.");
+                return;
             }
+            /* Cliente selecionado
+            1º ja pagos
+            2º em aberto
+            3º todos
+             */
+            if (oppago.isSelected()) { //1º
+                
+            } else if (opaberto.isSelected()) { //2º
+
+            } else if (optodos.isSelected()) { //3º
+
+            }
+        } else { //geral
+            /* GERAL
+            1º ja pagos
+            2º em aberto
+            3º todos
+             */
         }
-        JOptionPane.showMessageDialog(null, "Ainda falta criar os relatórios. É necessário mais tempo.\nEm média acrescentará ao projeto 80MB.");
     }
 }
