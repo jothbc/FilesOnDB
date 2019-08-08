@@ -88,7 +88,7 @@ public class ConnectionFactoryMySQL {
             byte[] dados = os.readAllBytes();
             os.close();
             String ipString = new String(dados);
-            System.out.print(ipString);
+            System.out.print("IP do servidor: "+ipString);
             return ipString;
         } catch (FileNotFoundException ex) {
             Logger.getLogger(ConnectionFactoryMySQL.class.getName()).log(Level.SEVERE, null, ex);

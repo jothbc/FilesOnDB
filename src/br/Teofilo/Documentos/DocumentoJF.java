@@ -470,10 +470,11 @@ public class DocumentoJF extends javax.swing.JFrame {
                                 .addComponent(informtxt, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(jScrollPane2))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel7)
-                            .addComponent(modiftxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(tamlbl, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(tamlbl, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(jLabel7)
+                                .addComponent(modiftxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(37, 37, 37))))
         );
 
@@ -908,7 +909,7 @@ public class DocumentoJF extends javax.swing.JFrame {
                             String chaveAES_String = RSA.decriptografa(chaveAES, CHAVE_RSA_PRIVADA);
                             chaveAES = AES.hexStringToByteArray(chaveAES_String);
                             SecretKey AES_KEY = new SecretKeySpec(chaveAES, "AES");
-                            System.out.println("CHAVE AES CAPTURADA EM FORMATO HEXA: " + AES.bytesToHex(AES_KEY.getEncoded()));
+                            //System.out.println("CHAVE AES CAPTURADA EM FORMATO HEXA: " + AES.bytesToHex(AES_KEY.getEncoded()));
                             arquivo = new DocumentoDAO().getArquivo(doc.getId(), fl.getSelectedFile().getPath() + "\\", "documentos_pessoais");
                             arquivo = AES.decrypt(arquivo.getPath(), arquivo.getParent() + "\\decrip" + arquivo.getName(), AES_KEY, true);
                         } else {

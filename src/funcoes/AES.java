@@ -132,13 +132,14 @@ public class AES {
                 outStream.write(cifraAES.update(buffer, 0, len));
                 outStream.flush();
             }
-
             outStream.write(cifraAES.doFinal());
             inStream.close();
             outStream.close();
             if (deletarCriptografado) {
                 encryptedFile.delete();
             }
+            //a linha a seguir retira o "decrip" do nome do arquivo
+            decryptedFile.renameTo(new File(decryptedFile.getParent()+"\\"+decryptedFile.getName().substring(6)));
             return decryptedFile;
         } catch (IOException | InvalidAlgorithmParameterException | InvalidKeyException | NoSuchAlgorithmException | BadPaddingException | IllegalBlockSizeException | NoSuchPaddingException e) {
             System.err.println(e);

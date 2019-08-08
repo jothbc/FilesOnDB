@@ -452,7 +452,7 @@ public class UploadJD extends javax.swing.JDialog {
                     /*
                     1 gera a chave aes
                     2 encripta o arquivo com a chave aes
-                    3 encripta a chave aes com rsa
+                    3 encripta a chave aes(em formato HEXA) com rsa
                     4 manda para o db a chave aes encriptada
                     */
                     //1
