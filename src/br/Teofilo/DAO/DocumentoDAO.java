@@ -11,6 +11,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -301,4 +302,73 @@ public class DocumentoDAO {
         }
     }
 
+    /*
+     procedimento que verifica se os documentos postados no DB,
+     caso o documento tenha sido postado sem preencher o campo tam
+     então é feito o update desse campo
+     */
+    public void ifNotExistTam() {
+        verificarDocumentos();
+        verificarDocumentosPessoais();
+    }
+
+    private void verificarDocumentos() {
+        sql = "SELECT * FROM documentos WHERE tam is null";
+        int[] id = new int[9999];
+        int count = 0;
+        try {
+            stmt = con.prepareStatement(sql);
+            rs = stmt.executeQuery();
+            while (rs.next()) {
+                id[count] = rs.getInt("id");
+                count++;
+            }
+            for (int x = 0; x < count; x++) {
+                sql = "SELECT length(arq) FROM documentos_arq where id = ?";
+                stmt = con.prepareStatement(sql);
+                stmt.setInt(1, id[x]);
+                rs = stmt.executeQuery();
+                rs.first();
+                BigDecimal tamanho = rs.getBigDecimal("length(arq)");
+                sql = "UPDATE documentos SET tam = ? WHERE id = ?";
+                stmt = con.prepareStatement(sql);
+                stmt.setBigDecimal(1, tamanho);
+                stmt.setInt(2, id[x]);
+                stmt.executeUpdate();
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(DocumentoDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private void verificarDocumentosPessoais() {
+        sql = "SELECT * FROM documentos_pessoais WHERE tam is null";
+        int[] id = new int[9999];
+        int count = 0;
+        try {
+            stmt = con.prepareStatement(sql);
+            rs = stmt.executeQuery();
+            while (rs.next()) {
+                id[count] = rs.getInt("id");
+                count++;
+            }
+            for (int x = 0; x < count; x++) {
+                sql = "SELECT length(arq) FROM documentos_pessoais_arq where id = ?";
+                stmt = con.prepareStatement(sql);
+                stmt.setInt(1, id[x]);
+                rs = stmt.executeQuery();
+                rs.first();
+                BigDecimal tamanho = rs.getBigDecimal("length(arq)");
+                sql = "UPDATE documentos_pessoais SET tam = ? WHERE id = ?";
+                stmt = con.prepareStatement(sql);
+                stmt.setBigDecimal(1, tamanho);
+                stmt.setInt(2, id[x]);
+                stmt.executeUpdate();
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(DocumentoDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 }
