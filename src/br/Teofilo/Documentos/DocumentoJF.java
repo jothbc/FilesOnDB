@@ -935,6 +935,13 @@ public class DocumentoJF extends javax.swing.JFrame {
                 } else {
                     cripLabel.setText("");
                 }
+                if (d.getTamanho() == 0) {
+                    JOptionPane.showMessageDialog(null, "Atualizando tamanho dos arquivos no banco de dados.. aguarde..");
+                    new DocumentoDAO().ifNotExistTam();
+                    JOptionPane.showMessageDialog(null, "Concluido!");
+                    jListTiposMouseClicked(null);
+                    return;
+                }
                 tamlbl.setText(Conv.CDblDuasCasas((d.getTamanho() / 1024) / 1024) + "MB");
                 statustxt.setText(d.getStatus());
                 modiftxt.setText(d.getModificacao());
@@ -945,6 +952,13 @@ public class DocumentoJF extends javax.swing.JFrame {
                     cripLabel.setText("Criptografado.");
                 } else {
                     cripLabel.setText("");
+                }
+                if (dp.getTamanho() == 0) {
+                    JOptionPane.showMessageDialog(null, "Atualizando tamanho dos arquivos no banco de dados.. aguarde..");
+                    new DocumentoDAO().ifNotExistTam();
+                    JOptionPane.showMessageDialog(null, "Concluido!");
+                    dadosPessoaisBtnActionPerformed(null);
+                    return;
                 }
                 tamlbl.setText(Conv.CDblDuasCasas((dp.getTamanho() / 1024) / 1024) + "MB");
                 statustxt.setText("");
@@ -963,12 +977,12 @@ public class DocumentoJF extends javax.swing.JFrame {
             if (listDocumentos.getElementAt(0) instanceof Documento) {
                 for (int x = 0; x < jListDocumento.getSelectedIndices().length; x++) {
                     d = (Documento) listDocumentos.getElementAt(jListDocumento.getSelectedIndices()[x]);
-                    tam+=d.getTamanho();
+                    tam += d.getTamanho();
                 }
             } else {
                 for (int x = 0; x < jListDocumento.getSelectedIndices().length; x++) {
                     dp = (DocumentoPessoal) listDocumentos.getElementAt(jListDocumento.getSelectedIndices()[x]);
-                    tam+=dp.getTamanho();
+                    tam += dp.getTamanho();
                 }
             }
             tamlbl.setText(Conv.CDblDuasCasas((tam / 1024) / 1024) + "MB");

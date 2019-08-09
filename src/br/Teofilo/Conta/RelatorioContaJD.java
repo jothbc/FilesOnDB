@@ -390,7 +390,7 @@ public class RelatorioContaJD extends javax.swing.JDialog {
             if (oppago.isSelected()) { //1º
                 
             } else if (opaberto.isSelected()) { //2º
-
+                
             } else if (optodos.isSelected()) { //3º
 
             }

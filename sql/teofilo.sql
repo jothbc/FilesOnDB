@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: 08-Ago-2019 às 21:21
+-- Generation Time: 09-Ago-2019 às 21:56
 -- Versão do servidor: 10.1.36-MariaDB
 -- versão do PHP: 7.2.11
 
@@ -251,6 +251,16 @@ CREATE TABLE `tipo` (
   `descricao` varchar(200) DEFAULT NULL,
   `ID_CLIENTE` int(4) DEFAULT NULL,
   `ID_PROCESSO` int(4) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura da tabela `umatabela`
+--
+
+CREATE TABLE `umatabela` (
+  `id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
