@@ -151,7 +151,7 @@ public class ContaDAO {
         //variaveis para logpago
         String hoje = CDate.DataPTBRtoDataMySQL(CDate.DataPTBRAtual());
         double valor = 0;
-        int ID_CLIENTE =0;
+        int ID_CLIENTE = 0;
         String nome_cliente;
         String descricao = null;
         //fim variaveis
@@ -196,14 +196,23 @@ public class ContaDAO {
                     stmt.setInt(2, id_conta);
                     stmt.executeUpdate();
                 }
+            } else {
+                sql = "SELECT * FROM conta WHERE id = ?";
+                stmt = con.prepareStatement(sql);
+                stmt.setInt(1, id_conta);
+                rs = stmt.executeQuery();
+                rs.first();
+                ID_CLIENTE = rs.getInt("ID_CLIENTE");
+                descricao = rs.getString("descricao");
             }
             sql = "SELECT nome FROM clientes WHERE id = ?";
             stmt = con.prepareStatement(sql);
             stmt.setInt(1, ID_CLIENTE);
+            rs = stmt.executeQuery();
             rs.first();
-            nome_cliente =rs.getString("nome");
+            nome_cliente = rs.getString("nome");
             sql = "INSERT INTO logpago (ID_CLIENTE,nome_cliente,descricao,valor_pago,data_pago) VALUES (?,?,?,?,?)";
-            stmt=con.prepareStatement(sql);
+            stmt = con.prepareStatement(sql);
             stmt.setInt(1, ID_CLIENTE);
             stmt.setString(2, nome_cliente);
             stmt.setString(3, descricao);
@@ -240,7 +249,7 @@ public class ContaDAO {
             rs = stmt.executeQuery();
             rs.first();
             logID_CLIENTE = rs.getInt("ID_CLIENTE");
-            logdescricao= rs.getString("descricao");
+            logdescricao = rs.getString("descricao");
             if (rs.getString("data_pagamento_final") == null) {
                 if (rs.getDouble("valor_ja_pago") >= rs.getDouble("valor")) {
                     sql = "UPDATE conta SET data_pagamento_final = ? WHERE id = ?";
@@ -253,10 +262,11 @@ public class ContaDAO {
             sql = "SELECT nome FROM clientes WHERE id = ?";
             stmt = con.prepareStatement(sql);
             stmt.setInt(1, logID_CLIENTE);
+            rs = stmt.executeQuery();
             rs.first();
-            lognome_cliente =rs.getString("nome");
+            lognome_cliente = rs.getString("nome");
             sql = "INSERT INTO logpago (ID_CLIENTE,nome_cliente,descricao,valor_pago,data_pago) VALUES (?,?,?,?,?)";
-            stmt=con.prepareStatement(sql);
+            stmt = con.prepareStatement(sql);
             stmt.setInt(1, logID_CLIENTE);
             stmt.setString(2, lognome_cliente);
             stmt.setString(3, logdescricao);
@@ -307,7 +317,7 @@ public class ContaDAO {
 
     public boolean baixarCartoesHoje() {
         //variaveis para logpago
-        String loghoje = CDate.DataPTBRtoDataMySQL(CDate.DataPTBRAtual());
+        String loghoje;
         double logvalor = 0;
         int logID_CLIENTE;
         String lognome_cliente;
@@ -343,15 +353,37 @@ public class ContaDAO {
                     stmt = con.prepareStatement(sql);
                     stmt.setInt(1, id_);
                     double valor;
-                    try (ResultSet rs2 = stmt.executeQuery()) {
-                        rs2.first();
-                        valor = rs2.getDouble("valor");
-                        sql = "UPDATE conta SET valor_ja_pago = valor_ja_pago + ? WHERE id = ?";
-                        stmt = con.prepareStatement(sql);
-                        stmt.setDouble(1, valor);
-                        stmt.setInt(2, id[x]);
-                        stmt.executeUpdate();
-                    }
+                    ResultSet rs2 = stmt.executeQuery();
+                    rs2.first();
+                    valor = rs2.getDouble("valor");
+                    logvalor = valor;
+                    loghoje = rs2.getString("data_pago");
+                    sql = "UPDATE conta SET valor_ja_pago = valor_ja_pago + ? WHERE id = ?";
+                    stmt = con.prepareStatement(sql);
+                    stmt.setDouble(1, valor);
+                    stmt.setInt(2, id[x]);
+                    stmt.executeUpdate();
+                    sql = "SELECT * FROM conta WHERE id =?";
+                    stmt = con.prepareStatement(sql);
+                    stmt.setInt(1, id[x]);
+                    rs2 = stmt.executeQuery();
+                    rs2.first();
+                    logID_CLIENTE = rs2.getInt("ID_CLIENTE");
+                    logdescricao = rs2.getString("descricao");
+                    sql = "SELECT nome FROM clientes WHERE id = ?";
+                    stmt = con.prepareStatement(sql);
+                    stmt.setInt(1, logID_CLIENTE);
+                    rs2 = stmt.executeQuery();
+                    rs2.first();
+                    lognome_cliente = rs2.getString("nome");
+                    sql = "INSERT INTO logpago (ID_CLIENTE,nome_cliente,descricao,valor_pago,data_pago) VALUES (?,?,?,?,?)";
+                    stmt = con.prepareStatement(sql);
+                    stmt.setInt(1, logID_CLIENTE);
+                    stmt.setString(2, lognome_cliente);
+                    stmt.setString(3, logdescricao);
+                    stmt.setDouble(4, logvalor);
+                    stmt.setString(5, loghoje);
+                    stmt.execute();
                 }
             }
             //repetidor para verificar se pagou a ultima parcela
