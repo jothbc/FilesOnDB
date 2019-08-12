@@ -24,6 +24,7 @@ import java.awt.Color;
 import java.awt.Desktop;
 import java.awt.HeadlessException;
 import java.awt.Point;
+import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -210,6 +211,11 @@ public class DocumentoJF extends javax.swing.JFrame {
         jListProcessos.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jListProcessosMouseClicked(evt);
+            }
+        });
+        jListProcessos.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                jListProcessosKeyPressed(evt);
             }
         });
         jScrollPane4.setViewportView(jListProcessos);
@@ -579,6 +585,12 @@ public class DocumentoJF extends javax.swing.JFrame {
         carregarDadosPessoaisDoClienteSelecionado((Cliente) listClientes.getElementAt(jListCliente.getSelectedIndex()));
         btnPessoal = true;
     }//GEN-LAST:event_dadosPessoaisBtnActionPerformed
+
+    private void jListProcessosKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jListProcessosKeyPressed
+        if (evt.getKeyCode() == KeyEvent.VK_DELETE) {
+            removerProcesso();
+        }
+    }//GEN-LAST:event_jListProcessosKeyPressed
 
     /**
      * @param args the command line arguments
@@ -1199,6 +1211,23 @@ public class DocumentoJF extends javax.swing.JFrame {
                 }
             }
             carregarDadosPessoaisDoClienteSelecionado((Cliente) listClientes.getElementAt(jListCliente.getSelectedIndex()));
+        }
+    }
+
+    private void removerProcesso() {
+        if (listTipo.isEmpty()) {
+            if (jListProcessos.getSelectedIndex() >= 0) {
+                int op = JOptionPane.showOptionDialog(null, "Deseja realmente excluir esse processo?", "Confirmação de exclusão", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, null, null, null);
+                if (op == JOptionPane.YES_OPTION) {
+                    if (!new DocumentoDAO().removerProcesso((Processo) listProcessos.getElementAt(jListProcessos.getSelectedIndex()))){
+                        JOptionPane.showMessageDialog(null, "Erro ao tentar remover o processo selecioado.");
+                    }else{
+                        processoBtnActionPerformed(null);
+                    }
+                }
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Ainda existem documentos associados a esse processo.");
         }
     }
 

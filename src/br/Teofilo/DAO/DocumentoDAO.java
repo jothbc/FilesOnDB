@@ -4,6 +4,7 @@ import JDBC.ConnectionFactoryMySQL;
 import br.Teofilo.Bean.Documento;
 import br.Teofilo.Bean.DocumentoPessoal;
 import br.Teofilo.Bean.GerarLogErro;
+import br.Teofilo.Bean.Processo;
 import funcoes.CDate;
 import java.io.File;
 import java.io.FileInputStream;
@@ -313,7 +314,7 @@ public class DocumentoDAO {
     }
 
     private void verificarDocumentos() {
-        sql = "SELECT * FROM documentos WHERE tam is null";
+        sql = "SELECT * FROM documentos WHERE tam = 0";
         int[] id = new int[9999];
         int count = 0;
         try {
@@ -337,7 +338,7 @@ public class DocumentoDAO {
     }
 
     private void verificarDocumentosPessoais() {
-        sql = "SELECT * FROM documentos_pessoais WHERE tam is null";
+        sql = "SELECT * FROM documentos_pessoais WHERE tam = 0";
         int[] id = new int[9999];
         int count = 0;
         try {
@@ -356,6 +357,22 @@ public class DocumentoDAO {
             }
         } catch (SQLException ex) {
             Logger.getLogger(DocumentoDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public boolean removerProcesso(Processo processo) {
+        sql = "DELETE FROM processos WHERE id = ?";
+        try {
+            stmt = con.prepareStatement(sql);
+            stmt.setInt(1, processo.getId());
+            stmt.execute();
+            return true;
+        } catch (SQLException ex) {
+            GerarLogErro.gerar(ex.getMessage());
+            Logger.getLogger(DocumentoDAO.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        }finally{
+            ConnectionFactoryMySQL.closeConnection(con, stmt);
         }
     }
 }
