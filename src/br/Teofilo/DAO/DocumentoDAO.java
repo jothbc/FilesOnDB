@@ -354,7 +354,6 @@ public class DocumentoDAO {
                 stmt.setInt(2, id[x]);
                 stmt.executeUpdate();
             }
-
         } catch (SQLException ex) {
             Logger.getLogger(DocumentoDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
