@@ -18,15 +18,12 @@ import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
-import javax.crypto.spec.IvParameterSpec;
-import javax.crypto.spec.SecretKeySpec;
 
 public class RSA {
 
     public static final String ALGORITHM = "RSA";
     public static final String PATH_CHAVE_PRIVADA = "C:/keys/private.key";      //Local da chave privada no sistema de arquivos.
     public static final String PATH_CHAVE_PUBLICA = "C:/keys/public.key";       //Local da chave pública no sistema de arquivos.
-    static String IV = "AAAAAAAAAAAAAAAA";
 
     //Gera a chave que contém um par de chave Privada e Pública usando 2048
     // bytes. Armazena o conjunto de chaves nos arquivos private.key e public.key
@@ -130,41 +127,6 @@ public class RSA {
         return new String(dectyptedText);
     }
 
-    public static byte[] encryptAES(File bytes_puros, File chaveencriptacao) throws Exception {
-        Cipher encripta = Cipher.getInstance("AES/CBC/PKCS5Padding", "SunJCE");
-//        SecretKeySpec key = new SecretKeySpec(chaveencriptacao.getBytes("UTF-8"), "AES");
-        SecretKeySpec key = new SecretKeySpec(Files.readAllBytes(chaveencriptacao.toPath()), "AES");
-        encripta.init(Cipher.ENCRYPT_MODE, key, new IvParameterSpec(IV.getBytes("UTF-8")));
-        return encripta.doFinal(Files.readAllBytes(bytes_puros.toPath()));
-    }
-//    public static File encryptAES(File bytes_puros, File chaveencriptacao) throws Exception {
-//        Cipher encripta = Cipher.getInstance("AES/CBC/PKCS5Padding", "SunJCE");
-//        SecretKeySpec key = new SecretKeySpec(Files.readAllBytes(chaveencriptacao.toPath()), "AES");
-//        encripta.init(Cipher.ENCRYPT_MODE, key, new IvParameterSpec(IV.getBytes("UTF-8")));
-//        File fileCrip = new File(bytes_puros.getPath());                                        //Criamos um nome para o arquivo
-//        BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(fileCrip));    //Criamos o arquivo
-//        bos.write(encripta.doFinal(Files.readAllBytes(bytes_puros.toPath())));                  //Gravamos os bytes lá
-//        bos.close();                                                                            //Fechamos o stream.
-//        return fileCrip;
-//    }
-
-    public static byte[] decryptAES(File bytes_encriptados, File chaveencriptacao) throws Exception {
-        Cipher decripta = Cipher.getInstance("AES/CBC/PKCS5Padding", "SunJCE");
-//        SecretKeySpec key = new SecretKeySpec(chaveencriptacao.getBytes("UTF-8"), "AES");
-        SecretKeySpec key = new SecretKeySpec(Files.readAllBytes(chaveencriptacao.toPath()), "AES");
-        decripta.init(Cipher.DECRYPT_MODE, key, new IvParameterSpec(IV.getBytes("UTF-8")));
-        return decripta.doFinal(Files.readAllBytes(bytes_encriptados.toPath()));
-    }
-//    public static File decryptAES(File bytes_encriptados, File chaveencriptacao) throws Exception {
-//        Cipher decripta = Cipher.getInstance("AES/CBC/PKCS5Padding", "SunJCE");
-//        SecretKeySpec key = new SecretKeySpec(Files.readAllBytes(chaveencriptacao.toPath()), "AES");
-//        decripta.init(Cipher.DECRYPT_MODE, key, new IvParameterSpec(IV.getBytes("UTF-8")));
-//        File fileDecrip = new File(bytes_encriptados.getPath());                                        //Criamos um nome para o arquivo
-//        BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(fileDecrip));    //Criamos o arquivo
-//        bos.write(decripta.doFinal(Files.readAllBytes(bytes_encriptados.toPath())));                  //Gravamos os bytes lá
-//        bos.close();                                                                            //Fechamos o stream.
-//        return fileDecrip;
-//    }
 
     public static void main(String[] args) {
         try {

@@ -19,3 +19,5 @@ TO
 FLUSH PRIVILEGES;
 
 
+//ip do jadsom
+http://181.221.149.14:888/phpmyadmin/

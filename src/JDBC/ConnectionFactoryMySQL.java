@@ -27,14 +27,14 @@ import javax.swing.JOptionPane;
  *
  * Classe responsável pela conexão com o banco de dados MySQL
  *
- *  User: root Password: ""
+ * User: root Password: ""
  *
  */
 public class ConnectionFactoryMySQL {
 
     private static final String DATABASE = "teofilo";
     private static final String DRIVER = "com.mysql.jdbc.Driver";
-    private static final String URL = "jdbc:mysql://"+ip()+"/"+DATABASE;
+    private static final String URL = "jdbc:mysql://" + ip() + "/" + DATABASE;
     private static final String USER = "root";
     private static final String PASS = "";
 
@@ -80,15 +80,15 @@ public class ConnectionFactoryMySQL {
         }
         closeConnection(con, stmt);
     }
-    
-    private static String ip(){
+
+    private static String ip() {
         File f = new File("src\\ip_db.txt");
         try {
             InputStream os = new FileInputStream(f);
             byte[] dados = os.readAllBytes();
             os.close();
             String ipString = new String(dados);
-            System.out.print("IP do servidor: "+ipString);
+            System.out.print("IP do servidor: " + ipString);
             return ipString;
         } catch (FileNotFoundException ex) {
             Logger.getLogger(ConnectionFactoryMySQL.class.getName()).log(Level.SEVERE, null, ex);

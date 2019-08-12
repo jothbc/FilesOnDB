@@ -324,15 +324,9 @@ public class DocumentoDAO {
                 count++;
             }
             for (int x = 0; x < count; x++) {
-                sql = "SELECT length(arq) FROM documentos_arq where id = ?";
+                sql = "UPDATE documentos SET tam = (SELECT length(arq) FROM documentos_arq where id = ?) WHERE id = ?";
                 stmt = con.prepareStatement(sql);
                 stmt.setInt(1, id[x]);
-                rs = stmt.executeQuery();
-                rs.first();
-                BigDecimal tamanho = rs.getBigDecimal("length(arq)");
-                sql = "UPDATE documentos SET tam = ? WHERE id = ?";
-                stmt = con.prepareStatement(sql);
-                stmt.setBigDecimal(1, tamanho);
                 stmt.setInt(2, id[x]);
                 stmt.executeUpdate();
             }
@@ -354,15 +348,9 @@ public class DocumentoDAO {
                 count++;
             }
             for (int x = 0; x < count; x++) {
-                sql = "SELECT length(arq) FROM documentos_pessoais_arq where id = ?";
+                sql = "UPDATE documentos_pessoais SET tam = (SELECT length(arq) FROM documentos_pessoais_arq where id = ? ) WHERE id = ?";
                 stmt = con.prepareStatement(sql);
                 stmt.setInt(1, id[x]);
-                rs = stmt.executeQuery();
-                rs.first();
-                BigDecimal tamanho = rs.getBigDecimal("length(arq)");
-                sql = "UPDATE documentos_pessoais SET tam = ? WHERE id = ?";
-                stmt = con.prepareStatement(sql);
-                stmt.setBigDecimal(1, tamanho);
                 stmt.setInt(2, id[x]);
                 stmt.executeUpdate();
             }
