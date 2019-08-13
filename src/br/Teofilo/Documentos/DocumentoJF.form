@@ -3,7 +3,6 @@
 <Form version="1.5" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JFrameFormInfo">
   <Properties>
     <Property name="defaultCloseOperation" type="int" value="2"/>
-    <Property name="undecorated" type="boolean" value="true"/>
   </Properties>
   <SyntheticProperties>
     <SyntheticProperty name="formSizePolicy" type="int" value="1"/>
@@ -24,7 +23,7 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Component id="jPanel1" min="-2" max="-2" attributes="0"/>
+          <Component id="jPanel1" alignment="0" max="32767" attributes="0"/>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
@@ -91,11 +90,11 @@
                           </Group>
                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                              <Component id="jButton6" pref="95" max="32767" attributes="0"/>
+                              <Component id="jButton6" max="32767" attributes="0"/>
                               <Component id="downloadBtn" pref="95" max="32767" attributes="0"/>
-                              <Component id="jButton4" pref="95" max="32767" attributes="0"/>
-                              <Component id="jButton3" pref="95" max="32767" attributes="0"/>
-                              <Component id="jButton9" alignment="0" pref="95" max="32767" attributes="0"/>
+                              <Component id="jButton4" max="32767" attributes="0"/>
+                              <Component id="jButton3" max="32767" attributes="0"/>
+                              <Component id="jButton9" alignment="0" max="32767" attributes="0"/>
                               <Component id="informtxt" max="32767" attributes="0"/>
                           </Group>
                       </Group>
