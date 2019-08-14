@@ -5,6 +5,7 @@ import br.Teofilo.Bean.Documento;
 import br.Teofilo.Bean.DocumentoPessoal;
 import br.Teofilo.Bean.GerarLogErro;
 import br.Teofilo.Bean.Processo;
+import br.Teofilo.Bean.TipoDoc;
 import funcoes.CDate;
 import java.io.File;
 import java.io.FileInputStream;
@@ -371,8 +372,48 @@ public class DocumentoDAO {
             GerarLogErro.gerar(ex.getMessage());
             Logger.getLogger(DocumentoDAO.class.getName()).log(Level.SEVERE, null, ex);
             return false;
-        }finally{
+        } finally {
             ConnectionFactoryMySQL.closeConnection(con, stmt);
+        }
+    }
+
+    public boolean removerTipoDeDocumento(TipoDoc tipoDoc) {
+        //remover todos os arquivos vinculados a esse tipo de documento e ao cliente selecionado
+        int[] id = new int[99999];
+        int count = 0;
+        sql = "SELECT * FROM documentos WHERE ID_TIPO = ?";
+        try {
+            stmt = con.prepareStatement(sql);
+            stmt.setInt(1, tipoDoc.getId());
+            rs = stmt.executeQuery();
+            while (rs.next()) {
+                id[count] = rs.getInt("id");
+                count++;
+            }
+            //ja tenho todos os ids dos documentos a serem removidos
+            sql = "DELETE FROM documentos_arq WHERE id = ?";
+            stmt = con.prepareStatement(sql);
+            for (int x = 0; x < count; x++) {
+                stmt.setInt(1, id[x]);
+                stmt.execute();
+            }
+            sql = "DELETE FROM documentos WHERE id = ?";
+            stmt = con.prepareStatement(sql);
+            for (int x = 0; x < count; x++) {
+                stmt.setInt(1, id[x]);
+                stmt.execute();
+            }
+            sql = "DELETE FROM tipo WHERE id = ?";
+            stmt = con.prepareStatement(sql);
+            stmt.setInt(1, tipoDoc.getId());
+            stmt.execute();
+            return true;
+        } catch (SQLException ex) {
+            Logger.getLogger(DocumentoDAO.class.getName()).log(Level.SEVERE, null, ex);
+            GerarLogErro.gerar(ex.getMessage());
+            return false;
+        } finally {
+            ConnectionFactoryMySQL.closeConnection(con, stmt, rs);
         }
     }
 }

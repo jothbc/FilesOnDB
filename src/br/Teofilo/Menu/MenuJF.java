@@ -400,5 +400,4 @@ public class MenuJF extends javax.swing.JFrame {
             ConnectionFactoryMySQL.closeConnection(con);
         }
     }
-    //
 }
