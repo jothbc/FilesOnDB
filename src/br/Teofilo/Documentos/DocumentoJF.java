@@ -25,6 +25,7 @@ import br.Teofilo.DAO.TipoDocDAO;
 import br.Teofilo.DAO.UserDAO;
 import br.Teofilo.Menu.MenuJF;
 import br.Teofilo.Utilidades.CadastrarUsuarioJD;
+import br.Teofilo.Utilidades.TimeLineJF;
 import funcoes.AES;
 import funcoes.Conv;
 import funcoes.RSA;
@@ -68,6 +69,7 @@ public class DocumentoJF extends javax.swing.JFrame {
     DefaultListModel listDocumentos = new DefaultListModel();
     private boolean btnPessoal = false;
     ContasClienteJF contasjf;
+    TimeLineJF timeLineJF;
 
     /**
      * Creates new form DocumentoJF
@@ -89,7 +91,7 @@ public class DocumentoJF extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         jLabel13 = new javax.swing.JLabel();
-        jButton5 = new javax.swing.JButton();
+        contasBtn = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         jListCliente = new javax.swing.JList<>();
         jScrollPane2 = new javax.swing.JScrollPane();
@@ -107,14 +109,14 @@ public class DocumentoJF extends javax.swing.JFrame {
         jLabelRelacionadoCliente = new javax.swing.JLabel();
         jLabelProcessos = new javax.swing.JLabel();
         jLabelTiposDocumentos = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
+        addProcessoBtn = new javax.swing.JButton();
+        visualizarBtn = new javax.swing.JButton();
+        uploadBtn = new javax.swing.JButton();
         downloadBtn = new javax.swing.JButton();
-        jButton6 = new javax.swing.JButton();
-        jButton7 = new javax.swing.JButton();
-        jButton8 = new javax.swing.JButton();
-        jButton9 = new javax.swing.JButton();
+        editarBtn = new javax.swing.JButton();
+        addTipoBtn = new javax.swing.JButton();
+        changeStatusBtn = new javax.swing.JButton();
+        deleteBtn = new javax.swing.JButton();
         jLabel8 = new javax.swing.JLabel();
         abertoEmtxt = new javax.swing.JTextField();
         informtxt = new javax.swing.JLabel();
@@ -122,7 +124,8 @@ public class DocumentoJF extends javax.swing.JFrame {
         dadosPessoaisBtn = new javax.swing.JButton();
         cripLabel = new javax.swing.JLabel();
         tamlbl = new javax.swing.JLabel();
-        jButton10 = new javax.swing.JButton();
+        gerenciarClientesBtn = new javax.swing.JButton();
+        tarefasBtn = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Advocacia Teófilo Rocha");
@@ -135,7 +138,6 @@ public class DocumentoJF extends javax.swing.JFrame {
         });
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
-        jPanel1.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
         jPanel2.setBackground(new java.awt.Color(0, 0, 0));
         jPanel2.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
@@ -157,15 +159,15 @@ public class DocumentoJF extends javax.swing.JFrame {
             }
         });
 
-        jButton5.setBackground(new java.awt.Color(0, 0, 0));
-        jButton5.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jButton5.setForeground(new java.awt.Color(255, 255, 255));
-        jButton5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/Teofilo/IMG/1x/ic_local_atm_24px_white.png"))); // NOI18N
-        jButton5.setText("Contas");
-        jButton5.setBorder(null);
-        jButton5.addActionListener(new java.awt.event.ActionListener() {
+        contasBtn.setBackground(new java.awt.Color(0, 0, 0));
+        contasBtn.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        contasBtn.setForeground(new java.awt.Color(255, 255, 255));
+        contasBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/Teofilo/IMG/1x/ic_local_atm_24px_white.png"))); // NOI18N
+        contasBtn.setText("Contas");
+        contasBtn.setBorder(null);
+        contasBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton5ActionPerformed(evt);
+                contasBtnActionPerformed(evt);
             }
         });
 
@@ -177,7 +179,7 @@ public class DocumentoJF extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jLabel13, javax.swing.GroupLayout.PREFERRED_SIZE, 403, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(contasBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -185,7 +187,7 @@ public class DocumentoJF extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jButton5)
+                    .addComponent(contasBtn)
                     .addComponent(jLabel13))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -269,34 +271,34 @@ public class DocumentoJF extends javax.swing.JFrame {
         jLabelTiposDocumentos.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabelTiposDocumentos.setText("Tipos de Documentos");
 
-        jButton1.setBackground(new java.awt.Color(255, 255, 255));
-        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/Teofilo/IMG/1x/ic_playlist_add_24px.png"))); // NOI18N
-        jButton1.setBorder(null);
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        addProcessoBtn.setBackground(new java.awt.Color(255, 255, 255));
+        addProcessoBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/Teofilo/IMG/1x/ic_playlist_add_24px.png"))); // NOI18N
+        addProcessoBtn.setBorder(null);
+        addProcessoBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                addProcessoBtnActionPerformed(evt);
             }
         });
 
-        jButton3.setBackground(new java.awt.Color(255, 255, 255));
-        jButton3.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        jButton3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/Teofilo/IMG/1x/eye-19.png"))); // NOI18N
-        jButton3.setText("Visualizar");
-        jButton3.setBorder(null);
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
+        visualizarBtn.setBackground(new java.awt.Color(255, 255, 255));
+        visualizarBtn.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        visualizarBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/Teofilo/IMG/1x/eye-19.png"))); // NOI18N
+        visualizarBtn.setText("Visualizar");
+        visualizarBtn.setBorder(null);
+        visualizarBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
+                visualizarBtnActionPerformed(evt);
             }
         });
 
-        jButton4.setBackground(new java.awt.Color(255, 255, 255));
-        jButton4.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        jButton4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/Teofilo/IMG/1x/square-upload.png"))); // NOI18N
-        jButton4.setText("Upload");
-        jButton4.setBorder(null);
-        jButton4.addActionListener(new java.awt.event.ActionListener() {
+        uploadBtn.setBackground(new java.awt.Color(255, 255, 255));
+        uploadBtn.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        uploadBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/Teofilo/IMG/1x/square-upload.png"))); // NOI18N
+        uploadBtn.setText("Upload");
+        uploadBtn.setBorder(null);
+        uploadBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton4ActionPerformed(evt);
+                uploadBtnActionPerformed(evt);
             }
         });
 
@@ -311,43 +313,43 @@ public class DocumentoJF extends javax.swing.JFrame {
             }
         });
 
-        jButton6.setBackground(new java.awt.Color(255, 255, 255));
-        jButton6.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        jButton6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/Teofilo/IMG/1x/pencil.png"))); // NOI18N
-        jButton6.setText("Editar");
-        jButton6.setBorder(null);
-        jButton6.addActionListener(new java.awt.event.ActionListener() {
+        editarBtn.setBackground(new java.awt.Color(255, 255, 255));
+        editarBtn.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        editarBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/Teofilo/IMG/1x/pencil.png"))); // NOI18N
+        editarBtn.setText("Editar");
+        editarBtn.setBorder(null);
+        editarBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton6ActionPerformed(evt);
+                editarBtnActionPerformed(evt);
             }
         });
 
-        jButton7.setBackground(new java.awt.Color(255, 255, 255));
-        jButton7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/Teofilo/IMG/1x/ic_playlist_add_24px.png"))); // NOI18N
-        jButton7.setBorder(null);
-        jButton7.addActionListener(new java.awt.event.ActionListener() {
+        addTipoBtn.setBackground(new java.awt.Color(255, 255, 255));
+        addTipoBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/Teofilo/IMG/1x/ic_playlist_add_24px.png"))); // NOI18N
+        addTipoBtn.setBorder(null);
+        addTipoBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton7ActionPerformed(evt);
+                addTipoBtnActionPerformed(evt);
             }
         });
 
-        jButton8.setBackground(new java.awt.Color(255, 255, 255));
-        jButton8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/Teofilo/IMG/1x/bookmark-2.png"))); // NOI18N
-        jButton8.setBorder(null);
-        jButton8.addActionListener(new java.awt.event.ActionListener() {
+        changeStatusBtn.setBackground(new java.awt.Color(255, 255, 255));
+        changeStatusBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/Teofilo/IMG/1x/bookmark-2.png"))); // NOI18N
+        changeStatusBtn.setBorder(null);
+        changeStatusBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton8ActionPerformed(evt);
+                changeStatusBtnActionPerformed(evt);
             }
         });
 
-        jButton9.setBackground(new java.awt.Color(255, 255, 255));
-        jButton9.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        jButton9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/Teofilo/IMG/1x/ic_delete_24px.png"))); // NOI18N
-        jButton9.setText("Deletar");
-        jButton9.setBorder(null);
-        jButton9.addActionListener(new java.awt.event.ActionListener() {
+        deleteBtn.setBackground(new java.awt.Color(255, 255, 255));
+        deleteBtn.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        deleteBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/Teofilo/IMG/1x/ic_delete_24px.png"))); // NOI18N
+        deleteBtn.setText("Deletar");
+        deleteBtn.setBorder(null);
+        deleteBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton9ActionPerformed(evt);
+                deleteBtnActionPerformed(evt);
             }
         });
 
@@ -384,12 +386,21 @@ public class DocumentoJF extends javax.swing.JFrame {
         tamlbl.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         tamlbl.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
 
-        jButton10.setBackground(new java.awt.Color(255, 255, 255));
-        jButton10.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/Teofilo/IMG/1x/ic_more_horiz_24px.png"))); // NOI18N
-        jButton10.setBorder(null);
-        jButton10.addActionListener(new java.awt.event.ActionListener() {
+        gerenciarClientesBtn.setBackground(new java.awt.Color(255, 255, 255));
+        gerenciarClientesBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/Teofilo/IMG/1x/ic_more_horiz_24px.png"))); // NOI18N
+        gerenciarClientesBtn.setBorder(null);
+        gerenciarClientesBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton10ActionPerformed(evt);
+                gerenciarClientesBtnActionPerformed(evt);
+            }
+        });
+
+        tarefasBtn.setBackground(new java.awt.Color(255, 255, 255));
+        tarefasBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/Teofilo/IMG/1x/ic_insert_invitation_24px.png"))); // NOI18N
+        tarefasBtn.setBorder(null);
+        tarefasBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tarefasBtnActionPerformed(evt);
             }
         });
 
@@ -399,37 +410,39 @@ public class DocumentoJF extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jButton10)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabelClientes, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(jPanel1Layout.createSequentialGroup()
+                            .addComponent(gerenciarClientesBtn)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(jLabelClientes, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addComponent(tarefasBtn))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 306, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton7))
+                            .addComponent(addTipoBtn))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(visualizarBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(modiftxt, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 77, Short.MAX_VALUE)
                                 .addComponent(cripLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 242, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGap(10, 10, 10)
                                 .addComponent(downloadBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(uploadBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(editarBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButton9, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addComponent(deleteBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(informtxt, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -441,9 +454,9 @@ public class DocumentoJF extends javax.swing.JFrame {
                             .addComponent(jLabelProcessos, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jLabelTiposDocumentos, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jButton1)
+                                .addComponent(addProcessoBtn)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButton8, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(changeStatusBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -475,7 +488,7 @@ public class DocumentoJF extends javax.swing.JFrame {
                         .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabelDocumentos)
                             .addComponent(jLabelRelacionadoCliente)))
-                    .addComponent(jButton10, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(gerenciarClientesBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
@@ -490,8 +503,8 @@ public class DocumentoJF extends javax.swing.JFrame {
                                 .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(jButton8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(changeStatusBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(addProcessoBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(statustxt, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -501,10 +514,12 @@ public class DocumentoJF extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(jLabelTiposDocumentos)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 90, Short.MAX_VALUE))
+                                .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 96, Short.MAX_VALUE))
                             .addComponent(jScrollPane1))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton7)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(addTipoBtn)
+                            .addComponent(tarefasBtn))
                         .addContainerGap())
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addComponent(jScrollPane2)
@@ -522,11 +537,11 @@ public class DocumentoJF extends javax.swing.JFrame {
                                     .addComponent(cripLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(visualizarBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(downloadBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jButton9, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                    .addComponent(uploadBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(editarBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(deleteBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))))
                         .addGap(11, 11, 11))))
         );
 
@@ -555,6 +570,7 @@ public class DocumentoJF extends javax.swing.JFrame {
         statustxt.setText("");
         modiftxt.setText("");
         abertoEmtxt.setText("");
+        limparListas();
     }//GEN-LAST:event_jListClienteMouseClicked
 
     private void jListDocumentoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jListDocumentoMouseClicked
@@ -573,37 +589,37 @@ public class DocumentoJF extends javax.swing.JFrame {
         carregarDocumentosDoTipoEProcessoSelecionado();
     }//GEN-LAST:event_jListTiposMouseClicked
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+    private void visualizarBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_visualizarBtnActionPerformed
         visualizarArquivo();
-    }//GEN-LAST:event_jButton3ActionPerformed
+    }//GEN-LAST:event_visualizarBtnActionPerformed
 
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+    private void uploadBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_uploadBtnActionPerformed
         upload();
-    }//GEN-LAST:event_jButton4ActionPerformed
+    }//GEN-LAST:event_uploadBtnActionPerformed
 
     private void downloadBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_downloadBtnActionPerformed
         download();
     }//GEN-LAST:event_downloadBtnActionPerformed
 
-    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
+    private void editarBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editarBtnActionPerformed
         editar();
-    }//GEN-LAST:event_jButton6ActionPerformed
+    }//GEN-LAST:event_editarBtnActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void addProcessoBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addProcessoBtnActionPerformed
         addProcesso();
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_addProcessoBtnActionPerformed
 
-    private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
+    private void addTipoBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addTipoBtnActionPerformed
         addTipoDocumento();
-    }//GEN-LAST:event_jButton7ActionPerformed
+    }//GEN-LAST:event_addTipoBtnActionPerformed
 
-    private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
+    private void changeStatusBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_changeStatusBtnActionPerformed
         editarStatusDeProcesso();
-    }//GEN-LAST:event_jButton8ActionPerformed
+    }//GEN-LAST:event_changeStatusBtnActionPerformed
 
-    private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
+    private void deleteBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteBtnActionPerformed
         deletarDocumento();
-    }//GEN-LAST:event_jButton9ActionPerformed
+    }//GEN-LAST:event_deleteBtnActionPerformed
 
     private void processoBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_processoBtnActionPerformed
         if (jListCliente.getSelectedIndex() < 0) {
@@ -629,9 +645,9 @@ public class DocumentoJF extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jListProcessosKeyPressed
 
-    private void jButton10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton10ActionPerformed
+    private void gerenciarClientesBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_gerenciarClientesBtnActionPerformed
         gerenciarClientes();
-    }//GEN-LAST:event_jButton10ActionPerformed
+    }//GEN-LAST:event_gerenciarClientesBtnActionPerformed
 
     private void jListTiposKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jListTiposKeyPressed
         if (evt.getKeyCode() == KeyEvent.VK_DELETE) {
@@ -639,16 +655,19 @@ public class DocumentoJF extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jListTiposKeyPressed
 
-    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+    private void contasBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_contasBtnActionPerformed
         if (conectado) {
             contasjf = new ContasClienteJF();
             contasjf.setVisible(true);
         }
-    }//GEN-LAST:event_jButton5ActionPerformed
+    }//GEN-LAST:event_contasBtnActionPerformed
 
     private void formWindowGainedFocus(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowGainedFocus
         if (contasjf != null) {
             contasjf.dispose();
+        }
+        if (timeLineJF !=null){
+            timeLineJF.dispose();
         }
     }//GEN-LAST:event_formWindowGainedFocus
 
@@ -661,6 +680,10 @@ public class DocumentoJF extends javax.swing.JFrame {
             }
         }
     }//GEN-LAST:event_jLabel13MouseClicked
+
+    private void tarefasBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tarefasBtnActionPerformed
+        exibirTarefas();
+    }//GEN-LAST:event_tarefasBtnActionPerformed
 
     /**
      * @param args the command line arguments
@@ -699,19 +722,17 @@ public class DocumentoJF extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField abertoEmtxt;
+    private javax.swing.JButton addProcessoBtn;
+    private javax.swing.JButton addTipoBtn;
+    private javax.swing.JButton changeStatusBtn;
+    private javax.swing.JButton contasBtn;
     private javax.swing.JLabel cripLabel;
     private javax.swing.JButton dadosPessoaisBtn;
+    private javax.swing.JButton deleteBtn;
     private javax.swing.JButton downloadBtn;
+    private javax.swing.JButton editarBtn;
+    private javax.swing.JButton gerenciarClientesBtn;
     private javax.swing.JLabel informtxt;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton10;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
-    private javax.swing.JButton jButton6;
-    private javax.swing.JButton jButton7;
-    private javax.swing.JButton jButton8;
-    private javax.swing.JButton jButton9;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
@@ -735,6 +756,9 @@ public class DocumentoJF extends javax.swing.JFrame {
     private javax.swing.JButton processoBtn;
     private javax.swing.JTextField statustxt;
     private javax.swing.JLabel tamlbl;
+    private javax.swing.JButton tarefasBtn;
+    private javax.swing.JButton uploadBtn;
+    private javax.swing.JButton visualizarBtn;
     // End of variables declaration//GEN-END:variables
 
     private void init() {
@@ -1385,5 +1409,12 @@ public class DocumentoJF extends javax.swing.JFrame {
                 }
             }
         }
+    }
+
+    private synchronized void exibirTarefas() {
+        new Thread(() -> {
+            timeLineJF = new TimeLineJF();
+            timeLineJF.setVisible(true);
+        }).start();
     }
 }
