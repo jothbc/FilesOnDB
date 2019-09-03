@@ -6,7 +6,6 @@
 package br.Teofilo.Atividades;
 
 import br.Teofilo.Utilidades.ColorJD;
-import com.sun.beans.introspect.PropertyInfo;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;

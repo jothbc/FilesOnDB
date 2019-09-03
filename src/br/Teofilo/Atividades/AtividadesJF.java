@@ -396,7 +396,7 @@ public class AtividadesJF extends javax.swing.JFrame {
     }//GEN-LAST:event_jPanel2MousePressed
 
     private void addBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addBtnActionPerformed
-        adicionarTarefa();
+        adicionarTarefa_EmAndamento();
     }//GEN-LAST:event_addBtnActionPerformed
 
     private void addBtn_1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addBtn_1ActionPerformed
@@ -489,28 +489,49 @@ public class AtividadesJF extends javax.swing.JFrame {
         atualizarTarefas();
     }
 
-    private void adicionarTarefa() {
-        JButton botao = new JButton(JOptionPane.showInputDialog("Digite o nome da nova tarefa: "));
+    private void adicionarTarefa_EmAndamento() {
+        String nomeDoBotao = JOptionPane.showInputDialog(null, "Digite o nome da nova tarefa: ", "Em Andamento", JOptionPane.QUESTION_MESSAGE);
+        if (nomeDoBotao == null){
+            return;
+        }else if (nomeDoBotao.equals("")){
+            return;
+        }
+        //cria um novo botao
+        JButton botao = new JButton(nomeDoBotao);
+        //cria um evento para o click no botao
+        botao.addActionListener((java.awt.event.ActionEvent evt) -> {
+            tarefaBotao(evt, botao);
+        });
+        //defini o tamanho do botao
         botao.setSize(jspp.getSize().width, 50);
+        //defini bordas
         botao.setBorder(null);
+        //defini o local onde o botao deve aparecer
         if (jspp.getComponentCount() > 0) {
             botao.setLocation(0, jspp.getComponent(jspp.getComponentCount() - 1).getLocation().y + jspp.getComponent(jspp.getComponentCount() - 1).getHeight() + 5);
         } else {
             botao.setLocation(0, 5);
         }
+        //adiciona o botao ao jspp
         jspp.add(botao);
-        if (jspp.getComponentCount() >0) {
+        //redimenciona o jspp caso tenha muios botoes
+        if (jspp.getComponentCount() > 0) {
             Dimension d = jspp.getSize();
-            int height = jspp.getComponent(jspp.getComponentCount()-1).getLocation().y;
-            height+=jspp.getComponent(jspp.getComponentCount()-1).getSize().height + 5;
-            d.height= height;
+            int height = jspp.getComponent(jspp.getComponentCount() - 1).getLocation().y;
+            height += jspp.getComponent(jspp.getComponentCount() - 1).getSize().height + 5;
+            d.height = height;
             jspp.setPreferredSize(d);
         }
+        //seta viewport
         jsp.setViewportView(jspp);
     }
 
     private void atualizarTarefas() {
         //atualizar tarefas
+    }
+
+    private void tarefaBotao(ActionEvent evt, JButton botao) {
+        System.out.println(botao.getText());
     }
 
 }
