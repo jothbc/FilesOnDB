@@ -6,10 +6,14 @@
 package br.Teofilo.Atividades;
 
 import br.Teofilo.Utilidades.ColorJD;
+import funcoes.CDate;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JOptionPane;
 import javax.swing.JProgressBar;
@@ -22,14 +26,17 @@ public class CartaoJD extends javax.swing.JDialog {
 
     int ID_CARD;
     List<JCheckBox> checks;
+    public String data_entrega_temp;
+    JButton botao;
 
     /**
      * Creates new form CartaoJD
      */
-    public CartaoJD(java.awt.Frame parent, boolean modal) {
+    public CartaoJD(java.awt.Frame parent, boolean modal, JButton botao) {
         super(parent, modal);
         initComponents();
         checks = new ArrayList<>();
+        this.botao = botao;
         init();
     }
 
@@ -44,13 +51,15 @@ public class CartaoJD extends javax.swing.JDialog {
 
         jPanel1 = new javax.swing.JPanel();
         jButton1 = new javax.swing.JButton();
-        jTextField1 = new javax.swing.JTextField();
+        titulotxt = new javax.swing.JTextField();
         marcadorBtn = new javax.swing.JButton();
         jspcheck = new javax.swing.JScrollPane();
         jpcheck = new javax.swing.JPanel();
         checkListBtn = new javax.swing.JButton();
         progressCheck = new javax.swing.JProgressBar();
-        jCheckBox1 = new javax.swing.JCheckBox();
+        jLabel1 = new javax.swing.JLabel();
+        dataEntregatxt = new javax.swing.JFormattedTextField();
+        grupoCB = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setUndecorated(true);
@@ -67,7 +76,17 @@ public class CartaoJD extends javax.swing.JDialog {
             }
         });
 
-        jTextField1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        titulotxt.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        titulotxt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                titulotxtActionPerformed(evt);
+            }
+        });
+        titulotxt.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                titulotxtKeyPressed(evt);
+            }
+        });
 
         marcadorBtn.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         marcadorBtn.setText("   Marcador");
@@ -115,10 +134,22 @@ public class CartaoJD extends javax.swing.JDialog {
 
         progressCheck.setStringPainted(true);
 
-        jCheckBox1.setText("jCheckBox1");
-        jCheckBox1.addActionListener(new java.awt.event.ActionListener() {
+        jLabel1.setText("Data de entrega");
+
+        try {
+            dataEntregatxt.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("##/##/####")));
+        } catch (java.text.ParseException ex) {
+            ex.printStackTrace();
+        }
+        dataEntregatxt.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jCheckBox1ActionPerformed(evt);
+                dataEntregatxtActionPerformed(evt);
+            }
+        });
+
+        grupoCB.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                grupoCBActionPerformed(evt);
             }
         });
 
@@ -128,38 +159,46 @@ public class CartaoJD extends javax.swing.JDialog {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jTextField1)
-                .addGap(18, 18, 18)
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(jspcheck, javax.swing.GroupLayout.PREFERRED_SIZE, 409, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(marcadorBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(progressCheck, javax.swing.GroupLayout.DEFAULT_SIZE, 273, Short.MAX_VALUE)
-                        .addContainerGap())))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jCheckBox1)
-                .addGap(167, 167, 167))
+                        .addComponent(titulotxt)
+                        .addGap(18, 18, 18)
+                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
+                                .addComponent(jLabel1)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(dataEntregatxt, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(grupoCB, 0, 273, Short.MAX_VALUE))
+                            .addComponent(jspcheck, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(marcadorBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 226, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(progressCheck, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addContainerGap())))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(titulotxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jspcheck, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(marcadorBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(progressCheck, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(97, 97, 97)
-                .addComponent(jCheckBox1)
-                .addGap(0, 210, Short.MAX_VALUE))
+                        .addComponent(progressCheck, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jspcheck, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(dataEntregatxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(grupoCB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(0, 297, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -189,9 +228,34 @@ public class CartaoJD extends javax.swing.JDialog {
         addCheck();
     }//GEN-LAST:event_checkListBtnActionPerformed
 
-    private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jCheckBox1ActionPerformed
+    private void titulotxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_titulotxtActionPerformed
+        botao.setName(titulotxt.getText());
+        if (data_entrega_temp != null)
+            botao.setText("<html><center>" + botao.getName() + "<br>" + data_entrega_temp + "</center></html>");
+        else
+            botao.setText("<html><center>" + botao.getName() + "</center></html>");
+    }//GEN-LAST:event_titulotxtActionPerformed
+
+    private void titulotxtKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_titulotxtKeyPressed
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            //titulotxt perde o foco pra qualquer outra coisa, pra poder setar o titulo também
+            // no botao la fora
+        }
+    }//GEN-LAST:event_titulotxtKeyPressed
+
+    private void grupoCBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_grupoCBActionPerformed
+        //acao quando mudar de grupo
+        System.out.println("Mudou para o grupo: " + grupoCB.getSelectedItem());
+    }//GEN-LAST:event_grupoCBActionPerformed
+
+    private void dataEntregatxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dataEntregatxtActionPerformed
+        System.out.println("Nova data de entrega: " + dataEntregatxt.getText());
+        data_entrega_temp = dataEntregatxt.getText();
+        if (data_entrega_temp != null)
+            botao.setText("<html><center>" + botao.getName() + "<br>" + data_entrega_temp + "</center></html>");
+        else
+            botao.setText("<html><center>" + botao.getName() + "</center></html>");
+    }//GEN-LAST:event_dataEntregatxtActionPerformed
 
     /**
      * @param args the command line arguments
@@ -223,7 +287,7 @@ public class CartaoJD extends javax.swing.JDialog {
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                CartaoJD dialog = new CartaoJD(new javax.swing.JFrame(), true);
+                CartaoJD dialog = new CartaoJD(new javax.swing.JFrame(), true, null);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {
@@ -237,14 +301,16 @@ public class CartaoJD extends javax.swing.JDialog {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton checkListBtn;
+    private javax.swing.JFormattedTextField dataEntregatxt;
+    private javax.swing.JComboBox<String> grupoCB;
     private javax.swing.JButton jButton1;
-    private javax.swing.JCheckBox jCheckBox1;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JTextField jTextField1;
     private javax.swing.JPanel jpcheck;
     private javax.swing.JScrollPane jspcheck;
     private javax.swing.JButton marcadorBtn;
     private javax.swing.JProgressBar progressCheck;
+    private javax.swing.JTextField titulotxt;
     // End of variables declaration//GEN-END:variables
 
     private void changeColorMarcador() {
@@ -252,6 +318,7 @@ public class CartaoJD extends javax.swing.JDialog {
         changeColor.setVisible(true);
         if (changeColor.getColor() != null) {
             marcadorBtn.setBackground(changeColor.getColor());
+            botao.setBackground(changeColor.getColor());
         }
     }
 
@@ -262,15 +329,13 @@ public class CartaoJD extends javax.swing.JDialog {
                 JCheckBox ck = new JCheckBox();
                 ck.setText(tituloCheck);
                 ck.setSelected(false);
-                ck.addActionListener(new java.awt.event.ActionListener() {
-                    public void actionPerformed(java.awt.event.ActionEvent evt) {
-                        if (ck.isSelected()) {
-                            //atualizar no db que esse check esta selecionado
-                        } else {
-                            //atualizar no db que esse check esta desselecionado
-                        }
-                        atualizarChecks();
+                ck.addActionListener((java.awt.event.ActionEvent evt) -> {
+                    if (ck.isSelected()) {
+                        //atualizar no db que esse check esta selecionado
+                    } else {
+                        //atualizar no db que esse check esta desselecionado
                     }
+                    atualizarChecks();
                 });
                 checks.add(ck);
                 atualizarChecks();
@@ -303,7 +368,20 @@ public class CartaoJD extends javax.swing.JDialog {
     }
 
     private void init() {
-        progressCheck.setVisible(!checks.isEmpty());
-        ID_CARD = 1;
+        //carregar do db
+        progressCheck.setVisible(!checks.isEmpty()); //temporario
+        ID_CARD = 1; //temporario
+        dataEntregatxt.setText(CDate.DataPTBRAtual());//temporario
+        List<String> grupos = new ArrayList<>(); //fazer busca dos nomes dos grupos no db
+        grupos.add("Em Andamento"); // temporario
+        grupos.add("A Seguir");     //
+        grupos.add("Em Espera");    //
+        grupos.add("Concluídos");   //
+        for (String s : grupos) {
+            grupoCB.addItem(s);
+        }
+
+        titulotxt.setText(botao.getName());
+        marcadorBtn.setBackground(botao.getBackground());
     }
 }

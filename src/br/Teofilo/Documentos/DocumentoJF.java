@@ -1121,19 +1121,29 @@ public class DocumentoJF extends javax.swing.JFrame {
         TipoDoc tp = null;
         Processo p = null;
         Cliente c = null;
+        String msgCrip = "Esse documento esta criptografado!\n"
+                + "Fazer a substituição dessa forma vai substitui-lo por um arquivo descriptografado.\n"
+                + "Se deseja manter esse arquivo criptografado no Banco de Dados\n"
+                + "então exclua esse documento e faça o upload novamente informando a chave.";
         if (listDocumentos.getElementAt(jListDocumento.getSelectedIndex()) instanceof Documento) {
             try {
                 d = (Documento) listDocumentos.getElementAt(jListDocumento.getSelectedIndex());
                 tp = (TipoDoc) listTipo.getElementAt(jListTipos.getSelectedIndex());
                 p = (Processo) listProcessos.getElementAt(jListProcessos.getSelectedIndex());
-            } catch (Exception ex) {
+                if (d.isCrip()){
+                    JOptionPane.showMessageDialog(null, msgCrip,"Upload de arquivo Descriptografado",JOptionPane.INFORMATION_MESSAGE);
+                }
+            } catch (HeadlessException ex) {
                 System.err.println("Editar>> Documento, tipoDoc ou Processo retornaram erro.." + ex);
             }
         } else if (listDocumentos.getElementAt(jListDocumento.getSelectedIndex()) instanceof DocumentoPessoal) {
             try {
                 dp = (DocumentoPessoal) listDocumentos.getElementAt(jListDocumento.getSelectedIndex());
                 c = (Cliente) listClientes.getElementAt(jListCliente.getSelectedIndex());
-            } catch (Exception ex) {
+                if (dp.isCrip()){
+                    JOptionPane.showMessageDialog(null, msgCrip,"Upload de arquivo Descriptografado",JOptionPane.INFORMATION_MESSAGE);
+                }
+            } catch (HeadlessException ex) {
                 System.err.println("Editar>>DocumentoPessoal ou Cliente retornaram erro.." + ex);
             }
         }
@@ -1148,6 +1158,7 @@ public class DocumentoJF extends javax.swing.JFrame {
                     if (!new DocumentoDAO().updateDocumento(f, d.getId(), tp.getId(), p.getId())) {
                         JOptionPane.showMessageDialog(null, "Erro ao tentar atualizar o arquivo no banco de dados.", "Erro", JOptionPane.ERROR_MESSAGE);
                     } else {
+                        //ação ao concluir edit
                         String coment = "@Editou um Documento.\n" + f.getName();
                         if (!new ComentarioDAO().addComentario(coment, new UserDAO().getUser().getId())) {
                             GerarLogErro.gerar("Erro ao tentar comentar uma edição de um Documento " + f.getName());
@@ -1158,6 +1169,7 @@ public class DocumentoJF extends javax.swing.JFrame {
                     if (!new DocumentoDAO().updateDocumentoPessoal(f, dp.getId())) {
                         JOptionPane.showMessageDialog(null, "Erro ao tentar atualizar o arquivo no banco de dados.", "Erro", JOptionPane.ERROR_MESSAGE);
                     } else {
+                        //ação ao concluir um edit
                         String coment = "@Editou um Documento Pessoal.\n" + f.getName();
                         if (!new ComentarioDAO().addComentario(coment, new UserDAO().getUser().getId())) {
                             GerarLogErro.gerar("Erro ao tentar comentar uma edição de um Documento Pessoal " + f.getName());

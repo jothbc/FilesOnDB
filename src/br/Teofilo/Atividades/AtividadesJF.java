@@ -5,11 +5,12 @@
  */
 package br.Teofilo.Atividades;
 
+import funcoes.CDate;
 import java.awt.CardLayout;
-import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.FocusEvent;
@@ -497,7 +498,10 @@ public class AtividadesJF extends javax.swing.JFrame {
             return;
         }
         //cria um novo botao
-        JButton botao = new JButton(nomeDoBotao);
+        String data_entrega = "";
+        JButton botao = new JButton("<html><center>"+nomeDoBotao+"<br>"+data_entrega+"</center></html>");
+        botao.setFont(new Font("Arial", Font.BOLD, 14));
+        botao.setName(nomeDoBotao);
         //cria um evento para o click no botao
         botao.addActionListener((java.awt.event.ActionEvent evt) -> {
             tarefaBotao(evt, botao);
@@ -531,7 +535,10 @@ public class AtividadesJF extends javax.swing.JFrame {
     }
 
     private void tarefaBotao(ActionEvent evt, JButton botao) {
-        System.out.println(botao.getText());
+        //System.out.println(botao.getText());
+        CartaoJD jd = new CartaoJD(null, true,botao);
+        jd.setVisible(true);
+        
     }
 
 }

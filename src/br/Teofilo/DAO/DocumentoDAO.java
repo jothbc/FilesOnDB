@@ -204,6 +204,11 @@ public class DocumentoDAO {
         return pessoal;
     }
 
+    /*
+     Se o arquivo a ser substituido for criptografado ele deixa de ser,
+    para fazer a substituição de um arquivo criptografado tem que excluir o mesmo e fazer o upload
+    de novo, informando a chave e etc...
+    */
     public boolean updateDocumento(File f, int idArquivo, int tipo, int processo) {
         sql = "UPDATE documentos SET nome = ?, modificacao = ?, crip = ?, crip2 = ? , tam = ? WHERE ID_TIPO = ? and ID_PROCESSO = ? and id = ?";
         try {
@@ -212,7 +217,7 @@ public class DocumentoDAO {
             //stmt.setBlob(1, is);
             stmt.setString(1, f.getName());
             stmt.setString(2, CDate.DataPTBRtoDataMySQL(CDate.DataPTBRAtual()));
-            stmt.setBoolean(3, false);
+            stmt.setBoolean(3, false); //arquivo não vai criptografado
             stmt.setBytes(4, null);
             stmt.setInt(5, tipo);
             stmt.setInt(6, processo);
@@ -234,7 +239,11 @@ public class DocumentoDAO {
             ConnectionFactoryMySQL.closeConnection(con, stmt);
         }
     }
-
+    /*
+     Se o arquivo a ser substituido for criptografado ele deixa de ser,
+    para fazer a substituição de um arquivo criptografado tem que excluir o mesmo e fazer o upload
+    de novo, informando a chave e etc...
+    */
     public boolean updateDocumentoPessoal(File f, int idArquivo) {
         sql = "UPDATE documentos_pessoais SET nome = ?, alteracao = ?, crip = ?, crip2 = ? ,tam = ? WHERE id = ?";
         try {
@@ -314,6 +323,9 @@ public class DocumentoDAO {
         verificarDocumentosPessoais();
     }
 
+    /*
+     verifica documentos que foram feitos upload sem informar o tamanho do arquivo
+    */
     private void verificarDocumentos() {
         sql = "SELECT * FROM documentos WHERE tam = 0";
         int[] id = new int[9999];
@@ -337,7 +349,9 @@ public class DocumentoDAO {
             Logger.getLogger(DocumentoDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
+    /*
+     verifica documentos que foram feitos upload sem informar o tamanho do arquivo
+    */
     private void verificarDocumentosPessoais() {
         sql = "SELECT * FROM documentos_pessoais WHERE tam = 0";
         int[] id = new int[9999];
