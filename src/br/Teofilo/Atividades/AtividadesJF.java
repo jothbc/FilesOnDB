@@ -5,23 +5,16 @@
  */
 package br.Teofilo.Atividades;
 
-import funcoes.CDate;
-import java.awt.CardLayout;
-import java.awt.Container;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
-import java.awt.event.FocusEvent;
-import javax.swing.BoxLayout;
-import javax.swing.GroupLayout;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.LayoutStyle;
-import org.netbeans.lib.awtextra.AbsoluteLayout;
+import javax.swing.JScrollPane;
 
 /**
  *
@@ -29,13 +22,32 @@ import org.netbeans.lib.awtextra.AbsoluteLayout;
  */
 public class AtividadesJF extends javax.swing.JFrame {
 
-    private Point point = new Point();
+    //variaveis que representam o id das atividades no banco de dados
+    private static final int PRIMEIRA_TABELA = 1;
+    private static final int SEGUNDA_TABELA = 2;
+    private static final int TERCEIRA_TABELA = 3;
+    private static final int QUARTA_TABELA = 4;
+
+    JScrollPane[] jsp = new JScrollPane[4];
+    JPanel[] jspp = new JPanel[4];
+
+    private final Point point = new Point();
+    List<Atividade> atividades;
+    List<Cartao> cartoes;
 
     /**
      * Creates new form AtividadesJF
      */
     public AtividadesJF() {
         initComponents();
+        jsp[0] = jsp_0;
+        jsp[1] = jsp_1;
+        jsp[2] = jsp_2;
+        jsp[3] = jsp_3;
+        jspp[0] = jspp_0;
+        jspp[1] = jspp_1;
+        jspp[2] = jspp_2;
+        jspp[3] = jspp_3;
         init();
     }
 
@@ -50,22 +62,22 @@ public class AtividadesJF extends javax.swing.JFrame {
 
         panelFundo = new javax.swing.JPanel();
         jp = new javax.swing.JPanel();
-        jTextField1 = new javax.swing.JTextField();
+        atv1 = new javax.swing.JTextField();
         addBtn = new javax.swing.JButton();
-        jsp = new javax.swing.JScrollPane();
-        jspp = new javax.swing.JPanel();
+        jsp_0 = new javax.swing.JScrollPane();
+        jspp_0 = new javax.swing.JPanel();
         jp_1 = new javax.swing.JPanel();
-        jTextField4 = new javax.swing.JTextField();
+        atv2 = new javax.swing.JTextField();
         addBtn_1 = new javax.swing.JButton();
         jsp_1 = new javax.swing.JScrollPane();
         jspp_1 = new javax.swing.JPanel();
         jp_2 = new javax.swing.JPanel();
-        jTextField5 = new javax.swing.JTextField();
+        atv3 = new javax.swing.JTextField();
         addBtn_2 = new javax.swing.JButton();
         jsp_2 = new javax.swing.JScrollPane();
         jspp_2 = new javax.swing.JPanel();
         jp_3 = new javax.swing.JPanel();
-        jTextField6 = new javax.swing.JTextField();
+        atv4 = new javax.swing.JTextField();
         addBtn_3 = new javax.swing.JButton();
         jsp_3 = new javax.swing.JScrollPane();
         jspp_3 = new javax.swing.JPanel();
@@ -82,13 +94,12 @@ public class AtividadesJF extends javax.swing.JFrame {
         jp.setBackground(new java.awt.Color(255, 255, 255));
         jp.setBorder(javax.swing.BorderFactory.createEtchedBorder(new java.awt.Color(0, 0, 0), null));
 
-        jTextField1.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        jTextField1.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        jTextField1.setText("Em Andamento");
-        jTextField1.setBorder(null);
-        jTextField1.addActionListener(new java.awt.event.ActionListener() {
+        atv1.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        atv1.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        atv1.setBorder(null);
+        atv1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField1ActionPerformed(evt);
+                atv1ActionPerformed(evt);
             }
         });
 
@@ -101,39 +112,39 @@ public class AtividadesJF extends javax.swing.JFrame {
             }
         });
 
-        jsp.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        jsp.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-        jsp.setViewportView(jspp);
+        jsp_0.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        jsp_0.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+        jsp_0.setViewportView(jspp_0);
 
-        javax.swing.GroupLayout jsppLayout = new javax.swing.GroupLayout(jspp);
-        jspp.setLayout(jsppLayout);
-        jsppLayout.setHorizontalGroup(
-            jsppLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        javax.swing.GroupLayout jspp_0Layout = new javax.swing.GroupLayout(jspp_0);
+        jspp_0.setLayout(jspp_0Layout);
+        jspp_0Layout.setHorizontalGroup(
+            jspp_0Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 194, Short.MAX_VALUE)
         );
-        jsppLayout.setVerticalGroup(
-            jsppLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        jspp_0Layout.setVerticalGroup(
+            jspp_0Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 396, Short.MAX_VALUE)
         );
 
-        jsp.setViewportView(jspp);
+        jsp_0.setViewportView(jspp_0);
 
         javax.swing.GroupLayout jpLayout = new javax.swing.GroupLayout(jp);
         jp.setLayout(jpLayout);
         jpLayout.setHorizontalGroup(
             jpLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTextField1)
+            .addComponent(atv1)
             .addGroup(jpLayout.createSequentialGroup()
                 .addComponent(addBtn)
                 .addGap(0, 0, Short.MAX_VALUE))
-            .addComponent(jsp)
+            .addComponent(jsp_0)
         );
         jpLayout.setVerticalGroup(
             jpLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jpLayout.createSequentialGroup()
-                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(atv1, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jsp)
+                .addComponent(jsp_0)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(addBtn))
         );
@@ -141,10 +152,9 @@ public class AtividadesJF extends javax.swing.JFrame {
         jp_1.setBackground(new java.awt.Color(255, 255, 255));
         jp_1.setBorder(javax.swing.BorderFactory.createEtchedBorder(new java.awt.Color(0, 0, 0), null));
 
-        jTextField4.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        jTextField4.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        jTextField4.setText("A Seguir");
-        jTextField4.setBorder(null);
+        atv2.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        atv2.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        atv2.setBorder(null);
 
         addBtn_1.setBackground(new java.awt.Color(255, 255, 255));
         addBtn_1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/Teofilo/IMG/1x/ic_control_point_24px.png"))); // NOI18N
@@ -154,6 +164,8 @@ public class AtividadesJF extends javax.swing.JFrame {
                 addBtn_1ActionPerformed(evt);
             }
         });
+
+        jsp_1.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 
         javax.swing.GroupLayout jspp_1Layout = new javax.swing.GroupLayout(jspp_1);
         jspp_1.setLayout(jspp_1Layout);
@@ -172,7 +184,7 @@ public class AtividadesJF extends javax.swing.JFrame {
         jp_1.setLayout(jp_1Layout);
         jp_1Layout.setHorizontalGroup(
             jp_1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTextField4)
+            .addComponent(atv2)
             .addGroup(jp_1Layout.createSequentialGroup()
                 .addComponent(addBtn_1)
                 .addGap(0, 0, Short.MAX_VALUE))
@@ -181,7 +193,7 @@ public class AtividadesJF extends javax.swing.JFrame {
         jp_1Layout.setVerticalGroup(
             jp_1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jp_1Layout.createSequentialGroup()
-                .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(atv2, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jsp_1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -191,10 +203,9 @@ public class AtividadesJF extends javax.swing.JFrame {
         jp_2.setBackground(new java.awt.Color(255, 255, 255));
         jp_2.setBorder(javax.swing.BorderFactory.createEtchedBorder(new java.awt.Color(0, 0, 0), null));
 
-        jTextField5.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        jTextField5.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        jTextField5.setText("Em Espera");
-        jTextField5.setBorder(null);
+        atv3.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        atv3.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        atv3.setBorder(null);
 
         addBtn_2.setBackground(new java.awt.Color(255, 255, 255));
         addBtn_2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/Teofilo/IMG/1x/ic_control_point_24px.png"))); // NOI18N
@@ -204,6 +215,8 @@ public class AtividadesJF extends javax.swing.JFrame {
                 addBtn_2ActionPerformed(evt);
             }
         });
+
+        jsp_2.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 
         javax.swing.GroupLayout jspp_2Layout = new javax.swing.GroupLayout(jspp_2);
         jspp_2.setLayout(jspp_2Layout);
@@ -222,7 +235,7 @@ public class AtividadesJF extends javax.swing.JFrame {
         jp_2.setLayout(jp_2Layout);
         jp_2Layout.setHorizontalGroup(
             jp_2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTextField5)
+            .addComponent(atv3)
             .addGroup(jp_2Layout.createSequentialGroup()
                 .addComponent(addBtn_2)
                 .addGap(0, 0, Short.MAX_VALUE))
@@ -231,7 +244,7 @@ public class AtividadesJF extends javax.swing.JFrame {
         jp_2Layout.setVerticalGroup(
             jp_2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jp_2Layout.createSequentialGroup()
-                .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(atv3, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jsp_2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -241,10 +254,9 @@ public class AtividadesJF extends javax.swing.JFrame {
         jp_3.setBackground(new java.awt.Color(255, 255, 255));
         jp_3.setBorder(javax.swing.BorderFactory.createEtchedBorder(new java.awt.Color(0, 0, 0), null));
 
-        jTextField6.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        jTextField6.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        jTextField6.setText("Concluídos");
-        jTextField6.setBorder(null);
+        atv4.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        atv4.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        atv4.setBorder(null);
 
         addBtn_3.setBackground(new java.awt.Color(255, 255, 255));
         addBtn_3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/Teofilo/IMG/1x/ic_control_point_24px.png"))); // NOI18N
@@ -254,6 +266,8 @@ public class AtividadesJF extends javax.swing.JFrame {
                 addBtn_3ActionPerformed(evt);
             }
         });
+
+        jsp_3.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 
         javax.swing.GroupLayout jspp_3Layout = new javax.swing.GroupLayout(jspp_3);
         jspp_3.setLayout(jspp_3Layout);
@@ -272,7 +286,7 @@ public class AtividadesJF extends javax.swing.JFrame {
         jp_3.setLayout(jp_3Layout);
         jp_3Layout.setHorizontalGroup(
             jp_3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTextField6)
+            .addComponent(atv4)
             .addGroup(jp_3Layout.createSequentialGroup()
                 .addComponent(addBtn_3)
                 .addGap(0, 0, Short.MAX_VALUE))
@@ -281,7 +295,7 @@ public class AtividadesJF extends javax.swing.JFrame {
         jp_3Layout.setVerticalGroup(
             jp_3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jp_3Layout.createSequentialGroup()
-                .addComponent(jTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(atv4, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jsp_3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -397,24 +411,24 @@ public class AtividadesJF extends javax.swing.JFrame {
     }//GEN-LAST:event_jPanel2MousePressed
 
     private void addBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addBtnActionPerformed
-        adicionarTarefa_EmAndamento();
+        adicionarTarefa(PRIMEIRA_TABELA, atv1.getName());
     }//GEN-LAST:event_addBtnActionPerformed
 
     private void addBtn_1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addBtn_1ActionPerformed
-        // TODO add your handling code here:
+        adicionarTarefa(SEGUNDA_TABELA, atv2.getName());
     }//GEN-LAST:event_addBtn_1ActionPerformed
 
     private void addBtn_2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addBtn_2ActionPerformed
-        // TODO add your handling code here:
+        adicionarTarefa(TERCEIRA_TABELA, atv3.getName());
     }//GEN-LAST:event_addBtn_2ActionPerformed
 
     private void addBtn_3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addBtn_3ActionPerformed
-        // TODO add your handling code here:
+        adicionarTarefa(QUARTA_TABELA, atv4.getName());
     }//GEN-LAST:event_addBtn_3ActionPerformed
 
-    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
+    private void atv1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_atv1ActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField1ActionPerformed
+    }//GEN-LAST:event_atv1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -456,30 +470,22 @@ public class AtividadesJF extends javax.swing.JFrame {
     private javax.swing.JButton addBtn_1;
     private javax.swing.JButton addBtn_2;
     private javax.swing.JButton addBtn_3;
+    private javax.swing.JTextField atv1;
+    private javax.swing.JTextField atv2;
+    private javax.swing.JTextField atv3;
+    private javax.swing.JTextField atv4;
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
-    private javax.swing.JTextField jTextField4;
-    private javax.swing.JTextField jTextField5;
-    private javax.swing.JTextField jTextField6;
     private javax.swing.JPanel jp;
-    private javax.swing.JPanel jp1;
-    private javax.swing.JPanel jp2;
     private javax.swing.JPanel jp_1;
     private javax.swing.JPanel jp_2;
     private javax.swing.JPanel jp_3;
-    private javax.swing.JScrollPane jsp;
-    private javax.swing.JScrollPane jsp1;
-    private javax.swing.JScrollPane jsp2;
+    private javax.swing.JScrollPane jsp_0;
     private javax.swing.JScrollPane jsp_1;
     private javax.swing.JScrollPane jsp_2;
     private javax.swing.JScrollPane jsp_3;
-    private javax.swing.JPanel jspp;
+    private javax.swing.JPanel jspp_0;
     private javax.swing.JPanel jspp_1;
     private javax.swing.JPanel jspp_2;
     private javax.swing.JPanel jspp_3;
@@ -487,58 +493,125 @@ public class AtividadesJF extends javax.swing.JFrame {
     // End of variables declaration//GEN-END:variables
 
     private void init() {
-        atualizarTarefas();
+        //inicializa atividades
+        atividades = new AtividadeDAO().findAll();
+        atv1.setText(atividades.get(0).getNome());
+        atv2.setText(atividades.get(1).getNome());
+        atv3.setText(atividades.get(2).getNome());
+        atv4.setText(atividades.get(3).getNome());
+        //carrega botoes do banco de dados
+        addbotao_1();
+
     }
 
-    private void adicionarTarefa_EmAndamento() {
-        String nomeDoBotao = JOptionPane.showInputDialog(null, "Digite o nome da nova tarefa: ", "Em Andamento", JOptionPane.QUESTION_MESSAGE);
-        if (nomeDoBotao == null){
+    private void adicionarTarefa(int tabela, String tituloTabela) {
+        String nomeDoBotao = "";
+        nomeDoBotao = JOptionPane.showInputDialog(null, "Digite o nome da nova tarefa: ", tituloTabela, JOptionPane.QUESTION_MESSAGE);
+        if (nomeDoBotao == null) {
             return;
-        }else if (nomeDoBotao.equals("")){
+        } else if (nomeDoBotao.equals("")) {
             return;
         }
-        //cria um novo botao
-        String data_entrega = "";
-        JButton botao = new JButton("<html><center>"+nomeDoBotao+"<br>"+data_entrega+"</center></html>");
-        botao.setFont(new Font("Arial", Font.BOLD, 14));
-        botao.setName(nomeDoBotao);
-        //cria um evento para o click no botao
-        botao.addActionListener((java.awt.event.ActionEvent evt) -> {
-            tarefaBotao(evt, botao);
-        });
-        //defini o tamanho do botao
-        botao.setSize(jspp.getSize().width, 50);
-        //defini bordas
-        botao.setBorder(null);
-        //defini o local onde o botao deve aparecer
-        if (jspp.getComponentCount() > 0) {
-            botao.setLocation(0, jspp.getComponent(jspp.getComponentCount() - 1).getLocation().y + jspp.getComponent(jspp.getComponentCount() - 1).getHeight() + 5);
+        //salvar no db esse botao novo
+        Cartao c = new Cartao();
+        c.setCor("-2696737"); //cor padrao do botao em rgb
+        c.setID_LISTA_ATIVIDADES(tabela);
+        c.setTitulo(nomeDoBotao);
+        if (new CartaoDAO().addCartao(c)) {
+            addbotao_1();
         } else {
-            botao.setLocation(0, 5);
+            JOptionPane.showMessageDialog(null, "Ocorreu um problema ao tentar adicionar Cartao ao Banco de Dados.");
         }
-        //adiciona o botao ao jspp
-        jspp.add(botao);
-        //redimenciona o jspp caso tenha muios botoes
-        if (jspp.getComponentCount() > 0) {
-            Dimension d = jspp.getSize();
-            int height = jspp.getComponent(jspp.getComponentCount() - 1).getLocation().y;
-            height += jspp.getComponent(jspp.getComponentCount() - 1).getSize().height + 5;
-            d.height = height;
-            jspp.setPreferredSize(d);
-        }
-        //seta viewport
-        jsp.setViewportView(jspp);
-    }
-
-    private void atualizarTarefas() {
-        //atualizar tarefas
     }
 
     private void tarefaBotao(ActionEvent evt, JButton botao) {
         //System.out.println(botao.getText());
-        CartaoJD jd = new CartaoJD(null, true,botao);
+        CartaoJD jd = new CartaoJD(null, true, botao);
         jd.setVisible(true);
-        
+    }
+
+    private void addbotao_1() {
+        List<JButton> botoes1 = new ArrayList<>(); //buscar botoes no banco de dados
+        List<JButton> botoes2 = new ArrayList<>(); //buscar botoes no banco de dados
+        List<JButton> botoes3 = new ArrayList<>(); //buscar botoes no banco de dados
+        List<JButton> botoes4 = new ArrayList<>(); //buscar botoes no banco de dados
+        cartoes = new CartaoDAO().findAll();
+        for (Cartao c : cartoes) {
+            String entrega = "";
+            if (c.getEntrega() != null) {
+                entrega = c.getEntrega();
+            }
+            JButton botao = new JButton("<html><center>" + c.getTitulo() + "<br>" + entrega + "</center></html>");
+            botao.setFont(new Font("Arial", Font.BOLD, 14));
+            botao.setName(c.getTitulo());
+            switch (c.getID_LISTA_ATIVIDADES()) {
+                case PRIMEIRA_TABELA:
+                    botoes1.add(botao);
+                    break;
+                case SEGUNDA_TABELA:
+                    botoes2.add(botao);
+                    break;
+                case TERCEIRA_TABELA:
+                    botoes3.add(botao);
+                    break;
+                case QUARTA_TABELA:
+                    botoes4.add(botao);
+                    break;
+                default:
+                    break;
+            }
+        }
+        for (int x = 0; x < 4; x++) {
+            switch (x) {
+                case 0:
+                    preencherLista(botoes1, x);
+                    break;
+                case 1:
+                    preencherLista(botoes2, x);
+                    break;
+                case 2:
+                    preencherLista(botoes3, x);
+                    break;
+                default:
+                    preencherLista(botoes4, x);
+                    break;
+            }
+        }
+
+    }
+
+    private void preencherLista(List<JButton> botoes, int x) {
+        jspp[x].removeAll();
+        for (JButton botao : botoes) {
+            /////////////////////////
+            //cria um evento para o click no botao
+            botao.addActionListener((java.awt.event.ActionEvent evt) -> {
+                tarefaBotao(evt, botao);
+            });
+            //defini o tamanho do botao
+            botao.setSize(jspp[x].getSize().width, 50);
+            //defini bordas
+            botao.setBorder(null);
+            /////////////////////////////////////
+            //defini o local onde o botao deve aparecer
+            if (jspp[x].getComponentCount() > 0) {
+                botao.setLocation(0, jspp[x].getComponent(jspp[x].getComponentCount() - 1).getLocation().y + jspp[x].getComponent(jspp[x].getComponentCount() - 1).getHeight() + 5);
+            } else {
+                botao.setLocation(0, 5);
+            }
+            //adiciona o botao ao jspp
+            jspp[x].add(botao);
+            //redimenciona o jspp caso tenha muios botoes
+            if (jspp[x].getComponentCount() > 0) {
+                Dimension d = jspp[x].getSize();
+                int height = jspp[x].getComponent(jspp[x].getComponentCount() - 1).getLocation().y;
+                height += jspp[x].getComponent(jspp[x].getComponentCount() - 1).getSize().height + 5;
+                d.height = height;
+                jspp[x].setPreferredSize(d);
+            }
+            //seta viewport
+            jsp[x].setViewportView(jspp[x]);
+        }
     }
 
 }
