@@ -5,6 +5,7 @@
  */
 package br.Teofilo.Atividades;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Point;
@@ -500,7 +501,7 @@ public class AtividadesJF extends javax.swing.JFrame {
         atv3.setText(atividades.get(2).getNome());
         atv4.setText(atividades.get(3).getNome());
         //carrega botoes do banco de dados
-        addbotao_1();
+        atualizarBotoes();
 
     }
 
@@ -512,38 +513,52 @@ public class AtividadesJF extends javax.swing.JFrame {
         } else if (nomeDoBotao.equals("")) {
             return;
         }
+        /*
+            fazer metodo para verificar se ja existe um cartao criado com o mesmo nome no db
+            caso exista: impedir o usuario de concluir a ação.
+        */
+        
         //salvar no db esse botao novo
         Cartao c = new Cartao();
         c.setCor("-2696737"); //cor padrao do botao em rgb
         c.setID_LISTA_ATIVIDADES(tabela);
         c.setTitulo(nomeDoBotao);
         if (new CartaoDAO().addCartao(c)) {
-            addbotao_1();
+            atualizarBotoes();
         } else {
             JOptionPane.showMessageDialog(null, "Ocorreu um problema ao tentar adicionar Cartao ao Banco de Dados.");
         }
     }
 
+    /*
+     metodo que abre o botao clicado
+     */
     private void tarefaBotao(ActionEvent evt, JButton botao) {
-        //System.out.println(botao.getText());
         CartaoJD jd = new CartaoJD(null, true, botao);
         jd.setVisible(true);
     }
 
-    private void addbotao_1() {
-        List<JButton> botoes1 = new ArrayList<>(); //buscar botoes no banco de dados
-        List<JButton> botoes2 = new ArrayList<>(); //buscar botoes no banco de dados
-        List<JButton> botoes3 = new ArrayList<>(); //buscar botoes no banco de dados
-        List<JButton> botoes4 = new ArrayList<>(); //buscar botoes no banco de dados
+    /*
+     metodo que popula as listas com todos os botoes existentes no banco de dados
+     */
+    private void atualizarBotoes() {
+        List<JButton> botoes1 = new ArrayList<>();
+        List<JButton> botoes2 = new ArrayList<>();
+        List<JButton> botoes3 = new ArrayList<>();
+        List<JButton> botoes4 = new ArrayList<>();
+        //busca todos os cartoes no banco de dados
         cartoes = new CartaoDAO().findAll();
         for (Cartao c : cartoes) {
             String entrega = "";
             if (c.getEntrega() != null) {
                 entrega = c.getEntrega();
             }
+            //cria os botoes para o cartao
             JButton botao = new JButton("<html><center>" + c.getTitulo() + "<br>" + entrega + "</center></html>");
             botao.setFont(new Font("Arial", Font.BOLD, 14));
             botao.setName(c.getTitulo());
+            botao.setBackground(new Color(Integer.parseInt(c.getCor())));
+            //coloca o botao criado em sua respectiva lista
             switch (c.getID_LISTA_ATIVIDADES()) {
                 case PRIMEIRA_TABELA:
                     botoes1.add(botao);
@@ -561,6 +576,7 @@ public class AtividadesJF extends javax.swing.JFrame {
                     break;
             }
         }
+        //preenche as listas com os botoes
         for (int x = 0; x < 4; x++) {
             switch (x) {
                 case 0:
@@ -583,7 +599,6 @@ public class AtividadesJF extends javax.swing.JFrame {
     private void preencherLista(List<JButton> botoes, int x) {
         jspp[x].removeAll();
         for (JButton botao : botoes) {
-            /////////////////////////
             //cria um evento para o click no botao
             botao.addActionListener((java.awt.event.ActionEvent evt) -> {
                 tarefaBotao(evt, botao);
@@ -592,7 +607,6 @@ public class AtividadesJF extends javax.swing.JFrame {
             botao.setSize(jspp[x].getSize().width, 50);
             //defini bordas
             botao.setBorder(null);
-            /////////////////////////////////////
             //defini o local onde o botao deve aparecer
             if (jspp[x].getComponentCount() > 0) {
                 botao.setLocation(0, jspp[x].getComponent(jspp[x].getComponentCount() - 1).getLocation().y + jspp[x].getComponent(jspp[x].getComponentCount() - 1).getHeight() + 5);
