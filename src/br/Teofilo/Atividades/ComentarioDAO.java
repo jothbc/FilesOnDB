@@ -88,4 +88,29 @@ public class ComentarioDAO {
         return comentarios;
     }
     
+    public List<Comentario> getComentarioCartao(int ID_CARTAO){
+        List<Comentario> comentarios = new ArrayList<>();
+        sql = "SELECT * FROM cartao_comentario WHERE id_CARTAO = ?";
+        try {
+            stmt = con.prepareStatement(sql);
+            stmt.setInt(1, ID_CARTAO);
+            rs = stmt.executeQuery();
+            while (rs.next()){
+                Comentario c = new Comentario();
+                c.setId(rs.getInt("id"));
+                c.setID_CARTAO(rs.getInt("ID_CARTAO"));
+                c.setUsuario(rs.getString("usuario"));
+                c.setData_hora(rs.getString("data_hora"));
+                c.setComentario(rs.getString("comentario"));
+                comentarios.add(c);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ComentarioDAO.class.getName()).log(Level.SEVERE, null, ex);
+            GerarLogErro.gerar(ex.getMessage());
+        }finally{
+            ConnectionFactoryMySQL.closeConnection(con, stmt, rs);
+        }
+        return comentarios;
+    }
+    
 }

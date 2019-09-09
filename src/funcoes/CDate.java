@@ -47,7 +47,9 @@ public class CDate {
     public static String DataPTBRAtual() {
         return new SimpleDateFormat("dd/MM/yyyy").format(new Date());
     }
-
+    public static String DataPTBRAtualAbreviado() {
+        return new SimpleDateFormat("dd/MM/yy").format(new Date());
+    }
     /**
      *
      * @param temp

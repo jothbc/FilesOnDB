@@ -41,4 +41,7 @@ public class Atividade {
         this.nome = nome;
     }
     
+    public String toString(){
+        return this.nome;
+    }
 }

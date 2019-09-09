@@ -29,8 +29,10 @@ public class AtividadesJF extends javax.swing.JFrame {
     private static final int TERCEIRA_TABELA = 3;
     private static final int QUARTA_TABELA = 4;
 
-    JScrollPane[] jsp = new JScrollPane[4];
-    JPanel[] jspp = new JPanel[4];
+    
+    private static final int QTD_QUADROS = 4;
+    JScrollPane[] jsp = new JScrollPane[QTD_QUADROS];
+    JPanel[] jspp = new JPanel[QTD_QUADROS];
 
     private final Point point = new Point();
     List<Atividade> atividades;
@@ -145,7 +147,7 @@ public class AtividadesJF extends javax.swing.JFrame {
             .addGroup(jpLayout.createSequentialGroup()
                 .addComponent(atv1, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jsp_0)
+                .addComponent(jsp_0, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(addBtn))
         );
@@ -196,7 +198,7 @@ public class AtividadesJF extends javax.swing.JFrame {
             .addGroup(jp_1Layout.createSequentialGroup()
                 .addComponent(atv2, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jsp_1)
+                .addComponent(jsp_1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(addBtn_1))
         );
@@ -247,7 +249,7 @@ public class AtividadesJF extends javax.swing.JFrame {
             .addGroup(jp_2Layout.createSequentialGroup()
                 .addComponent(atv3, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jsp_2)
+                .addComponent(jsp_2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(addBtn_2))
         );
@@ -298,7 +300,7 @@ public class AtividadesJF extends javax.swing.JFrame {
             .addGroup(jp_3Layout.createSequentialGroup()
                 .addComponent(atv4, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jsp_3)
+                .addComponent(jsp_3, javax.swing.GroupLayout.DEFAULT_SIZE, 387, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(addBtn_3))
         );
@@ -389,8 +391,9 @@ public class AtividadesJF extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(0, 0, 0)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, 0)
-                .addComponent(panelFundo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(panelFundo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(2, 2, 2))
         );
 
         pack();
@@ -536,6 +539,9 @@ public class AtividadesJF extends javax.swing.JFrame {
     private void tarefaBotao(ActionEvent evt, JButton botao) {
         CartaoJD jd = new CartaoJD(null, true, botao);
         jd.setVisible(true);
+        if (jd.atualizarExterno()){
+            atualizarBotoes();
+        }
     }
 
     /*
@@ -556,7 +562,9 @@ public class AtividadesJF extends javax.swing.JFrame {
             //cria os botoes para o cartao
             JButton botao = new JButton("<html><center>" + c.getTitulo() + "<br>" + entrega + "</center></html>");
             botao.setFont(new Font("Arial", Font.BOLD, 14));
-            botao.setName(c.getTitulo());
+            //defini o name do botao como ID do cartao para passar por parametro para o CartaoJD
+            botao.setName(Integer.toString(c.getId()));
+            //defini a cor do botao atravez da cor obtida no c.getColor()
             botao.setBackground(new Color(Integer.parseInt(c.getCor())));
             //coloca o botao criado em sua respectiva lista
             switch (c.getID_LISTA_ATIVIDADES()) {
@@ -573,11 +581,11 @@ public class AtividadesJF extends javax.swing.JFrame {
                     botoes4.add(botao);
                     break;
                 default:
-                    break;
+                    return;
             }
         }
         //preenche as listas com os botoes
-        for (int x = 0; x < 4; x++) {
+        for (int x = 0; x < QTD_QUADROS; x++) {
             switch (x) {
                 case 0:
                     preencherLista(botoes1, x);
@@ -593,11 +601,11 @@ public class AtividadesJF extends javax.swing.JFrame {
                     break;
             }
         }
-
     }
 
     private void preencherLista(List<JButton> botoes, int x) {
         jspp[x].removeAll();
+        jsp[x].setViewportView(jspp[x]);
         for (JButton botao : botoes) {
             //cria um evento para o click no botao
             botao.addActionListener((java.awt.event.ActionEvent evt) -> {

@@ -127,6 +127,15 @@ public class Cartao {
     public List<Comentario> getComentarios() {
         return comentarios;
     }
+
+    public void setChecks(List<Check> checks) {
+        this.checks = checks;
+    }
+
+    public void setComentarios(List<Comentario> comentarios) {
+        this.comentarios = comentarios;
+    }
+    
     
 
 }

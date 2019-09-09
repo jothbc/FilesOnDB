@@ -5,7 +5,11 @@
  */
 package br.Teofilo.Atividades;
 
+import br.Teofilo.Bean.GerarLogErro;
+import br.Teofilo.Bean.User;
+import br.Teofilo.DAO.UserDAO;
 import br.Teofilo.Utilidades.ColorJD;
+import com.sun.org.apache.bcel.internal.generic.AALOAD;
 import funcoes.CDate;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -13,6 +17,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JOptionPane;
@@ -24,10 +29,13 @@ import javax.swing.JProgressBar;
  */
 public class CartaoJD extends javax.swing.JDialog {
 
-    int ID_CARD;
-    List<JCheckBox> checks;
-    public String data_entrega_temp;
-    JButton botao;
+    private Cartao cartao;
+    private List<Atividade> atividades;
+    private List<JCheckBox> checks;
+    private JButton botao;
+    public boolean refreshExterno = false;
+    private DefaultListModel listaAtv = new DefaultListModel();
+    private User user;
 
     /**
      * Creates new form CartaoJD
@@ -37,6 +45,7 @@ public class CartaoJD extends javax.swing.JDialog {
         initComponents();
         checks = new ArrayList<>();
         this.botao = botao;
+        listAtividades.setModel(listaAtv);
         init();
     }
 
@@ -52,14 +61,24 @@ public class CartaoJD extends javax.swing.JDialog {
         jPanel1 = new javax.swing.JPanel();
         jButton1 = new javax.swing.JButton();
         titulotxt = new javax.swing.JTextField();
-        marcadorBtn = new javax.swing.JButton();
         jspcheck = new javax.swing.JScrollPane();
         jpcheck = new javax.swing.JPanel();
         checkListBtn = new javax.swing.JButton();
         progressCheck = new javax.swing.JProgressBar();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        comentariostxt = new javax.swing.JTextArea();
+        jPanel2 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         dataEntregatxt = new javax.swing.JFormattedTextField();
-        grupoCB = new javax.swing.JComboBox<>();
+        marcadorBtn = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
+        removerDataEntregaBtn = new javax.swing.JButton();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        listAtividades = new javax.swing.JList<>();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        descricaotxt = new javax.swing.JTextArea();
+        comenttxt = new javax.swing.JTextField();
+        removerItemCheckList = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setUndecorated(true);
@@ -77,24 +96,9 @@ public class CartaoJD extends javax.swing.JDialog {
         });
 
         titulotxt.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        titulotxt.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                titulotxtActionPerformed(evt);
-            }
-        });
         titulotxt.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 titulotxtKeyPressed(evt);
-            }
-        });
-
-        marcadorBtn.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-        marcadorBtn.setText("   Marcador");
-        marcadorBtn.setBorder(null);
-        marcadorBtn.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        marcadorBtn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                marcadorBtnActionPerformed(evt);
             }
         });
 
@@ -134,6 +138,16 @@ public class CartaoJD extends javax.swing.JDialog {
 
         progressCheck.setStringPainted(true);
 
+        jScrollPane1.setBorder(null);
+
+        comentariostxt.setEditable(false);
+        comentariostxt.setColumns(20);
+        comentariostxt.setRows(5);
+        comentariostxt.setBorder(javax.swing.BorderFactory.createTitledBorder("Comentários"));
+        jScrollPane1.setViewportView(comentariostxt);
+
+        jPanel2.setBackground(new java.awt.Color(255, 255, 255));
+
         jLabel1.setText("Data de entrega");
 
         try {
@@ -141,15 +155,118 @@ public class CartaoJD extends javax.swing.JDialog {
         } catch (java.text.ParseException ex) {
             ex.printStackTrace();
         }
+        dataEntregatxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         dataEntregatxt.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 dataEntregatxtActionPerformed(evt);
             }
         });
 
-        grupoCB.addActionListener(new java.awt.event.ActionListener() {
+        marcadorBtn.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        marcadorBtn.setText("   Marcador");
+        marcadorBtn.setBorder(null);
+        marcadorBtn.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        marcadorBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                grupoCBActionPerformed(evt);
+                marcadorBtnActionPerformed(evt);
+            }
+        });
+
+        jButton2.setBackground(new java.awt.Color(255, 255, 255));
+        jButton2.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/Teofilo/IMG/1x/send-2.png"))); // NOI18N
+        jButton2.setText("Lembrete via E-mail");
+        jButton2.setBorder(null);
+
+        removerDataEntregaBtn.setBackground(new java.awt.Color(255, 255, 255));
+        removerDataEntregaBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/Teofilo/IMG/1x/ic_indeterminate_check_box_24px.png"))); // NOI18N
+        removerDataEntregaBtn.setToolTipText("Remover data de entrega");
+        removerDataEntregaBtn.setBorder(null);
+        removerDataEntregaBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                removerDataEntregaBtnActionPerformed(evt);
+            }
+        });
+
+        jScrollPane2.setBorder(null);
+
+        listAtividades.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        listAtividades.setToolTipText("Clique duas vezes para efetivar a alteração");
+        listAtividades.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                listAtividadesMouseClicked(evt);
+            }
+        });
+        jScrollPane2.setViewportView(listAtividades);
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                        .addGap(18, 18, 18))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(dataEntregatxt, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(removerDataEntregaBtn)
+                        .addGap(49, 49, 49)))
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(marcadorBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, 152, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel1)
+                        .addComponent(dataEntregatxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(removerDataEntregaBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(marcadorBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(jButton2)
+                        .addGap(0, 0, Short.MAX_VALUE))))
+        );
+
+        jScrollPane3.setBorder(null);
+
+        descricaotxt.setColumns(20);
+        descricaotxt.setRows(5);
+        descricaotxt.setToolTipText("Limite de 2000 caracteres");
+        descricaotxt.setBorder(javax.swing.BorderFactory.createTitledBorder("Descrição"));
+        descricaotxt.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                descricaotxtKeyPressed(evt);
+            }
+        });
+        jScrollPane3.setViewportView(descricaotxt);
+
+        comenttxt.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                comenttxtKeyPressed(evt);
+            }
+        });
+
+        removerItemCheckList.setBackground(new java.awt.Color(255, 255, 255));
+        removerItemCheckList.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/Teofilo/IMG/1x/ic_indeterminate_check_box_24px.png"))); // NOI18N
+        removerItemCheckList.setToolTipText("Remover item de CheckList");
+        removerItemCheckList.setBorder(null);
+        removerItemCheckList.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                removerItemCheckListActionPerformed(evt);
             }
         });
 
@@ -164,21 +281,21 @@ public class CartaoJD extends javax.swing.JDialog {
                         .addComponent(titulotxt)
                         .addGap(18, 18, 18)
                         .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
-                                .addComponent(jLabel1)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(dataEntregatxt, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(grupoCB, 0, 273, Short.MAX_VALUE))
-                            .addComponent(jspcheck, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(marcadorBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 226, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(comenttxt, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(progressCheck, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addContainerGap())))))
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jspcheck, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addComponent(removerItemCheckList)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(progressCheck, javax.swing.GroupLayout.DEFAULT_SIZE, 318, Short.MAX_VALUE)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addContainerGap())))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -189,16 +306,19 @@ public class CartaoJD extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(marcadorBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jspcheck, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(progressCheck, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jspcheck, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(progressCheck, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(removerItemCheckList, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(dataEntregatxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(grupoCB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(0, 297, Short.MAX_VALUE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 173, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(comenttxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(13, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -217,6 +337,11 @@ public class CartaoJD extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        if (!descricaotxt.getText().equals(cartao.getDescricao())) {
+            if (!new CartaoDAO().updateCartao_Descricao(cartao.getId(), descricaotxt.getText())) {
+                JOptionPane.showMessageDialog(null, "Falha ao tentar atualizar a descrição do Cartão no Banco de Dados");
+            }
+        }
         this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
 
@@ -228,34 +353,48 @@ public class CartaoJD extends javax.swing.JDialog {
         addCheck();
     }//GEN-LAST:event_checkListBtnActionPerformed
 
-    private void titulotxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_titulotxtActionPerformed
-        botao.setName(titulotxt.getText());
-        if (data_entrega_temp != null)
-            botao.setText("<html><center>" + botao.getName() + "<br>" + data_entrega_temp + "</center></html>");
-        else
-            botao.setText("<html><center>" + botao.getName() + "</center></html>");
-    }//GEN-LAST:event_titulotxtActionPerformed
-
     private void titulotxtKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_titulotxtKeyPressed
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-            //titulotxt perde o foco pra qualquer outra coisa, pra poder setar o titulo também
-            // no botao la fora
+            mudarTitulo();
         }
     }//GEN-LAST:event_titulotxtKeyPressed
 
-    private void grupoCBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_grupoCBActionPerformed
-        //acao quando mudar de grupo
-        System.out.println("Mudou para o grupo: " + grupoCB.getSelectedItem());
-    }//GEN-LAST:event_grupoCBActionPerformed
-
     private void dataEntregatxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dataEntregatxtActionPerformed
-        System.out.println("Nova data de entrega: " + dataEntregatxt.getText());
-        data_entrega_temp = dataEntregatxt.getText();
-        if (data_entrega_temp != null)
-            botao.setText("<html><center>" + botao.getName() + "<br>" + data_entrega_temp + "</center></html>");
-        else
-            botao.setText("<html><center>" + botao.getName() + "</center></html>");
+        if (new CartaoDAO().updateCartao_Entrega(cartao.getId(), dataEntregatxt.getText())) {
+            cartao.setEntrega(dataEntregatxt.getText());
+            botao.setText("<html><center>" + cartao.getTitulo() + "<br>" + cartao.getEntrega() + "</center></html>");
+        }
     }//GEN-LAST:event_dataEntregatxtActionPerformed
+
+    private void removerDataEntregaBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removerDataEntregaBtnActionPerformed
+        if (new CartaoDAO().updateCartao_Entrega(cartao.getId(), null)) {
+            cartao.setEntrega(null);
+            dataEntregatxt.setText("");
+            botao.setText("<html><center>" + cartao.getTitulo() + "</center></html>");
+        }
+    }//GEN-LAST:event_removerDataEntregaBtnActionPerformed
+
+    private void listAtividadesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_listAtividadesMouseClicked
+        if (evt.getClickCount() == 2) {
+            mudarAtividade();
+        }
+    }//GEN-LAST:event_listAtividadesMouseClicked
+
+    private void descricaotxtKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_descricaotxtKeyPressed
+        if (descricaotxt.getText().length() > 2000) {
+            descricaotxt.setText(descricaotxt.getText().substring(0, 2000));
+        }
+    }//GEN-LAST:event_descricaotxtKeyPressed
+
+    private void comenttxtKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_comenttxtKeyPressed
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            addComentario();
+        }
+    }//GEN-LAST:event_comenttxtKeyPressed
+
+    private void removerItemCheckListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removerItemCheckListActionPerformed
+        removerItemCheck();
+    }//GEN-LAST:event_removerItemCheckListActionPerformed
 
     /**
      * @param args the command line arguments
@@ -301,53 +440,88 @@ public class CartaoJD extends javax.swing.JDialog {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton checkListBtn;
+    private javax.swing.JTextArea comentariostxt;
+    private javax.swing.JTextField comenttxt;
     private javax.swing.JFormattedTextField dataEntregatxt;
-    private javax.swing.JComboBox<String> grupoCB;
+    private javax.swing.JTextArea descricaotxt;
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JPanel jpcheck;
     private javax.swing.JScrollPane jspcheck;
+    private javax.swing.JList<String> listAtividades;
     private javax.swing.JButton marcadorBtn;
     private javax.swing.JProgressBar progressCheck;
+    private javax.swing.JButton removerDataEntregaBtn;
+    private javax.swing.JButton removerItemCheckList;
     private javax.swing.JTextField titulotxt;
     // End of variables declaration//GEN-END:variables
 
+    /*
+        procedimento que muda a cor do Cartão
+        status: funcionando
+     */
     private void changeColorMarcador() {
         ColorJD changeColor = new ColorJD(null, true);
         changeColor.setVisible(true);
         if (changeColor.getColor() != null) {
-            marcadorBtn.setBackground(changeColor.getColor());
-            botao.setBackground(changeColor.getColor());
-        }
-    }
-
-    private void addCheck() {
-        String tituloCheck = JOptionPane.showInputDialog(null, "Descrição");
-        if (tituloCheck != null) {
-            if (!tituloCheck.equals("")) {
-                JCheckBox ck = new JCheckBox();
-                ck.setText(tituloCheck);
-                ck.setSelected(false);
-                ck.addActionListener((java.awt.event.ActionEvent evt) -> {
-                    if (ck.isSelected()) {
-                        //atualizar no db que esse check esta selecionado
-                    } else {
-                        //atualizar no db que esse check esta desselecionado
-                    }
-                    atualizarChecks();
-                });
-                checks.add(ck);
-                atualizarChecks();
+            if (new CartaoDAO().updateCartao_Cor(cartao.getId(), Integer.toString(changeColor.getColor().getRGB()))) {
+                marcadorBtn.setBackground(changeColor.getColor());
+                botao.setBackground(changeColor.getColor());
+            } else {
+                JOptionPane.showMessageDialog(null, "Problema ao tentar mudar a cor do Cartao no Banco de dados.");
             }
         }
     }
 
+    /*
+        procedimento responsável por criar um novo Check(Classe) e adiciona-lo
+        ao banco de dados.
+     */
+    private void addCheck() {
+        String tituloCheck = JOptionPane.showInputDialog(null, "Descrição");
+        if (tituloCheck != null) {
+            if (!tituloCheck.equals("")) {
+                if (new CheckDAO().addCheck(cartao.getId(), tituloCheck)) {
+                    atualizarChecks();
+                } else {
+                    JOptionPane.showMessageDialog(null, "Erro ao tentar criar um novo CheckBox");
+                }
+            }
+        }
+    }
+
+    /*
+       procedimento que atualiza a lista de check, e cria cada JCheckBox e adiciona na lista
+     */
     private void atualizarChecks() {
+        List<Check> checksdao = new CheckDAO().getChecksCartao(cartao.getId());
+        cartao.setChecks(checksdao);
+        checks = new ArrayList<>();
+        for (Check c : checksdao) {
+            JCheckBox ck = new JCheckBox();
+            ck.setText(c.getNome());
+            ck.setSelected(c.isConcluido());
+            ck.addActionListener((java.awt.event.ActionEvent evt) -> {
+                atualizarStatusCheck(ck.isSelected(), c.getId());
+            });
+            checks.add(ck);
+        }
+        criarChecks();
+    }
+
+    /*
+        procedimento que coloca as JCheckBox visiveis, e orienta seus lugares.
+     */
+    private void criarChecks() {
         jpcheck.removeAll();
         checkListBtn.setLocation(0, 0);
         jpcheck.add(checkListBtn);
-//        checks = new CHECKSDAO().GETCHECKSOFCARD(ID DESSE CARTAO);
         progressCheck.setMinimum(0);
         progressCheck.setMaximum(checks.size());
         progressCheck.setValue(0);
@@ -368,20 +542,122 @@ public class CartaoJD extends javax.swing.JDialog {
     }
 
     private void init() {
-        //carregar do db
-        progressCheck.setVisible(!checks.isEmpty()); //temporario
-        ID_CARD = 1; //temporario
-        dataEntregatxt.setText(CDate.DataPTBRAtual());//temporario
-        List<String> grupos = new ArrayList<>(); //fazer busca dos nomes dos grupos no db
-        grupos.add("Em Andamento"); // temporario
-        grupos.add("A Seguir");     //
-        grupos.add("Em Espera");    //
-        grupos.add("Concluídos");   //
-        for (String s : grupos) {
-            grupoCB.addItem(s);
+        cartao = new CartaoDAO().getCartao(Integer.parseInt(botao.getName()));
+        if (cartao == null) {
+            String msg = "Cartao não deveria vir null, se por algum acaso ocorrer isso deu algum erro no sistema,"
+                    + "e é preciso averiguar melhor onde esta acontecendo esse erro, pois essa JD só deve abrir caso o cartao "
+                    + "exista na lista de AtividadesJF.";
+            GerarLogErro.gerar(msg);
+            return;
+        }
+        user = new UserDAO().getUser();
+        atividades = new AtividadeDAO().findAll();
+        for (Atividade a : atividades) {
+            listaAtv.addElement(a);
+            if (cartao.getID_LISTA_ATIVIDADES() == a.getId()) {
+                listAtividades.setSelectedIndex(listaAtv.getSize() - 1);
+            }
+        }
+        titulotxt.setText(cartao.getTitulo());
+        marcadorBtn.setBackground(new Color(Integer.parseInt(cartao.getCor())));
+        atualizarChecks();
+        if (cartao.getEntrega() != null) {
+            dataEntregatxt.setText(cartao.getEntrega());
+        }
+        descricaotxt.setText(cartao.getDescricao());
+        atualizarComentarios();
+    }
+
+    /*
+        procedimento responsável por fazer update de um novo estado boolean de um
+        checkbox do cartao
+        status: funcionando
+     */
+    private void atualizarStatusCheck(boolean selected, int idCheck) {
+        if (new CheckDAO().alterarStatusCheck(cartao.getId(), selected, idCheck)) {
+            atualizarChecks();
+        }
+    }
+
+    /*
+     procedimento responsável por avisar a classe AtividadeJF que deve atualizar
+    as informações de cartão
+     */
+    public boolean atualizarExterno() {
+        return this.refreshExterno;
+    }
+
+    /*
+        muda a atividade do cartao apos dar 2 clickes na nova atividade
+    status: funcionando
+     */
+    private void mudarAtividade() {
+        Atividade at = (Atividade) listaAtv.getElementAt(listAtividades.getSelectedIndex());
+        if (new CartaoDAO().updateCartao_Lista(cartao.getId(), at.getId())) {
+            refreshExterno = true;
+            cartao.setID_LISTA_ATIVIDADES(at.getId());
+            JOptionPane.showMessageDialog(null, "Lista Atualizada: " + at.getNome());
+        }
+    }
+
+    /*
+        procedimento para mudar o titulo do cartão
+        status: funcionando
+     */
+    private void mudarTitulo() {
+        if (titulotxt.getText().equals("")) { //impede de colocar um titulo vazio
+            return;
+        }
+        if (new CartaoDAO().updateCartao_Titulo(cartao.getId(), titulotxt.getText())) {
+            cartao.setTitulo(titulotxt.getText());
+            if (cartao.getEntrega() != null) {
+                botao.setText("<html><center>" + cartao.getTitulo() + "<br>" + cartao.getEntrega() + "</center></html>");
+            } else {
+                botao.setText("<html><center>" + cartao.getTitulo() + "</center></html>");
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Ocorreu um problema ao tentar mudar o titulo do cartão no Banco de Dados");
         }
 
-        titulotxt.setText(botao.getName());
-        marcadorBtn.setBackground(botao.getBackground());
+    }
+
+    /*
+        procedimento responsavel por adicionar o comentario ao db e chamar a funcao de atualizarComentarios
+    status: funcionando
+    */
+    private void addComentario() {
+        if (comenttxt.getText().equals("")){
+            atualizarComentarios();
+            return;
+        }
+        Comentario c = new Comentario();
+        c.setComentario(comenttxt.getText());
+        c.setData_hora(CDate.DataPTBRAtualAbreviado() + " " + CDate.getHoraAtualPTBR());
+        c.setID_CARTAO(cartao.getId());
+        c.setUsuario(user.getNome());
+        if (new ComentarioDAO().addComentario(c)) {
+            atualizarComentarios();
+        }
+    }
+
+    /*
+        procedimento responsavel por exibir todos os comentarios do cartao, sendo atualizado no db
+    status: funcionando
+    */
+    private void atualizarComentarios() {
+        cartao.setComentarios(new ComentarioDAO().getComentarioCartao(cartao.getId()));
+        comentariostxt.setText("");
+        for (Comentario c : cartao.getComentarios()) {
+            String usuario = c.getUsuario();
+            String data_hora = c.getData_hora();
+            String comentario = c.getComentario();
+            comentariostxt.append("[" + usuario + " " + data_hora + "]\n" + comentario + "\n");
+        }
+    }
+
+    private void removerItemCheck() {
+        ChecksExistentesJD jd = new ChecksExistentesJD(null, true, cartao.getId());
+        jd.setVisible(true);
+        atualizarChecks();
     }
 }

@@ -111,7 +111,11 @@ public class CartaoDAO {
         sql = "UPDATE cartao SET entrega = ? WHERE id = ?";
         try {
             stmt = con.prepareStatement(sql);
-            stmt.setString(1, entrega);
+            if (entrega == null) {
+                stmt.setString(1, null);
+            } else {
+                stmt.setString(1, CDate.DataPTBRtoDataMySQL(entrega));
+            }
             stmt.setInt(2, id);
             stmt.executeUpdate();
             return true;
@@ -125,7 +129,7 @@ public class CartaoDAO {
     }
 
     public boolean updateCartao_Descricao(int id, String descricao) {
-        sql = "UPDATE cartao SET ID_LISTAS_ATIVIDADES = ? WHERE id = ?";
+        sql = "UPDATE cartao SET descricao = ? WHERE id = ?";
         try {
             stmt = con.prepareStatement(sql);
             stmt.setString(1, descricao);
@@ -159,7 +163,7 @@ public class CartaoDAO {
 
     private List<Cartao> getCartoesSemComentarios() {
         List<Cartao> cartoes = new ArrayList<>();
-        sql = "SELECT * FROM cartao";
+        sql = "SELECT * FROM cartao ORDER BY -entrega desc";
         try {
             stmt = con.prepareStatement(sql);
             rs = stmt.executeQuery();
@@ -205,6 +209,42 @@ public class CartaoDAO {
         }
         return cartoes;
     }
-    
-    
+
+    public Cartao getCartao(int id) {
+        Cartao c = getCartaoByID(id);
+        if (c != null) {
+            c.setChecks(new CheckDAO().getChecksCartao(id));
+            c.setComentarios(new ComentarioDAO().getComentarioCartao(id));
+        }
+        return c;
+    }
+
+    private Cartao getCartaoByID(int id) {
+        sql = "SELECT * FROM cartao WHERE id = ?";
+        try {
+            stmt = con.prepareStatement(sql);
+            stmt.setInt(1, id);
+            rs = stmt.executeQuery();
+            while (rs.next()) {
+                Cartao c = new Cartao();
+                c.setId(id);
+                c.setCor(rs.getString("cor"));
+                c.setTitulo(rs.getString("titulo"));
+                c.setID_LISTA_ATIVIDADES(rs.getInt("ID_LISTAS_ATIVIDADES"));
+                c.setDescricao(rs.getString("descricao"));
+                if (rs.getString("entrega") != null) {
+                    c.setEntrega(CDate.DataMySQLtoDataStringPT(rs.getString("entrega")));
+                }
+                return c;
+            }
+            return null;
+        } catch (SQLException ex) {
+            Logger.getLogger(CartaoDAO.class.getName()).log(Level.SEVERE, null, ex);
+            GerarLogErro.gerar(ex.getMessage());
+            return null;
+        } finally {
+            ConnectionFactoryMySQL.closeConnection(con, stmt, rs);
+        }
+    }
+
 }

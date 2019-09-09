@@ -33,8 +33,9 @@
           <Group type="102" alignment="1" attributes="0">
               <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
               <Component id="jPanel2" min="-2" pref="40" max="-2" attributes="0"/>
-              <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
               <Component id="panelFundo" min="-2" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -114,7 +115,7 @@
                   <Group type="102" alignment="0" attributes="0">
                       <Component id="atv1" min="-2" pref="26" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jsp_0" max="32767" attributes="0"/>
+                      <Component id="jsp_0" pref="0" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="addBtn" min="-2" max="-2" attributes="0"/>
                   </Group>
@@ -212,7 +213,7 @@
                   <Group type="102" alignment="0" attributes="0">
                       <Component id="atv2" min="-2" pref="26" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jsp_1" max="32767" attributes="0"/>
+                      <Component id="jsp_1" pref="0" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="addBtn_1" min="-2" max="-2" attributes="0"/>
                   </Group>
@@ -303,7 +304,7 @@
                   <Group type="102" alignment="0" attributes="0">
                       <Component id="atv3" min="-2" pref="26" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jsp_2" max="32767" attributes="0"/>
+                      <Component id="jsp_2" pref="0" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="addBtn_2" min="-2" max="-2" attributes="0"/>
                   </Group>
@@ -394,7 +395,7 @@
                   <Group type="102" alignment="0" attributes="0">
                       <Component id="atv4" min="-2" pref="26" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jsp_3" max="32767" attributes="0"/>
+                      <Component id="jsp_3" pref="387" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="addBtn_3" min="-2" max="-2" attributes="0"/>
                   </Group>

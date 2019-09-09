@@ -49,6 +49,24 @@ public class CheckDAO {
         }
     }
     
+    public boolean alterarStatusCheck(int ID_CARTAO,boolean status, int id){
+        sql = "UPDATE cartao_check SET concluido = ? WHERE ID_CARTAO = ? and id = ?";
+        try {
+            stmt= con.prepareStatement(sql);
+            stmt.setBoolean(1, status);
+            stmt.setInt(2, ID_CARTAO);
+            stmt.setInt(3, id);
+            stmt.executeUpdate();
+            return true;
+        } catch (SQLException ex) {
+            Logger.getLogger(CheckDAO.class.getName()).log(Level.SEVERE, null, ex);
+            GerarLogErro.gerar(ex.getMessage());
+            return false;
+        }finally{
+            ConnectionFactoryMySQL.closeConnection(con, stmt);
+        }
+    }
+    
     public boolean removeCheck(int id){
         sql = "DELETE FROM cartao_check WHERE id = ?";
         try {
@@ -70,6 +88,30 @@ public class CheckDAO {
         sql = "SELECT * FROM cartao_check";
         try {
             stmt = con.prepareStatement(sql);
+            rs = stmt.executeQuery();
+            while (rs.next()){
+                Check c = new Check();
+                c.setId(rs.getInt("id"));
+                c.setID_CARTAO(rs.getInt("ID_CARTAO"));
+                c.setConcluido(rs.getBoolean("concluido"));
+                c.setNome(rs.getString("nome"));
+                checks.add(c);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(CheckDAO.class.getName()).log(Level.SEVERE, null, ex);
+            GerarLogErro.gerar(ex.getMessage());
+        }finally{
+            ConnectionFactoryMySQL.closeConnection(con, stmt, rs);
+        }
+        return checks;
+    }
+    
+    public List<Check> getChecksCartao(int ID_CARTAO){
+        List<Check> checks = new ArrayList<>();
+        sql = "SELECT * FROM cartao_check WHERE ID_CARTAO = ?";
+        try {
+            stmt = con.prepareStatement(sql);
+            stmt.setInt(1, ID_CARTAO);
             rs = stmt.executeQuery();
             while (rs.next()){
                 Check c = new Check();
