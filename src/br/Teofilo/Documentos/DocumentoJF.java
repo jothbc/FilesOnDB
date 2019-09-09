@@ -1312,55 +1312,53 @@ public class DocumentoJF extends javax.swing.JFrame {
         }
     }
 
-    private void deletarDocumento() {
+    private synchronized void deletarDocumento() {
         if (jListDocumento.getSelectedIndices().length == 0) {
             return;
         }
-        int op = -1;
-        op = JOptionPane.showOptionDialog(null, "Deseja realmente excluir esse(s) arquivo(s)?", "Confirmação de exclusão", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, null, null, null);
-        if (op != 0) {
-            return;
-        }
-        if (listDocumentos.getElementAt(jListDocumento.getSelectedIndices()[0]) instanceof Documento) {
-            Documento[] d = new Documento[jListDocumento.getSelectedIndices().length];
-            for (int x = 0; x < d.length; x++) {
-                d[x] = (Documento) listDocumentos.getElementAt(jListDocumento.getSelectedIndices()[x]);
-            }
-            for (int x = 0; x < d.length; x++) {
-                File f = new DocumentoDAO().getArquivo(d[x].getId(), "C:\\JCR LOG\\", "documentos");
-                boolean moveToTrash = Desktop.getDesktop().moveToTrash(f);
-                if (moveToTrash) {
-                    if (!new DocumentoDAO().removeDocumento(d[x])) {
-                        JOptionPane.showMessageDialog(null, "Erro ao tentar remover o documento do Bando de Dados.", "Erro", JOptionPane.ERROR_MESSAGE);
-                    } else {
-                        String coment = "@Removeu um Documento.\n" + d[x].getNome();
-                        if (!new ComentarioDAO().addComentario(coment, new UserDAO().getUser().getId())) {
-                            GerarLogErro.gerar("Erro ao tentar comentar a remoção de um documento " + d[x].getNome());
+        int op = JOptionPane.showOptionDialog(null, "Deseja realmente excluir esse(s) arquivo(s)?", "Confirmação de exclusão", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, null, null, null);
+        if (op == JOptionPane.YES_OPTION) {
+            if (listDocumentos.getElementAt(jListDocumento.getSelectedIndices()[0]) instanceof Documento) {
+                Documento[] d = new Documento[jListDocumento.getSelectedIndices().length];
+                for (int x = 0; x < d.length; x++) {
+                    d[x] = (Documento) listDocumentos.getElementAt(jListDocumento.getSelectedIndices()[x]);
+                }
+                for (int x = 0; x < d.length; x++) {
+                    File f = new DocumentoDAO().getArquivo(d[x].getId(), "C:\\JCR LOG\\", "documentos");
+                    boolean moveToTrash = Desktop.getDesktop().moveToTrash(f);
+                    if (moveToTrash) {
+                        if (!new DocumentoDAO().removeDocumento(d[x])) {
+                            JOptionPane.showMessageDialog(null, "Erro ao tentar remover o documento do Bando de Dados.", "Erro", JOptionPane.ERROR_MESSAGE);
+                        } else {
+                            String coment = "@Removeu um Documento.\n" + d[x].getNome();
+                            if (!new ComentarioDAO().addComentario(coment, new UserDAO().getUser().getId())) {
+                                GerarLogErro.gerar("Erro ao tentar comentar a remoção de um documento " + d[x].getNome());
+                            }
                         }
                     }
                 }
-            }
-            carregarDocumentosDoTipoEProcessoSelecionado();
-        } else if (listDocumentos.getElementAt(jListDocumento.getSelectedIndices()[0]) instanceof DocumentoPessoal) {
-            DocumentoPessoal[] dp = new DocumentoPessoal[jListDocumento.getSelectedIndices().length];
-            for (int x = 0; x < dp.length; x++) {
-                dp[x] = (DocumentoPessoal) listDocumentos.getElementAt(jListDocumento.getSelectedIndices()[x]);
-            }
-            for (int x = 0; x < dp.length; x++) {
-                File f = new DocumentoDAO().getArquivo(dp[x].getId(), "C:\\JCR LOG\\", "documentos_pessoais");
-                boolean moveToTrash = Desktop.getDesktop().moveToTrash(f);
-                if (moveToTrash) {
-                    if (!new DocumentoDAO().removeDocumentoPessoal(dp[x])) {
-                        JOptionPane.showMessageDialog(null, "Erro ao tentar remover o documento pessoal do Bando de Dados.", "Erro", JOptionPane.ERROR_MESSAGE);
-                    } else {
-                        String coment = "@Removeu um Documento`Pessoal.\n" + dp[x].getNome();
-                        if (!new ComentarioDAO().addComentario(coment, new UserDAO().getUser().getId())) {
-                            GerarLogErro.gerar("Erro ao tentar comentar a remoção de um Documento Pessoal " + dp[x].getNome());
+                carregarDocumentosDoTipoEProcessoSelecionado();
+            } else if (listDocumentos.getElementAt(jListDocumento.getSelectedIndices()[0]) instanceof DocumentoPessoal) {
+                DocumentoPessoal[] dp = new DocumentoPessoal[jListDocumento.getSelectedIndices().length];
+                for (int x = 0; x < dp.length; x++) {
+                    dp[x] = (DocumentoPessoal) listDocumentos.getElementAt(jListDocumento.getSelectedIndices()[x]);
+                }
+                for (int x = 0; x < dp.length; x++) {
+                    File f = new DocumentoDAO().getArquivo(dp[x].getId(), "C:\\JCR LOG\\", "documentos_pessoais");
+                    boolean moveToTrash = Desktop.getDesktop().moveToTrash(f);
+                    if (moveToTrash) {
+                        if (!new DocumentoDAO().removeDocumentoPessoal(dp[x])) {
+                            JOptionPane.showMessageDialog(null, "Erro ao tentar remover o documento pessoal do Bando de Dados.", "Erro", JOptionPane.ERROR_MESSAGE);
+                        } else {
+                            String coment = "@Removeu um Documento`Pessoal.\n" + dp[x].getNome();
+                            if (!new ComentarioDAO().addComentario(coment, new UserDAO().getUser().getId())) {
+                                GerarLogErro.gerar("Erro ao tentar comentar a remoção de um Documento Pessoal " + dp[x].getNome());
+                            }
                         }
                     }
                 }
+                carregarDadosPessoaisDoClienteSelecionado((Cliente) listClientes.getElementAt(jListCliente.getSelectedIndex()));
             }
-            carregarDadosPessoaisDoClienteSelecionado((Cliente) listClientes.getElementAt(jListCliente.getSelectedIndex()));
         }
     }
 
