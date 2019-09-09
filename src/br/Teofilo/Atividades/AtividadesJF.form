@@ -135,6 +135,7 @@
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="atv1ActionPerformed"/>
+                <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="atv1KeyPressed"/>
               </Events>
             </Component>
             <Component class="javax.swing.JButton" name="addBtn">
@@ -231,6 +232,9 @@
                   <Border info="null"/>
                 </Property>
               </Properties>
+              <Events>
+                <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="atv2KeyPressed"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JButton" name="addBtn_1">
               <Properties>
@@ -322,6 +326,9 @@
                   <Border info="null"/>
                 </Property>
               </Properties>
+              <Events>
+                <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="atv3KeyPressed"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JButton" name="addBtn_2">
               <Properties>
@@ -413,6 +420,9 @@
                   <Border info="null"/>
                 </Property>
               </Properties>
+              <Events>
+                <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="atv4KeyPressed"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JButton" name="addBtn_3">
               <Properties>

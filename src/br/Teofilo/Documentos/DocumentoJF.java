@@ -6,6 +6,7 @@
 package br.Teofilo.Documentos;
 
 import JDBC.ConnectionFactoryMySQL;
+import br.Teofilo.Atividades.AtividadesJF;
 import br.Teofilo.Bean.Cliente;
 import br.Teofilo.Bean.Documento;
 import br.Teofilo.Bean.DocumentoPessoal;
@@ -92,6 +93,7 @@ public class DocumentoJF extends javax.swing.JFrame {
         jPanel2 = new javax.swing.JPanel();
         jLabel13 = new javax.swing.JLabel();
         contasBtn = new javax.swing.JButton();
+        contasBtn1 = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         jListCliente = new javax.swing.JList<>();
         jScrollPane2 = new javax.swing.JScrollPane();
@@ -171,6 +173,18 @@ public class DocumentoJF extends javax.swing.JFrame {
             }
         });
 
+        contasBtn1.setBackground(new java.awt.Color(0, 0, 0));
+        contasBtn1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        contasBtn1.setForeground(new java.awt.Color(255, 255, 255));
+        contasBtn1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/Teofilo/IMG/1x/ic_style_24px_white.png"))); // NOI18N
+        contasBtn1.setText("Atividades");
+        contasBtn1.setBorder(null);
+        contasBtn1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                contasBtn1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -179,6 +193,8 @@ public class DocumentoJF extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jLabel13, javax.swing.GroupLayout.PREFERRED_SIZE, 403, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(contasBtn1, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(contasBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -187,7 +203,9 @@ public class DocumentoJF extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(contasBtn)
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(contasBtn)
+                        .addComponent(contasBtn1))
                     .addComponent(jLabel13))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -574,6 +592,9 @@ public class DocumentoJF extends javax.swing.JFrame {
     }//GEN-LAST:event_jListClienteMouseClicked
 
     private void jListDocumentoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jListDocumentoMouseClicked
+        if (evt.getClickCount() == 2) {
+            visualizarArquivo();
+        }
         atualizarInfos();
     }//GEN-LAST:event_jListDocumentoMouseClicked
 
@@ -666,7 +687,7 @@ public class DocumentoJF extends javax.swing.JFrame {
         if (contasjf != null) {
             contasjf.dispose();
         }
-        if (timeLineJF !=null){
+        if (timeLineJF != null) {
             timeLineJF.dispose();
         }
     }//GEN-LAST:event_formWindowGainedFocus
@@ -684,6 +705,10 @@ public class DocumentoJF extends javax.swing.JFrame {
     private void tarefasBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tarefasBtnActionPerformed
         exibirTarefas();
     }//GEN-LAST:event_tarefasBtnActionPerformed
+
+    private void contasBtn1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_contasBtn1ActionPerformed
+        atividades();
+    }//GEN-LAST:event_contasBtn1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -726,6 +751,7 @@ public class DocumentoJF extends javax.swing.JFrame {
     private javax.swing.JButton addTipoBtn;
     private javax.swing.JButton changeStatusBtn;
     private javax.swing.JButton contasBtn;
+    private javax.swing.JButton contasBtn1;
     private javax.swing.JLabel cripLabel;
     private javax.swing.JButton dadosPessoaisBtn;
     private javax.swing.JButton deleteBtn;
@@ -1130,8 +1156,8 @@ public class DocumentoJF extends javax.swing.JFrame {
                 d = (Documento) listDocumentos.getElementAt(jListDocumento.getSelectedIndex());
                 tp = (TipoDoc) listTipo.getElementAt(jListTipos.getSelectedIndex());
                 p = (Processo) listProcessos.getElementAt(jListProcessos.getSelectedIndex());
-                if (d.isCrip()){
-                    JOptionPane.showMessageDialog(null, msgCrip,"Upload de arquivo Descriptografado",JOptionPane.INFORMATION_MESSAGE);
+                if (d.isCrip()) {
+                    JOptionPane.showMessageDialog(null, msgCrip, "Upload de arquivo Descriptografado", JOptionPane.INFORMATION_MESSAGE);
                 }
             } catch (HeadlessException ex) {
                 System.err.println("Editar>> Documento, tipoDoc ou Processo retornaram erro.." + ex);
@@ -1140,8 +1166,8 @@ public class DocumentoJF extends javax.swing.JFrame {
             try {
                 dp = (DocumentoPessoal) listDocumentos.getElementAt(jListDocumento.getSelectedIndex());
                 c = (Cliente) listClientes.getElementAt(jListCliente.getSelectedIndex());
-                if (dp.isCrip()){
-                    JOptionPane.showMessageDialog(null, msgCrip,"Upload de arquivo Descriptografado",JOptionPane.INFORMATION_MESSAGE);
+                if (dp.isCrip()) {
+                    JOptionPane.showMessageDialog(null, msgCrip, "Upload de arquivo Descriptografado", JOptionPane.INFORMATION_MESSAGE);
                 }
             } catch (HeadlessException ex) {
                 System.err.println("Editar>>DocumentoPessoal ou Cliente retornaram erro.." + ex);
@@ -1427,6 +1453,13 @@ public class DocumentoJF extends javax.swing.JFrame {
         new Thread(() -> {
             timeLineJF = new TimeLineJF();
             timeLineJF.setVisible(true);
+        }).start();
+    }
+
+    private synchronized void atividades() {
+        new Thread(() -> {
+            AtividadesJF jf = new AtividadesJF();
+            jf.setVisible(true);
         }).start();
     }
 }

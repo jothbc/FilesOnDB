@@ -10,12 +10,14 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTextField;
 
 /**
  *
@@ -29,10 +31,10 @@ public class AtividadesJF extends javax.swing.JFrame {
     private static final int TERCEIRA_TABELA = 3;
     private static final int QUARTA_TABELA = 4;
 
-    
     private static final int QTD_QUADROS = 4;
     JScrollPane[] jsp = new JScrollPane[QTD_QUADROS];
     JPanel[] jspp = new JPanel[QTD_QUADROS];
+    JTextField[] titulos = new JTextField[QTD_QUADROS];
 
     private final Point point = new Point();
     List<Atividade> atividades;
@@ -51,6 +53,10 @@ public class AtividadesJF extends javax.swing.JFrame {
         jspp[1] = jspp_1;
         jspp[2] = jspp_2;
         jspp[3] = jspp_3;
+        titulos[0] = atv1;
+        titulos[1] = atv2;
+        titulos[2] = atv3;
+        titulos[3] = atv4;
         init();
     }
 
@@ -103,6 +109,11 @@ public class AtividadesJF extends javax.swing.JFrame {
         atv1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 atv1ActionPerformed(evt);
+            }
+        });
+        atv1.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                atv1KeyPressed(evt);
             }
         });
 
@@ -158,6 +169,11 @@ public class AtividadesJF extends javax.swing.JFrame {
         atv2.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         atv2.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         atv2.setBorder(null);
+        atv2.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                atv2KeyPressed(evt);
+            }
+        });
 
         addBtn_1.setBackground(new java.awt.Color(255, 255, 255));
         addBtn_1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/Teofilo/IMG/1x/ic_control_point_24px.png"))); // NOI18N
@@ -209,6 +225,11 @@ public class AtividadesJF extends javax.swing.JFrame {
         atv3.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         atv3.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         atv3.setBorder(null);
+        atv3.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                atv3KeyPressed(evt);
+            }
+        });
 
         addBtn_2.setBackground(new java.awt.Color(255, 255, 255));
         addBtn_2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/Teofilo/IMG/1x/ic_control_point_24px.png"))); // NOI18N
@@ -260,6 +281,11 @@ public class AtividadesJF extends javax.swing.JFrame {
         atv4.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         atv4.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         atv4.setBorder(null);
+        atv4.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                atv4KeyPressed(evt);
+            }
+        });
 
         addBtn_3.setBackground(new java.awt.Color(255, 255, 255));
         addBtn_3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/Teofilo/IMG/1x/ic_control_point_24px.png"))); // NOI18N
@@ -434,6 +460,30 @@ public class AtividadesJF extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_atv1ActionPerformed
 
+    private void atv1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_atv1KeyPressed
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            atualizarTitulo(PRIMEIRA_TABELA);
+        }
+    }//GEN-LAST:event_atv1KeyPressed
+
+    private void atv2KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_atv2KeyPressed
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            atualizarTitulo(SEGUNDA_TABELA);
+        }
+    }//GEN-LAST:event_atv2KeyPressed
+
+    private void atv3KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_atv3KeyPressed
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            atualizarTitulo(TERCEIRA_TABELA);
+        }
+    }//GEN-LAST:event_atv3KeyPressed
+
+    private void atv4KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_atv4KeyPressed
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            atualizarTitulo(QUARTA_TABELA);
+        }
+    }//GEN-LAST:event_atv4KeyPressed
+
     /**
      * @param args the command line arguments
      */
@@ -499,10 +549,14 @@ public class AtividadesJF extends javax.swing.JFrame {
     private void init() {
         //inicializa atividades
         atividades = new AtividadeDAO().findAll();
-        atv1.setText(atividades.get(0).getNome());
-        atv2.setText(atividades.get(1).getNome());
-        atv3.setText(atividades.get(2).getNome());
-        atv4.setText(atividades.get(3).getNome());
+        int count = 0;
+        for (Atividade a : atividades) {
+            titulos[count].setText(a.getNome());
+            count++;
+            if (count == QTD_QUADROS) {
+                break;
+            }
+        }
         //carrega botoes do banco de dados
         atualizarBotoes();
 
@@ -519,8 +573,8 @@ public class AtividadesJF extends javax.swing.JFrame {
         /*
             fazer metodo para verificar se ja existe um cartao criado com o mesmo nome no db
             caso exista: impedir o usuario de concluir a ação.
-        */
-        
+         */
+
         //salvar no db esse botao novo
         Cartao c = new Cartao();
         c.setCor("-2696737"); //cor padrao do botao em rgb
@@ -539,7 +593,7 @@ public class AtividadesJF extends javax.swing.JFrame {
     private void tarefaBotao(ActionEvent evt, JButton botao) {
         CartaoJD jd = new CartaoJD(null, true, botao);
         jd.setVisible(true);
-        if (jd.atualizarExterno()){
+        if (jd.atualizarExterno()) {
             atualizarBotoes();
         }
     }
@@ -634,6 +688,13 @@ public class AtividadesJF extends javax.swing.JFrame {
             //seta viewport
             jsp[x].setViewportView(jspp[x]);
         }
+    }
+
+    private void atualizarTitulo(int i) {
+        /*
+        
+        ficara responsável por atualizar os titulos no banco de dados
+         */
     }
 
 }
