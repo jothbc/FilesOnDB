@@ -75,21 +75,25 @@ public class AtividadesJF extends javax.swing.JFrame {
         addBtn = new javax.swing.JButton();
         jsp_0 = new javax.swing.JScrollPane();
         jspp_0 = new javax.swing.JPanel();
+        removeBtn = new javax.swing.JButton();
         jp_1 = new javax.swing.JPanel();
         atv2 = new javax.swing.JTextField();
         addBtn_1 = new javax.swing.JButton();
         jsp_1 = new javax.swing.JScrollPane();
         jspp_1 = new javax.swing.JPanel();
+        removeBtn1 = new javax.swing.JButton();
         jp_2 = new javax.swing.JPanel();
         atv3 = new javax.swing.JTextField();
         addBtn_2 = new javax.swing.JButton();
         jsp_2 = new javax.swing.JScrollPane();
         jspp_2 = new javax.swing.JPanel();
+        removeBtn2 = new javax.swing.JButton();
         jp_3 = new javax.swing.JPanel();
         atv4 = new javax.swing.JTextField();
         addBtn_3 = new javax.swing.JButton();
         jsp_3 = new javax.swing.JScrollPane();
         jspp_3 = new javax.swing.JPanel();
+        removeBtn3 = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jButton1 = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
@@ -143,6 +147,15 @@ public class AtividadesJF extends javax.swing.JFrame {
 
         jsp_0.setViewportView(jspp_0);
 
+        removeBtn.setBackground(new java.awt.Color(255, 255, 255));
+        removeBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/Teofilo/IMG/1x/ic_delete_24px.png"))); // NOI18N
+        removeBtn.setBorder(null);
+        removeBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                removeBtnActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jpLayout = new javax.swing.GroupLayout(jp);
         jp.setLayout(jpLayout);
         jpLayout.setHorizontalGroup(
@@ -150,7 +163,8 @@ public class AtividadesJF extends javax.swing.JFrame {
             .addComponent(atv1)
             .addGroup(jpLayout.createSequentialGroup()
                 .addComponent(addBtn)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(removeBtn))
             .addComponent(jsp_0)
         );
         jpLayout.setVerticalGroup(
@@ -158,9 +172,11 @@ public class AtividadesJF extends javax.swing.JFrame {
             .addGroup(jpLayout.createSequentialGroup()
                 .addComponent(atv1, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jsp_0, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                .addComponent(jsp_0, javax.swing.GroupLayout.DEFAULT_SIZE, 387, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(addBtn))
+                .addGroup(jpLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(addBtn)
+                    .addComponent(removeBtn)))
         );
 
         jp_1.setBackground(new java.awt.Color(255, 255, 255));
@@ -199,6 +215,15 @@ public class AtividadesJF extends javax.swing.JFrame {
 
         jsp_1.setViewportView(jspp_1);
 
+        removeBtn1.setBackground(new java.awt.Color(255, 255, 255));
+        removeBtn1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/Teofilo/IMG/1x/ic_delete_24px.png"))); // NOI18N
+        removeBtn1.setBorder(null);
+        removeBtn1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                removeBtn1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jp_1Layout = new javax.swing.GroupLayout(jp_1);
         jp_1.setLayout(jp_1Layout);
         jp_1Layout.setHorizontalGroup(
@@ -206,7 +231,8 @@ public class AtividadesJF extends javax.swing.JFrame {
             .addComponent(atv2)
             .addGroup(jp_1Layout.createSequentialGroup()
                 .addComponent(addBtn_1)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(removeBtn1))
             .addComponent(jsp_1)
         );
         jp_1Layout.setVerticalGroup(
@@ -214,9 +240,11 @@ public class AtividadesJF extends javax.swing.JFrame {
             .addGroup(jp_1Layout.createSequentialGroup()
                 .addComponent(atv2, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jsp_1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                .addComponent(jsp_1, javax.swing.GroupLayout.DEFAULT_SIZE, 387, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(addBtn_1))
+                .addGroup(jp_1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(addBtn_1)
+                    .addComponent(removeBtn1)))
         );
 
         jp_2.setBackground(new java.awt.Color(255, 255, 255));
@@ -255,6 +283,15 @@ public class AtividadesJF extends javax.swing.JFrame {
 
         jsp_2.setViewportView(jspp_2);
 
+        removeBtn2.setBackground(new java.awt.Color(255, 255, 255));
+        removeBtn2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/Teofilo/IMG/1x/ic_delete_24px.png"))); // NOI18N
+        removeBtn2.setBorder(null);
+        removeBtn2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                removeBtn2ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jp_2Layout = new javax.swing.GroupLayout(jp_2);
         jp_2.setLayout(jp_2Layout);
         jp_2Layout.setHorizontalGroup(
@@ -262,7 +299,8 @@ public class AtividadesJF extends javax.swing.JFrame {
             .addComponent(atv3)
             .addGroup(jp_2Layout.createSequentialGroup()
                 .addComponent(addBtn_2)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(removeBtn2))
             .addComponent(jsp_2)
         );
         jp_2Layout.setVerticalGroup(
@@ -270,9 +308,11 @@ public class AtividadesJF extends javax.swing.JFrame {
             .addGroup(jp_2Layout.createSequentialGroup()
                 .addComponent(atv3, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jsp_2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                .addComponent(jsp_2, javax.swing.GroupLayout.DEFAULT_SIZE, 387, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(addBtn_2))
+                .addGroup(jp_2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(addBtn_2)
+                    .addComponent(removeBtn2)))
         );
 
         jp_3.setBackground(new java.awt.Color(255, 255, 255));
@@ -311,6 +351,15 @@ public class AtividadesJF extends javax.swing.JFrame {
 
         jsp_3.setViewportView(jspp_3);
 
+        removeBtn3.setBackground(new java.awt.Color(255, 255, 255));
+        removeBtn3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/Teofilo/IMG/1x/ic_delete_24px.png"))); // NOI18N
+        removeBtn3.setBorder(null);
+        removeBtn3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                removeBtn3ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jp_3Layout = new javax.swing.GroupLayout(jp_3);
         jp_3.setLayout(jp_3Layout);
         jp_3Layout.setHorizontalGroup(
@@ -318,7 +367,8 @@ public class AtividadesJF extends javax.swing.JFrame {
             .addComponent(atv4)
             .addGroup(jp_3Layout.createSequentialGroup()
                 .addComponent(addBtn_3)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(removeBtn3))
             .addComponent(jsp_3)
         );
         jp_3Layout.setVerticalGroup(
@@ -328,7 +378,9 @@ public class AtividadesJF extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jsp_3, javax.swing.GroupLayout.DEFAULT_SIZE, 387, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(addBtn_3))
+                .addGroup(jp_3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(addBtn_3)
+                    .addComponent(removeBtn3)))
         );
 
         javax.swing.GroupLayout panelFundoLayout = new javax.swing.GroupLayout(panelFundo);
@@ -484,6 +536,26 @@ public class AtividadesJF extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_atv4KeyPressed
 
+    private void removeBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeBtnActionPerformed
+        new RemoverCartaoJD(null, true, PRIMEIRA_TABELA).setVisible(true);
+        atualizarBotoes();
+    }//GEN-LAST:event_removeBtnActionPerformed
+
+    private void removeBtn1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeBtn1ActionPerformed
+        new RemoverCartaoJD(null, true, SEGUNDA_TABELA).setVisible(true);
+        atualizarBotoes();
+    }//GEN-LAST:event_removeBtn1ActionPerformed
+
+    private void removeBtn2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeBtn2ActionPerformed
+        new RemoverCartaoJD(null, true, TERCEIRA_TABELA).setVisible(true);
+        atualizarBotoes();
+    }//GEN-LAST:event_removeBtn2ActionPerformed
+
+    private void removeBtn3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeBtn3ActionPerformed
+        new RemoverCartaoJD(null, true, QUARTA_TABELA).setVisible(true);
+        atualizarBotoes();
+    }//GEN-LAST:event_removeBtn3ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -544,6 +616,10 @@ public class AtividadesJF extends javax.swing.JFrame {
     private javax.swing.JPanel jspp_2;
     private javax.swing.JPanel jspp_3;
     private javax.swing.JPanel panelFundo;
+    private javax.swing.JButton removeBtn;
+    private javax.swing.JButton removeBtn1;
+    private javax.swing.JButton removeBtn2;
+    private javax.swing.JButton removeBtn3;
     // End of variables declaration//GEN-END:variables
 
     private void init() {
@@ -591,17 +667,21 @@ public class AtividadesJF extends javax.swing.JFrame {
      metodo que abre o botao clicado
      */
     private void tarefaBotao(ActionEvent evt, JButton botao) {
-        CartaoJD jd = new CartaoJD(null, true, botao);
-        jd.setVisible(true);
-        if (jd.atualizarExterno()) {
-            atualizarBotoes();
-        }
+        new Thread(() -> {
+            botao.setText("Abrindo...");
+            botao.setForeground(Color.BLUE);
+            CartaoJD jd = new CartaoJD(null, true, botao);
+            jd.setVisible(true);
+            if (jd.atualizarExterno()) {
+                atualizarBotoes();
+            }
+        }).start();
     }
 
     /*
      metodo que popula as listas com todos os botoes existentes no banco de dados
      */
-    private void atualizarBotoes() {
+    private synchronized void atualizarBotoes() {
         List<JButton> botoes1 = new ArrayList<>();
         List<JButton> botoes2 = new ArrayList<>();
         List<JButton> botoes3 = new ArrayList<>();
@@ -690,11 +770,18 @@ public class AtividadesJF extends javax.swing.JFrame {
         }
     }
 
+    /*
+        procedimento responsavel por atualizar os titulos
+        status : funcionando
+     */
     private void atualizarTitulo(int i) {
-        /*
-        
-        ficara responsável por atualizar os titulos no banco de dados
-         */
+        titulos[i - 1].setForeground(Color.blue);
+        if (!new AtividadeDAO().updateAtividade(i, titulos[i - 1].getText())) {
+            JOptionPane.showMessageDialog(null, "Ocorreu um problema ao tentar atualizar o titulo da atividade.");
+            titulos[i - 1].setForeground(Color.red);
+        } else {
+            titulos[i - 1].setForeground(Color.black);
+        }
     }
 
 }

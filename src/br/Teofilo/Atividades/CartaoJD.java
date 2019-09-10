@@ -550,6 +550,7 @@ public class CartaoJD extends javax.swing.JDialog {
             GerarLogErro.gerar(msg);
             return;
         }
+        mostrarTiuloOriginalBotaoNovamente(cartao);
         user = new UserDAO().getUser();
         atividades = new AtividadeDAO().findAll();
         for (Atividade a : atividades) {
@@ -623,10 +624,10 @@ public class CartaoJD extends javax.swing.JDialog {
 
     /*
         procedimento responsavel por adicionar o comentario ao db e chamar a funcao de atualizarComentarios
-    status: funcionando
-    */
+        status: funcionando
+     */
     private void addComentario() {
-        if (comenttxt.getText().equals("")){
+        if (comenttxt.getText().equals("")) {
             atualizarComentarios();
             return;
         }
@@ -638,12 +639,13 @@ public class CartaoJD extends javax.swing.JDialog {
         if (new ComentarioDAO().addComentario(c)) {
             atualizarComentarios();
         }
+        comenttxt.setText("");
     }
 
     /*
         procedimento responsavel por exibir todos os comentarios do cartao, sendo atualizado no db
-    status: funcionando
-    */
+        status: funcionando
+     */
     private void atualizarComentarios() {
         cartao.setComentarios(new ComentarioDAO().getComentarioCartao(cartao.getId()));
         comentariostxt.setText("");
@@ -659,5 +661,19 @@ public class CartaoJD extends javax.swing.JDialog {
         ChecksExistentesJD jd = new ChecksExistentesJD(null, true, cartao.getId());
         jd.setVisible(true);
         atualizarChecks();
+    }
+
+    /*
+        No atividades, quando clicado no botao, o titulo do mesmo é substituido por "abrindo.."
+        então esse método faz com que o titulo original seja mostrado de novo, pois
+        o botão ja abriu
+    */
+    private void mostrarTiuloOriginalBotaoNovamente(Cartao cartao) {
+        String entrega = "";
+        if (cartao.getEntrega() != null) {
+            entrega = cartao.getEntrega();
+        }
+        botao.setText("<html><center>" + cartao.getTitulo() + "<br>" + entrega + "</center></html>");
+        botao.setForeground(Color.BLACK);
     }
 }

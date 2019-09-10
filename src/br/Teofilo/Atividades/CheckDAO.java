@@ -83,6 +83,22 @@ public class CheckDAO {
         }
     }
     
+    public boolean removeChecksDoCartao(int ID_CARTAO){
+        sql = "DELETE FROM cartao_check WHERE ID_CARTAO = ?";
+        try {
+            stmt =con.prepareStatement(sql);
+            stmt.setInt(1, ID_CARTAO);
+            stmt.execute();
+            return true;
+        } catch (SQLException ex) {
+            Logger.getLogger(CheckDAO.class.getName()).log(Level.SEVERE, null, ex);
+            GerarLogErro.gerar(ex.getMessage());
+            return false;
+        }finally{
+            ConnectionFactoryMySQL.closeConnection(con, stmt);
+        }
+    }
+    
     public List<Check> findAll(){
         List<Check> checks = new ArrayList<>();
         sql = "SELECT * FROM cartao_check";

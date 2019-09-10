@@ -136,6 +136,8 @@ public class Cartao {
         this.comentarios = comentarios;
     }
     
-    
+    public String toString(){
+        return this.titulo;
+    }
 
 }

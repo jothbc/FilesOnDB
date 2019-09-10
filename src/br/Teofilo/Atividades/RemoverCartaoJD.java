@@ -5,18 +5,30 @@
  */
 package br.Teofilo.Atividades;
 
+import java.awt.Point;
+import java.awt.event.KeyEvent;
+import java.util.List;
+import javax.swing.DefaultListModel;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author User
  */
 public class RemoverCartaoJD extends javax.swing.JDialog {
 
+    private int ID_ATIVIDADE;
+    private DefaultListModel lista = new DefaultListModel();
+    private Point point = new Point();
+
     /**
      * Creates new form RemoverCartaoJD
      */
-    public RemoverCartaoJD(java.awt.Frame parent, boolean modal) {
+    public RemoverCartaoJD(java.awt.Frame parent, boolean modal, int ID_ATIVIDADE) {
         super(parent, modal);
         initComponents();
+        this.ID_ATIVIDADE = ID_ATIVIDADE;
+        init();
     }
 
     /**
@@ -38,6 +50,17 @@ public class RemoverCartaoJD extends javax.swing.JDialog {
         setUndecorated(true);
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel1.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 2, true));
+        jPanel1.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            public void mouseDragged(java.awt.event.MouseEvent evt) {
+                jPanel1MouseDragged(evt);
+            }
+        });
+        jPanel1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                jPanel1MousePressed(evt);
+            }
+        });
 
         jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/Teofilo/IMG/1x/ic_cancel_18px.png"))); // NOI18N
         jButton1.setBorder(null);
@@ -52,6 +75,12 @@ public class RemoverCartaoJD extends javax.swing.JDialog {
         jLabel1.setText("Cartões");
 
         jList1.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        jList1.setToolTipText("Selecione o cartão e precione DEL para excluir o registro.");
+        jList1.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                jList1KeyPressed(evt);
+            }
+        });
         jScrollPane1.setViewportView(jList1);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -65,7 +94,7 @@ public class RemoverCartaoJD extends javax.swing.JDialog {
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                         .addContainerGap())
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 233, Short.MAX_VALUE)
+                        .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 229, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButton1))))
         );
@@ -76,7 +105,7 @@ public class RemoverCartaoJD extends javax.swing.JDialog {
                     .addComponent(jLabel1)
                     .addComponent(jButton1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 344, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 340, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -98,6 +127,24 @@ public class RemoverCartaoJD extends javax.swing.JDialog {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jList1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jList1KeyPressed
+        if (evt.getKeyCode() == KeyEvent.VK_DELETE) {
+            if (jList1.getSelectedIndex() >= 0) {
+                remover();
+            }
+        }
+    }//GEN-LAST:event_jList1KeyPressed
+
+    private void jPanel1MouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel1MouseDragged
+        Point p = this.getLocation();
+        this.setLocation(p.x + evt.getX() - point.x, p.y + evt.getY() - point.y);
+    }//GEN-LAST:event_jPanel1MouseDragged
+
+    private void jPanel1MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel1MousePressed
+        point.x = evt.getX();
+        point.y = evt.getY();
+    }//GEN-LAST:event_jPanel1MousePressed
 
     /**
      * @param args the command line arguments
@@ -129,7 +176,7 @@ public class RemoverCartaoJD extends javax.swing.JDialog {
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                RemoverCartaoJD dialog = new RemoverCartaoJD(new javax.swing.JFrame(), true);
+                RemoverCartaoJD dialog = new RemoverCartaoJD(new javax.swing.JFrame(), true, 1);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {
@@ -148,4 +195,26 @@ public class RemoverCartaoJD extends javax.swing.JDialog {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
+
+    private void init() {
+        jList1.setModel(lista);
+        preencherLista();
+    }
+
+    private void preencherLista() {
+        List<Cartao> cartoes = new CartaoDAO().getCartoes_byAtividades_semInfo(ID_ATIVIDADE);
+        lista.removeAllElements();
+        for (Cartao c : cartoes) {
+            lista.addElement(c);
+        }
+    }
+
+    private void remover() {
+        Cartao c = (Cartao) lista.getElementAt(jList1.getSelectedIndex());
+        if (!new CartaoDAO().removeCartao(c.getId())) {
+            JOptionPane.showMessageDialog(null, "Algo deu errado ao tentar remover o Cartão do Banco de Dados.");
+        } else {
+            preencherLista();
+        }
+    }
 }

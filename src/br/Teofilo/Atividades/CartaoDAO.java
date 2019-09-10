@@ -145,7 +145,7 @@ public class CartaoDAO {
         }
     }
 
-    public boolean removeCartao(int id) {
+    private boolean removeCartaoID(int id) {
         sql = "DELETE FROM cartao WHERE id = ?";
         try {
             stmt = con.prepareStatement(sql);
@@ -161,11 +161,43 @@ public class CartaoDAO {
         }
     }
 
+    public boolean removeCartao(int id) {
+        return removeCartaoID(id) && new ComentarioDAO().removeComentariosDoCartao(id) && new CheckDAO().removeChecksDoCartao(id);
+    }
+
     private List<Cartao> getCartoesSemComentarios() {
         List<Cartao> cartoes = new ArrayList<>();
         sql = "SELECT * FROM cartao ORDER BY -entrega desc";
         try {
             stmt = con.prepareStatement(sql);
+            rs = stmt.executeQuery();
+            while (rs.next()) {
+                Cartao c = new Cartao();
+                c.setId(rs.getInt("id"));
+                c.setID_LISTA_ATIVIDADES(rs.getInt("ID_LISTAS_ATIVIDADES"));
+                c.setTitulo(rs.getString("titulo"));
+                c.setCor(rs.getString("cor"));
+                if (rs.getString("entrega") != null) {
+                    c.setEntrega(CDate.DataMySQLtoDataStringPT(rs.getString("entrega")));
+                }
+                c.setDescricao(rs.getString("descricao"));
+                cartoes.add(c);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(CartaoDAO.class.getName()).log(Level.SEVERE, null, ex);
+            GerarLogErro.gerar(ex.getMessage());
+        } finally {
+            ConnectionFactoryMySQL.closeConnection(con, stmt, rs);
+        }
+        return cartoes;
+    }
+
+    public List<Cartao> getCartoes_byAtividades_semInfo(int atividade) {
+        List<Cartao> cartoes = new ArrayList<>();
+        sql = "SELECT * FROM cartao WHERE ID_LISTAS_ATIVIDADES = ?";
+        try {
+            stmt = con.prepareStatement(sql);
+            stmt.setInt(1, atividade);
             rs = stmt.executeQuery();
             while (rs.next()) {
                 Cartao c = new Cartao();

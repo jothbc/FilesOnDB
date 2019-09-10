@@ -65,6 +65,22 @@ public class ComentarioDAO {
         }
     }
     
+    public boolean removeComentariosDoCartao(int ID_CARTAO){
+        sql = "DELETE FROM cartao_comentario WHERE ID_CARTAO = ?";
+        try {
+            stmt= con.prepareStatement(sql);
+            stmt.setInt(1, ID_CARTAO);
+            stmt.execute();
+            return true;
+        } catch (SQLException ex) {
+            Logger.getLogger(ComentarioDAO.class.getName()).log(Level.SEVERE, null, ex);
+            GerarLogErro.gerar(ex.getMessage());
+            return false;
+        }finally{
+            ConnectionFactoryMySQL.closeConnection(con, stmt);
+        }
+    }
+    
     public List<Comentario> findAll(){
         List<Comentario> comentarios = new ArrayList<>();
         sql = "SELECT * FROM cartao_comentario";
