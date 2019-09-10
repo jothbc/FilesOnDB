@@ -9,7 +9,6 @@ import br.Teofilo.Bean.GerarLogErro;
 import br.Teofilo.Bean.User;
 import br.Teofilo.DAO.UserDAO;
 import br.Teofilo.Utilidades.ColorJD;
-import com.sun.org.apache.bcel.internal.generic.AALOAD;
 import funcoes.CDate;
 import java.awt.Color;
 import java.awt.Dimension;

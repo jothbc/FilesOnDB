@@ -25,17 +25,19 @@ public class ParcelasJD extends javax.swing.JDialog {
 
     /**
      * Creates new form ParcelasJD
+     *
      * @param parent set parent
      * @param modal set modal
      * @param c é preciso informar a Conta para agregar a ela
      */
-    public ParcelasJD(java.awt.Frame parent, boolean modal,Conta c) {
+    public ParcelasJD(java.awt.Frame parent, boolean modal, Conta c) {
         super(parent, modal);
         initComponents();
         conta = c;
-        if (c.isCartao()){
+        if (c.isCartao()) {
             pagar = false;
         }
+        debitcheck.setSelected(c.isCartao());
         tb = (DefaultTableModel) jTable1.getModel();
         init();
     }
@@ -56,6 +58,7 @@ public class ParcelasJD extends javax.swing.JDialog {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         jButton1 = new javax.swing.JButton();
+        debitcheck = new javax.swing.JCheckBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setUndecorated(true);
@@ -146,20 +149,32 @@ public class ParcelasJD extends javax.swing.JDialog {
             }
         });
 
+        debitcheck.setBackground(new java.awt.Color(255, 255, 255));
+        debitcheck.setFont(new java.awt.Font("Tahoma", 1, 10)); // NOI18N
+        debitcheck.setText("Cartão (Debitar Automaticamente)");
+        debitcheck.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                debitcheckActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 554, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton1)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(debitcheck)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButton1))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 554, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -169,7 +184,9 @@ public class ParcelasJD extends javax.swing.JDialog {
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 238, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton1)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton1)
+                    .addComponent(debitcheck))
                 .addContainerGap())
         );
 
@@ -203,10 +220,14 @@ public class ParcelasJD extends javax.swing.JDialog {
     }//GEN-LAST:event_jPanel3MousePressed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        if (jTable1.getSelectedRow()>=0){
+        if (jTable1.getSelectedRow() >= 0) {
             baixarSelecionado();
         }
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void debitcheckActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_debitcheckActionPerformed
+        mudarDebitoAutomatico();
+    }//GEN-LAST:event_debitcheckActionPerformed
 
     /**
      * @param args the command line arguments
@@ -238,7 +259,7 @@ public class ParcelasJD extends javax.swing.JDialog {
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                ParcelasJD dialog = new ParcelasJD(new javax.swing.JFrame(), true,null);
+                ParcelasJD dialog = new ParcelasJD(new javax.swing.JFrame(), true, null);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {
@@ -251,6 +272,7 @@ public class ParcelasJD extends javax.swing.JDialog {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JCheckBox debitcheck;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel13;
@@ -261,25 +283,24 @@ public class ParcelasJD extends javax.swing.JDialog {
     // End of variables declaration//GEN-END:variables
 
     private void init() {
-        if (conta !=null){
+        if (conta != null) {
             tb.setRowCount(0);
-            for (ContaSub s:conta.getConta_sub()){
-                Object[] dado = {s.getId(),s.getValor(),s.getVencimento(),s.getData_pago()};
+            for (ContaSub s : conta.getConta_sub()) {
+                Object[] dado = {s.getId(), s.getValor(), s.getVencimento(), s.getData_pago()};
                 tb.addRow(dado);
             }
         }
     }
 
     private void baixarSelecionado() {
-        if (!pagar){
-            JOptionPane.showMessageDialog(null, "O parcelamento dessa conta foi feito em um cartão, e ele será automaticamente baixado no dia do seu vencimento.","Cartão",JOptionPane.INFORMATION_MESSAGE);
+        if (!pagar) {
+            JOptionPane.showMessageDialog(null, "O parcelamento dessa conta foi feito em um cartão, e ele será automaticamente baixado no dia do seu vencimento.", "Cartão", JOptionPane.INFORMATION_MESSAGE);
             return;
         }
         int id = (int) jTable1.getValueAt(jTable1.getSelectedRow(), 0);
-        if (!new ContaDAO().pagarParcela(id)){
-            JOptionPane.showMessageDialog(null, "Erro ao tentar pagar parcela.","Erro",JOptionPane.ERROR_MESSAGE);
-        }
-        else{
+        if (!new ContaDAO().pagarParcela(id)) {
+            JOptionPane.showMessageDialog(null, "Erro ao tentar pagar parcela.", "Erro", JOptionPane.ERROR_MESSAGE);
+        } else {
             atualizar();
         }
     }
@@ -287,5 +308,13 @@ public class ParcelasJD extends javax.swing.JDialog {
     private void atualizar() {
         conta = new ContaDAO().getContaSubByIDCONTA(conta.getId());
         init();
+    }
+
+    private void mudarDebitoAutomatico() {
+        if (!new ContaDAO().mudarStatusDebitoAutomatico(conta.getId(), debitcheck.isSelected())) {
+            JOptionPane.showMessageDialog(null, "Ocorreu um problema ao mudar o status de débito automático no Banco de Dados.");
+        } else {
+            pagar = !debitcheck.isSelected();
+        }
     }
 }

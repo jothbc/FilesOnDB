@@ -432,6 +432,7 @@ public class NovaContaJD extends javax.swing.JDialog {
         if (isParcelado.isSelected()) {
             jSpinner1.setEnabled(true);
             isCartao.setEnabled(true);
+            mudouQuantidadeDeParcelas();
         } else {
             jSpinner1.setEnabled(false);
             isCartao.setEnabled(false);

@@ -15,7 +15,6 @@ import br.Teofilo.DAO.UserDAO;
 import br.Teofilo.Utilidades.BackupJD;
 import br.Teofilo.Utilidades.CadastrarUsuarioJD;
 import br.Teofilo.Utilidades.ComentarioJF;
-import br.Teofilo.Utilidades.TimeLineJF;
 import java.awt.Desktop;
 import java.awt.Image;
 import java.awt.Toolkit;
@@ -38,7 +37,6 @@ public class MenuJF extends javax.swing.JFrame {
     private ClienteJF clienteJF;
     private ContasClienteJF contasClientesJF;
     private ComentarioJF comentariosJF;
-    private TimeLineJF timeLineJF;
 
     private boolean conectado = false;
 
@@ -321,9 +319,6 @@ public class MenuJF extends javax.swing.JFrame {
         if (contasClientesJF != null) {
             contasClientesJF.dispose();
         }
-        if (timeLineJF != null) {
-            timeLineJF.dispose();
-        }
     }
 
     private void valoresClientes() {
@@ -377,11 +372,6 @@ public class MenuJF extends javax.swing.JFrame {
     }
 
     private synchronized void tarefas() {
-        new Thread(() -> {
-            timeLineJF = new TimeLineJF();
-            timeLineJF.setVisible(true);
-        }).start();
-
     }
 
     private void backup() {

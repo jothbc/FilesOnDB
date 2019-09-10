@@ -69,6 +69,24 @@ public class ContaDAO {
         }
     }
 
+    public boolean mudarStatusDebitoAutomatico(int id_conta,boolean status){
+        sql = "UPDATE conta SET cartao = ? WHERE id = ?";
+        try {
+            stmt= con.prepareStatement(sql);
+            stmt.setBoolean(1, status);
+            stmt.setInt(2, id_conta);
+            stmt.executeUpdate();
+            return true;
+        } catch (SQLException ex) {
+            Logger.getLogger(ContaDAO.class.getName()).log(Level.SEVERE, null, ex);
+            GerarLogErro.gerar(ex.getMessage());
+            return false;
+        }finally{
+            ConnectionFactoryMySQL.closeConnection(con, stmt);
+        }
+        
+    }
+    
     public List<Conta> findAllByClienteID(int id) {
         List<Conta> contas = new ArrayList<>();
         sql = "SELECT * FROM conta WHERE ID_CLIENTE = ?";
