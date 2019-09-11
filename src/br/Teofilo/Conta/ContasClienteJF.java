@@ -407,7 +407,7 @@ public class ContasClienteJF extends javax.swing.JFrame {
     private void carregarContasDoCliente() {
         tb.setRowCount(0);
         //id, desc, valor,valorPago,emissao,vencimento,quitacao, parcelado
-        List<Conta> contas = new ContaDAO().findAllByClienteID(cliente.getId());
+        List<Conta> contas = new ContaDAO().getContas_ID_CLIENTE(cliente.getId());
         if (!contas.isEmpty()) {
             for (Conta c : contas) {
                 if (!c.isParcelado()) {
@@ -466,7 +466,7 @@ public class ContasClienteJF extends javax.swing.JFrame {
     private void verParcelas() {
         int idConta = (int) jTable1.getValueAt(jTable1.getSelectedRow(), 0);
         int idCliente = cliente.getId();
-        List<Conta> contas = new ContaDAO().findAllByClienteID(idCliente);
+        List<Conta> contas = new ContaDAO().getContas_ID_CLIENTE(idCliente);
         for (Conta c : contas) {
             if (c.getId() == idConta) {
                 if (!c.getConta_sub().isEmpty()) {

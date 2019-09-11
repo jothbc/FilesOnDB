@@ -69,10 +69,10 @@ public class ContaDAO {
         }
     }
 
-    public boolean mudarStatusDebitoAutomatico(int id_conta,boolean status){
+    public boolean mudarStatusDebitoAutomatico(int id_conta, boolean status) {
         sql = "UPDATE conta SET cartao = ? WHERE id = ?";
         try {
-            stmt= con.prepareStatement(sql);
+            stmt = con.prepareStatement(sql);
             stmt.setBoolean(1, status);
             stmt.setInt(2, id_conta);
             stmt.executeUpdate();
@@ -81,13 +81,13 @@ public class ContaDAO {
             Logger.getLogger(ContaDAO.class.getName()).log(Level.SEVERE, null, ex);
             GerarLogErro.gerar(ex.getMessage());
             return false;
-        }finally{
+        } finally {
             ConnectionFactoryMySQL.closeConnection(con, stmt);
         }
-        
+
     }
-    
-    public List<Conta> findAllByClienteID(int id) {
+
+    public List<Conta> getContas_ID_CLIENTE(int id) {
         List<Conta> contas = new ArrayList<>();
         sql = "SELECT * FROM conta WHERE ID_CLIENTE = ?";
         try {
@@ -137,7 +137,7 @@ public class ContaDAO {
         return contas;
     }
 
-    public Conta getContaSubByIDCONTA(int id) {
+    public Conta getParcelas_ID_CONTA(int id) {
         sql = "SELECT * FROM conta_sub WHERE ID_CONTA = ?";
         Conta c = new Conta();
         c.setId(id);
@@ -428,4 +428,5 @@ public class ContaDAO {
             ConnectionFactoryMySQL.closeConnection(con, stmt, rs);
         }
     }
+
 }

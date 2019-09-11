@@ -306,7 +306,7 @@ public class ParcelasJD extends javax.swing.JDialog {
     }
 
     private void atualizar() {
-        conta = new ContaDAO().getContaSubByIDCONTA(conta.getId());
+        conta = new ContaDAO().getParcelas_ID_CONTA(conta.getId());
         init();
     }
 

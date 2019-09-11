@@ -16,10 +16,15 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import net.sf.jasperreports.view.JasperViewer;
 
 /**
  *
@@ -388,7 +393,8 @@ public class RelatorioContaJD extends javax.swing.JDialog {
             3º todos
              */
             if (oppago.isSelected()) { //1º
-                
+                imprimir_relatorio_Pago(new LogPagoDAO().getLog_ID_CLIENTE(cliente.getId(), dataini.getText(), datafim.getText()));
+                dispose();
             } else if (opaberto.isSelected()) { //2º
                 
             } else if (optodos.isSelected()) { //3º
@@ -400,6 +406,34 @@ public class RelatorioContaJD extends javax.swing.JDialog {
             2º em aberto
             3º todos
              */
+            if (oppago.isSelected()) { //1º
+                imprimir_relatorio_Pago(new LogPagoDAO().getLog_GERAL(dataini.getText(), datafim.getText()));
+                dispose();
+            } else if (opaberto.isSelected()) { //2º
+
+            } else if (optodos.isSelected()) { //3º
+
+            }
+        }
+    }
+
+    private void imprimir_relatorio_Pago(List<LogPago> list) {
+        try {
+            double total =0;
+            for (LogPago p:list){
+                total+=p.getValor_pago();
+            }
+            String src = "src\\PagoCliente.jasper";
+            JasperPrint js;
+            JRBeanCollectionDataSource ds = new JRBeanCollectionDataSource(list);
+            HashMap<String, Object> map = new HashMap<>();
+            map.put("valor_total", total);
+            js = JasperFillManager.fillReport(src, map, ds);
+            JasperViewer vw = new JasperViewer(js, false);
+            vw.setTitle("Relatório");
+            vw.setVisible(true);
+        } catch (Exception ex) {
+
         }
     }
 }
