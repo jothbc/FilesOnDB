@@ -69,7 +69,7 @@ public class LogPagoDAO {
     
     public List<LogPago> getLog_GERAL(String data_inicial,String data_final){
         List<LogPago> log = new ArrayList<>();
-        sql = "SELECT * FROM logpago WHERE ID_CLIENTE = ? AND data_pago>=? AND data_pago<=?";
+        sql = "SELECT * FROM logpago WHERE data_pago>=? AND data_pago<=?";
         try {
             stmt = con.prepareStatement(sql);
             stmt.setString(1, CDate.DataPTBRtoDataMySQL(data_inicial));

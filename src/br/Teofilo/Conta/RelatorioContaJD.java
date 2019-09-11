@@ -9,6 +9,7 @@ import br.Teofilo.Cliente.SeletorDeClienteJD;
 import br.Teofilo.Bean.Cliente;
 import br.Teofilo.Bean.Conta;
 import br.Teofilo.Bean.ContaSub;
+import br.Teofilo.Bean.GerarLogErro;
 import br.Teofilo.DAO.ContaDAO;
 import funcoes.CDate;
 import java.awt.Point;
@@ -21,6 +22,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
@@ -393,13 +395,13 @@ public class RelatorioContaJD extends javax.swing.JDialog {
             3º todos
              */
             if (oppago.isSelected()) { //1º
-                imprimir_relatorio_Pago(new LogPagoDAO().getLog_ID_CLIENTE(cliente.getId(), dataini.getText(), datafim.getText()));
-                dispose();
+                imprimir_relatorio_Pago(new LogPagoDAO().getLog_ID_CLIENTE(cliente.getId(), dataini.getText(), datafim.getText()), dataini.getText(), datafim.getText());
             } else if (opaberto.isSelected()) { //2º
-                
+
             } else if (optodos.isSelected()) { //3º
 
             }
+            dispose();
         } else { //geral
             /* GERAL
             1º ja pagos
@@ -407,33 +409,37 @@ public class RelatorioContaJD extends javax.swing.JDialog {
             3º todos
              */
             if (oppago.isSelected()) { //1º
-                imprimir_relatorio_Pago(new LogPagoDAO().getLog_GERAL(dataini.getText(), datafim.getText()));
-                dispose();
+                imprimir_relatorio_Pago(new LogPagoDAO().getLog_GERAL(dataini.getText(), datafim.getText()), dataini.getText(), datafim.getText());
             } else if (opaberto.isSelected()) { //2º
 
             } else if (optodos.isSelected()) { //3º
 
             }
+            dispose();
         }
     }
 
-    private void imprimir_relatorio_Pago(List<LogPago> list) {
+    private void imprimir_relatorio_Pago(List<LogPago> list, String inicio, String fim) {
         try {
-            double total =0;
-            for (LogPago p:list){
-                total+=p.getValor_pago();
+            double total = 0;
+            for (LogPago p : list) {
+                total += p.getValor_pago();
             }
             String src = "src\\PagoCliente.jasper";
             JasperPrint js;
             JRBeanCollectionDataSource ds = new JRBeanCollectionDataSource(list);
             HashMap<String, Object> map = new HashMap<>();
             map.put("valor_total", total);
+            map.put("inicio", inicio);
+            map.put("fim", fim);
             js = JasperFillManager.fillReport(src, map, ds);
             JasperViewer vw = new JasperViewer(js, false);
             vw.setTitle("Relatório");
             vw.setVisible(true);
-        } catch (Exception ex) {
-
+            vw.setAlwaysOnTop(true);
+        } catch (SecurityException | JRException ex) {
+            GerarLogErro.gerar(ex.getMessage());
+            JOptionPane.showMessageDialog(null, "Algo deu errado.\n" + ex);
         }
     }
 }
