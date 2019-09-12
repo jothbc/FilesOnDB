@@ -16,6 +16,7 @@ public class LogAberto {
     private double valor_ja_pago;
     private String emissao;
     private String vencimento;
+    private String quitacao;
 
     /**
      * @return the nome
@@ -99,6 +100,20 @@ public class LogAberto {
      */
     public void setVencimento(String vencimento) {
         this.vencimento = vencimento;
+    }
+
+    /**
+     * @return the quitacao
+     */
+    public String getQuitacao() {
+        return quitacao;
+    }
+
+    /**
+     * @param quitacao the quitacao to set
+     */
+    public void setQuitacao(String quitacao) {
+        this.quitacao = quitacao;
     }
     
     

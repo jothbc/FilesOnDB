@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="PagoCliente" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="faa99537-3cd2-45b9-8bde-307baee500b0">
 	<property name="template.type" value="columnar"/>
 	<property name="ireport.zoom" value="1.771561000000002"/>
-	<property name="ireport.x" value="0"/>
+	<property name="ireport.x" value="75"/>
 	<property name="ireport.y" value="0"/>
 	<style name="Title" forecolor="#000000" fontName="Times New Roman" fontSize="50" isBold="false" pdfFontName="Times-Bold"/>
 	<style name="SubTitle" forecolor="#666666" fontName="Times New Roman" fontSize="18" isBold="false" pdfFontName="Times-Roman"/>
@@ -25,12 +25,13 @@
 	<field name="emissao" class="java.lang.String"/>
 	<field name="valor_ja_pago" class="java.lang.Double"/>
 	<field name="vencimento" class="java.lang.String"/>
+	<field name="quitacao" class="java.lang.String"/>
 	<group name="Group1" isReprintHeaderOnEachPage="true">
-		<groupExpression><![CDATA[(int)($V{REPORT_COUNT}/25)]]></groupExpression>
+		<groupExpression><![CDATA[(int)($V{REPORT_COUNT}/20)]]></groupExpression>
 		<groupHeader>
-			<band height="31">
+			<band height="29">
 				<frame>
-					<reportElement mode="Opaque" x="0" y="7" width="555" height="24" forecolor="#B89F7D" backcolor="#9DB1B8" uuid="8724c4c8-85d5-4e84-a4b6-e432073873f0"/>
+					<reportElement mode="Opaque" x="0" y="5" width="555" height="24" forecolor="#B89F7D" backcolor="#9DB1B8" uuid="8724c4c8-85d5-4e84-a4b6-e432073873f0"/>
 					<staticText>
 						<reportElement x="2" y="4" width="100" height="20" uuid="22205fea-9de0-41f7-a17c-1ed61d104f41"/>
 						<text><![CDATA[Nome]]></text>
@@ -50,9 +51,6 @@
 				</frame>
 			</band>
 		</groupHeader>
-	</group>
-	<group name="Group2">
-		<groupExpression><![CDATA[(int)($V{REPORT_COUNT}/5)]]></groupExpression>
 	</group>
 	<background>
 		<band splitType="Stretch"/>
@@ -79,7 +77,7 @@
 		<band splitType="Stretch"/>
 	</columnHeader>
 	<detail>
-		<band height="42" splitType="Stretch">
+		<band height="44" splitType="Stretch">
 			<textField>
 				<reportElement x="2" y="0" width="125" height="20" uuid="98a29bc6-7909-491a-8a90-77496b5c5a3f"/>
 				<textFieldExpression><![CDATA[$F{nome}]]></textFieldExpression>
@@ -89,7 +87,7 @@
 				<textFieldExpression><![CDATA[$F{desc}]]></textFieldExpression>
 			</textField>
 			<textField pattern="dd/MM/yyyy">
-				<reportElement x="2" y="20" width="125" height="20" uuid="f2597c87-398f-40ce-981f-71c3bb60296a"/>
+				<reportElement x="2" y="20" width="114" height="20" uuid="f2597c87-398f-40ce-981f-71c3bb60296a"/>
 				<textFieldExpression><![CDATA["Emissão: "+$F{emissao}]]></textFieldExpression>
 			</textField>
 			<textField pattern="¤ #,##0.00">
@@ -101,11 +99,15 @@
 				<textFieldExpression><![CDATA[$F{valor_ja_pago}]]></textFieldExpression>
 			</textField>
 			<textField pattern="dd/MM/yyyy">
-				<reportElement x="127" y="20" width="133" height="20" uuid="8dc3498f-2037-408c-bc1d-f8568436b6df"/>
+				<reportElement x="127" y="20" width="118" height="20" uuid="8dc3498f-2037-408c-bc1d-f8568436b6df"/>
 				<textFieldExpression><![CDATA["Vencimento: " +$F{vencimento}]]></textFieldExpression>
 			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="245" y="20" width="100" height="20" uuid="7b229087-cccc-479b-8f61-e85a2172dd60"/>
+				<textFieldExpression><![CDATA["Quitação: "+ ($F{quitacao}!=null?$F{quitacao}:"")]]></textFieldExpression>
+			</textField>
 			<line>
-				<reportElement x="0" y="39" width="555" height="1" uuid="5f4eb4f5-9836-484d-9dc1-d76105819040"/>
+				<reportElement x="0" y="42" width="553" height="1" uuid="14c9a014-5d7a-46e3-a90e-0e2ac2e17ec1"/>
 				<graphicElement>
 					<pen lineStyle="Dotted"/>
 				</graphicElement>
@@ -113,48 +115,55 @@
 		</band>
 	</detail>
 	<lastPageFooter>
-		<band height="69">
+		<band height="82">
 			<staticText>
-				<reportElement x="2" y="0" width="100" height="20" uuid="98961de1-97b4-4215-815b-c9fe5548933e"/>
+				<reportElement x="0" y="0" width="100" height="20" uuid="98961de1-97b4-4215-815b-c9fe5548933e"/>
 				<text><![CDATA[Valor Total]]></text>
 			</staticText>
 			<textField pattern="¤ #,##0.00">
-				<reportElement x="476" y="20" width="81" height="20" uuid="d73e3ee8-2d28-44be-a37d-8a35ca3f7dbc"/>
+				<reportElement x="474" y="40" width="81" height="20" uuid="d73e3ee8-2d28-44be-a37d-8a35ca3f7dbc"/>
 				<textFieldExpression><![CDATA[$P{valor_total}]]></textFieldExpression>
 			</textField>
 			<textField pattern="¤ #,##0.00">
-				<reportElement x="406" y="0" width="70" height="20" uuid="656406fb-c995-4b57-add0-4afe8abf368f"/>
+				<reportElement x="404" y="0" width="70" height="20" uuid="656406fb-c995-4b57-add0-4afe8abf368f"/>
 				<textFieldExpression><![CDATA[$P{total}]]></textFieldExpression>
 			</textField>
 			<textField pattern="¤ #,##0.00">
-				<reportElement x="476" y="0" width="81" height="20" uuid="955b6aaa-433b-44f1-8413-ad53041ccc01"/>
+				<reportElement x="474" y="20" width="81" height="20" uuid="955b6aaa-433b-44f1-8413-ad53041ccc01"/>
 				<textFieldExpression><![CDATA[$P{pago}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="2" y="20" width="100" height="20" uuid="5cd08907-f1da-4979-b1ca-b9e14bb9fd38"/>
-				<text><![CDATA[Valor Líquido]]></text>
+				<reportElement x="0" y="20" width="100" height="20" uuid="5cd08907-f1da-4979-b1ca-b9e14bb9fd38"/>
+				<text><![CDATA[Valor Recebido]]></text>
 			</staticText>
 			<line>
-				<reportElement x="0" y="20" width="557" height="1" uuid="fe7c1dc9-1878-4df2-940f-bba0bdc459bc"/>
+				<reportElement x="2" y="20" width="553" height="1" uuid="fe7c1dc9-1878-4df2-940f-bba0bdc459bc"/>
+			</line>
+			<staticText>
+				<reportElement x="0" y="40" width="100" height="20" uuid="b9e5bebb-460d-4b38-9f66-881465adf6f1"/>
+				<text><![CDATA[Valor A Receber]]></text>
+			</staticText>
+			<line>
+				<reportElement x="2" y="39" width="553" height="1" uuid="26b2e801-a7d1-4232-8b2f-c81e4dd1a237"/>
 			</line>
 			<frame>
-				<reportElement mode="Opaque" x="0" y="54" width="555" height="15" forecolor="#D0B48E" backcolor="#9DB1B8" uuid="1448628e-08ed-41d7-9a92-7c3ee0c99026"/>
+				<reportElement mode="Opaque" x="0" y="67" width="555" height="15" forecolor="#D0B48E" backcolor="#9DB1B8" uuid="6856a258-c323-49a5-a322-0d2e6dc827bf"/>
 				<textField evaluationTime="Report">
-					<reportElement style="Column header" x="515" y="0" width="40" height="13" forecolor="#FFFFFF" uuid="a08b23ce-3d89-49ca-bb70-fb2e83ad4c97"/>
+					<reportElement style="Column header" x="515" y="0" width="40" height="13" forecolor="#FFFFFF" uuid="610ce011-3de9-4167-956b-d3cf9e47b6dc"/>
 					<textElement verticalAlignment="Middle">
 						<font size="10" isBold="false"/>
 					</textElement>
 					<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement style="Column header" x="435" y="0" width="80" height="13" forecolor="#FFFFFF" uuid="7c854f88-e4f1-4bc1-905e-e84eb6fdd4f8"/>
+					<reportElement style="Column header" x="435" y="0" width="80" height="13" forecolor="#FFFFFF" uuid="d6354674-cfac-46e3-8923-cb41326043b8"/>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font size="10" isBold="false"/>
 					</textElement>
 					<textFieldExpression><![CDATA["Página "+$V{PAGE_NUMBER}+" de"]]></textFieldExpression>
 				</textField>
 				<textField pattern="EEEEE dd MMMMM yyyy">
-					<reportElement style="Column header" x="2" y="0" width="197" height="13" forecolor="#FFFFFF" uuid="8247b1f5-bd38-4bfd-a6ea-7c5e6864d70a"/>
+					<reportElement style="Column header" x="2" y="0" width="197" height="13" forecolor="#FFFFFF" uuid="4c09e0f8-92b1-4ffc-9ec6-f72435209911"/>
 					<textElement verticalAlignment="Middle">
 						<font size="10" isBold="false"/>
 					</textElement>
