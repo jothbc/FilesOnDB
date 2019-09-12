@@ -10,6 +10,7 @@ import br.Teofilo.Bean.Cliente;
 import br.Teofilo.Bean.Conta;
 import br.Teofilo.Bean.ContaSub;
 import br.Teofilo.Bean.GerarLogErro;
+import br.Teofilo.DAO.ClienteDAO;
 import br.Teofilo.DAO.ContaDAO;
 import funcoes.CDate;
 import java.awt.Point;
@@ -397,7 +398,7 @@ public class RelatorioContaJD extends javax.swing.JDialog {
             if (oppago.isSelected()) { //1º
                 imprimir_relatorio_Pago(new LogPagoDAO().getLog_ID_CLIENTE(cliente.getId(), dataini.getText(), datafim.getText()), dataini.getText(), datafim.getText());
             } else if (opaberto.isSelected()) { //2º
-
+                emAberto(cliente, dataini.getText(), datafim.getText());
             } else if (optodos.isSelected()) { //3º
 
             }
@@ -411,7 +412,7 @@ public class RelatorioContaJD extends javax.swing.JDialog {
             if (oppago.isSelected()) { //1º
                 imprimir_relatorio_Pago(new LogPagoDAO().getLog_GERAL(dataini.getText(), datafim.getText()), dataini.getText(), datafim.getText());
             } else if (opaberto.isSelected()) { //2º
-
+                emAberto(null, dataini.getText(), datafim.getText());
             } else if (optodos.isSelected()) { //3º
 
             }
@@ -441,5 +442,110 @@ public class RelatorioContaJD extends javax.swing.JDialog {
             GerarLogErro.gerar(ex.getMessage());
             JOptionPane.showMessageDialog(null, "Algo deu errado.\n" + ex);
         }
+    }
+
+    private void emAberto(Cliente cliente, String inicio, String fim) {
+        List<LogAberto> log = new ArrayList<>();
+        double total_em_aberto = 0; //variavel contem a soma de todos os valores em aberto incluindo as parcelas em aberto
+        double total = 0, pago = 0;
+        if (cliente != null) {
+            List<Conta> contas = new ContaDAO().getContas_ID_CLIENTE(cliente.getId());
+            double[] captura = obterValoresEmAbertoDoCliente(cliente, contas, log, total_em_aberto, total, pago, inicio, fim);
+            total_em_aberto += captura[0];
+            total += captura[1];
+            pago += captura[2];
+        } else { //geral em aberto
+            List<Cliente> clientes = new ClienteDAO().getClintes();
+            for (Cliente _cliente : clientes) {
+                List<Conta> contas = new ContaDAO().getContas_ID_CLIENTE(_cliente.getId());
+                double[] captura = obterValoresEmAbertoDoCliente(_cliente, contas, log, total_em_aberto, total, pago, inicio, fim);
+                total_em_aberto += captura[0];
+                total += captura[1];
+                pago += captura[2];
+            }
+
+        }
+        imprimir_em_aberto(log, total_em_aberto, total, pago, inicio, fim);
+
+    }
+
+    private void imprimir_em_aberto(List<LogAberto> log, double total_em_aberto, double total, double pago, String inicio, String fim) {
+        try {
+            String src = "src\\AbertoCliente.jasper";
+            JasperPrint js;
+            JRBeanCollectionDataSource ds = new JRBeanCollectionDataSource(log);
+            HashMap<String, Object> map = new HashMap<>();
+            map.put("valor_total", total_em_aberto);
+            map.put("total", total);
+            map.put("pago", pago);
+            map.put("inicio", inicio);
+            map.put("fim", fim);
+            js = JasperFillManager.fillReport(src, map, ds);
+            JasperViewer vw = new JasperViewer(js, false);
+            vw.setTitle("Relatório");
+            vw.setVisible(true);
+            vw.setAlwaysOnTop(true);
+        } catch (SecurityException | JRException ex) {
+            GerarLogErro.gerar(ex.getMessage());
+            JOptionPane.showMessageDialog(null, "Algo deu errado.\n" + ex);
+        }
+    }
+
+    private double[] obterValoresEmAbertoDoCliente(Cliente cliente, List<Conta> contas, List<LogAberto> log, double total_em_aberto, double total, double pago, String inicio, String fim) {
+        //primeira interação do for para ver valores sem parcela e nao quitados
+        for (Conta c : contas) {
+            if (c.isParcelado() || c.getData_pagamento_final()!=null) {
+                continue;
+            }
+            try {
+                if (new SimpleDateFormat("dd/MM/yyyy").parse(c.getEmissao()).compareTo(new SimpleDateFormat("dd/MM/yyyy").parse(inicio)) >= 0
+                        && new SimpleDateFormat("dd/MM/yyyy").parse(c.getEmissao()).compareTo(new SimpleDateFormat("dd/MM/yyyy").parse(fim)) <= 0) {
+                    total_em_aberto += (c.getValor() - c.getValor_ja_pago());
+                    total += c.getValor();
+                    pago += c.getValor_ja_pago();
+                    LogAberto l = new LogAberto();
+                    l.setNome(cliente.getNome());
+                    l.setDesc(c.getDescricao());
+                    l.setEmissao(c.getEmissao());
+                    l.setVencimento(c.getVencimento());
+                    l.setValor(c.getValor());
+                    l.setValor_ja_pago(c.getValor_ja_pago());
+                    log.add(l);
+                }
+            } catch (ParseException ex) {
+                Logger.getLogger(RelatorioContaJD.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        //segunda interação do for para ver valores em aberto de parcelas
+        for (Conta c : contas) {
+            if (!c.isParcelado()) {
+                continue;
+            }
+            for (ContaSub p : c.getConta_sub()) {
+                if (p.getData_pago() == null) {
+                    try {
+                        if (new SimpleDateFormat("dd/MM/yyyy").parse(p.getVencimento()).compareTo(new SimpleDateFormat("dd/MM/yyyy").parse(fim)) <= 0) {
+                            total_em_aberto += p.getValor();
+                            LogAberto l = new LogAberto();
+                            l.setNome(cliente.getNome());
+                            l.setDesc(c.getDescricao());
+                            l.setEmissao(c.getEmissao());
+                            l.setVencimento(p.getVencimento());
+                            l.setValor(p.getValor());
+                            l.setValor_ja_pago(0); //como é parcela nao tem valor "ja pago"
+                            total += p.getValor();
+                            log.add(l);
+                        }
+                    } catch (ParseException ex) {
+                        Logger.getLogger(RelatorioContaJD.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            }
+        }
+        double[] retorno = new double[3];
+        retorno[0] = total_em_aberto;
+        retorno[1] = total;
+        retorno[2] = pago;
+        return retorno;
     }
 }

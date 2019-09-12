@@ -301,6 +301,10 @@ public class ContaDAO {
         }
     }
 
+    /*
+        metodo que verifica se hoje ja foi verificado os cartões pra debito automatico.
+        caso ainda não tenha sido verificado retorna falso.
+    */
     public boolean controleCartao() {
         sql = "SELECT * FROM controle_cartao WHERE data = ?";
         try {
@@ -317,6 +321,10 @@ public class ContaDAO {
         return false;
     }
 
+    /*
+        metodo que assinala no banco de dados que hoje ja foi feita a verificação
+        de cartões com débito automático
+    */
     public boolean CartaoHojeConcluido() {
         sql = "INSERT INTO controle_cartao (data) VALUES (?)";
         try {
@@ -333,6 +341,11 @@ public class ContaDAO {
         }
     }
 
+    /*
+        metodo que faz a baixa automática dos cartoes que tem vencimento para hoje,
+        ou até mesmo cartoes com vencimentos passados que ainda estao com data
+        de pagamento == null (simbolizando que o cliente ficou mais de um dia sem abrir o programa)
+    */
     public boolean baixarCartoesHoje() {
         //variaveis para logpago
         String loghoje;
