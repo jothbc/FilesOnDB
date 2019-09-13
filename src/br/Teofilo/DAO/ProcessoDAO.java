@@ -70,7 +70,7 @@ public class ProcessoDAO {
 
     public List<Processo> getProcessos(int idCliente) {
         List<Processo> processos = new ArrayList<>();
-        sql = "SELECT * FROM processos WHERE ID_CLIENTE = ?";
+        sql = "SELECT * FROM processos WHERE ID_CLIENTE = ? ORDER BY processo";
         try {
             stmt = con.prepareStatement(sql);
             stmt.setInt(1, idCliente);

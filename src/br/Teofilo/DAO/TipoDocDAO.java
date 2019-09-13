@@ -125,7 +125,7 @@ public class TipoDocDAO {
 
     public List<TipoDoc> findAllByClienteEProcesso(Cliente c, Processo p) {
         List<TipoDoc> tipos = new ArrayList<>();
-        sql = "SELECT * from tipo WHERE ID_CLIENTE = ? AND ID_PROCESSO = ?";
+        sql = "SELECT * from tipo WHERE ID_CLIENTE = ? AND ID_PROCESSO = ? ORDER BY descricao";
         try {
             stmt = con.prepareStatement(sql);
             stmt.setInt(1, c.getId());

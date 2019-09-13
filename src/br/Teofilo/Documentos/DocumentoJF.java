@@ -126,6 +126,7 @@ public class DocumentoJF extends javax.swing.JFrame {
         tamlbl = new javax.swing.JLabel();
         gerenciarClientesBtn = new javax.swing.JButton();
         tarefasBtn = new javax.swing.JButton();
+        renomearDocumentoBtn = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Advocacia Teófilo Rocha");
@@ -331,8 +332,8 @@ public class DocumentoJF extends javax.swing.JFrame {
 
         editarBtn.setBackground(new java.awt.Color(255, 255, 255));
         editarBtn.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        editarBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/Teofilo/IMG/1x/pencil.png"))); // NOI18N
-        editarBtn.setText("Editar");
+        editarBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/Teofilo/IMG/1x/square-upload.png"))); // NOI18N
+        editarBtn.setText("Substituir");
         editarBtn.setBorder(null);
         editarBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -420,6 +421,17 @@ public class DocumentoJF extends javax.swing.JFrame {
             }
         });
 
+        renomearDocumentoBtn.setBackground(new java.awt.Color(255, 255, 255));
+        renomearDocumentoBtn.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        renomearDocumentoBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/Teofilo/IMG/1x/pencil.png"))); // NOI18N
+        renomearDocumentoBtn.setText("Renomear");
+        renomearDocumentoBtn.setBorder(null);
+        renomearDocumentoBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                renomearDocumentoBtnActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -465,6 +477,8 @@ public class DocumentoJF extends javax.swing.JFrame {
                         .addGroup(jPanel1Layout.createSequentialGroup()
                             .addComponent(addTipoBtn)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(renomearDocumentoBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(39, 39, 39)
                             .addComponent(cripLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 194, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGap(18, 18, 18)
                             .addComponent(tamlbl, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -483,9 +497,9 @@ public class DocumentoJF extends javax.swing.JFrame {
                                     .addComponent(downloadBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                     .addComponent(uploadBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                     .addComponent(editarBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGap(18, 18, 18)))
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                 .addComponent(deleteBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(informtxt, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)))))
@@ -554,7 +568,9 @@ public class DocumentoJF extends javax.swing.JFrame {
                                     .addComponent(editarBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(deleteBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(tamlbl, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(tamlbl, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(renomearDocumentoBtn, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)))
                             .addComponent(cripLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)))))
         );
 
@@ -701,6 +717,10 @@ public class DocumentoJF extends javax.swing.JFrame {
         atividades();
     }//GEN-LAST:event_contasBtn1ActionPerformed
 
+    private void renomearDocumentoBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_renomearDocumentoBtnActionPerformed
+        renomearDoc();
+    }//GEN-LAST:event_renomearDocumentoBtnActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -771,6 +791,7 @@ public class DocumentoJF extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JFormattedTextField modiftxt;
     private javax.swing.JButton processoBtn;
+    private javax.swing.JButton renomearDocumentoBtn;
     private javax.swing.JTextField statustxt;
     private javax.swing.JLabel tamlbl;
     private javax.swing.JButton tarefasBtn;
@@ -1443,5 +1464,61 @@ public class DocumentoJF extends javax.swing.JFrame {
             AtividadesJF jf = new AtividadesJF();
             jf.setVisible(true);
         }).start();
+    }
+
+    private void renomearDoc() {
+        if (jListDocumento.getSelectedIndex() < 0) {
+            return;
+        }
+        if (listDocumentos.getElementAt(jListDocumento.getSelectedIndex()) instanceof Documento) {
+            renomearDocumentoSelecionado((Documento) listDocumentos.getElementAt(jListDocumento.getSelectedIndex()));
+        } else if (listDocumentos.getElementAt(jListDocumento.getSelectedIndex()) instanceof DocumentoPessoal) {
+            renomearDocumentoPessoalSelecionado((DocumentoPessoal) listDocumentos.getElementAt(jListDocumento.getSelectedIndex()));
+        }
+    }
+
+    private void renomearDocumentoSelecionado(Documento documento) {
+        String nova = JOptionPane.showInputDialog(null, "Novo descrição", "Renomear Arquivo", JOptionPane.QUESTION_MESSAGE);
+        if (nova == null) {
+            return;
+        } else if (nova.equals("")) {
+            return;
+        }
+        /*
+            renomeia o arquivo mas mantem a extensão
+        */
+        //System.out.println(nova+obterExtensaoDoAquivo(documento.getNome()));
+        if(new DocumentoDAO().renomearDocumento(documento.getId(), nova+obterExtensaoDoAquivo(documento.getNome()))){
+            jListTiposMouseClicked(null); //atualiza os documentos de novo
+        }else{
+            JOptionPane.showMessageDialog(null, "Ocorreu um problema ao tentar renomear o arquivo no Banco de Dados.");
+        }
+    }
+
+    private void renomearDocumentoPessoalSelecionado(DocumentoPessoal documentoPessoal) {
+        String nova = JOptionPane.showInputDialog(null, "Novo descrição", "Renomear Arquivo", JOptionPane.QUESTION_MESSAGE);
+        if (nova == null) {
+            return;
+        } else if (nova.equals("")) {
+            return;
+        }
+        //System.out.println(nova+obterExtensaoDoAquivo(documentoPessoal.getNome()));
+        if(new DocumentoDAO().renomearDocumentoPessoal(documentoPessoal.getId(), nova+obterExtensaoDoAquivo(documentoPessoal.getNome()))){
+            dadosPessoaisBtnActionPerformed(null); //atualiza os documentos de novo
+        }else{
+            JOptionPane.showMessageDialog(null, "Ocorreu um problema ao tentar renomear o arquivo no Banco de Dados.");
+        }
+    }
+
+    private String obterExtensaoDoAquivo(String nome) {
+        String extensao = nome;
+        char[] f = extensao.toCharArray();
+        int ultimoPonto = 0;
+        for (int x = 0; x < f.length; x++) {
+            if (f[x] == '.') {
+                ultimoPonto = x;
+            }
+        }
+        return extensao.substring(ultimoPonto);
     }
 }

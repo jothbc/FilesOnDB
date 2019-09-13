@@ -695,7 +695,7 @@ public class AtividadesJF extends javax.swing.JFrame {
             }
             //cria os botoes para o cartao
             JButton botao = new JButton("<html><center>" + c.getTitulo() + "<br>" + entrega + "</center></html>");
-            botao.setFont(new Font("Arial", Font.BOLD, 14));
+            botao.setFont(new Font("Arial", 0, 11));
             //defini o name do botao como ID do cartao para passar por parametro para o CartaoJD
             botao.setName(Integer.toString(c.getId()));
             //defini a cor do botao atravez da cor obtida no c.getColor()

@@ -142,7 +142,7 @@ public class DocumentoDAO {
     public List<Documento> getDocumentosDeProcessoETipo(int idCliente, int processo, int tipo) {
         List<Documento> arquivos = new ArrayList<>();
         sql = "SELECT id,nome,modificacao,status,ID_PROCESSO,ID_TIPO,crip,crip2,tam FROM documentos WHERE ID_CLIENTE = ?"
-                + " and ID_PROCESSO = ? and ID_TIPO = ?";
+                + " and ID_PROCESSO = ? and ID_TIPO = ? ORDER BY nome";
         try {
             stmt = con.prepareStatement(sql);
             stmt.setInt(1, idCliente);
@@ -177,7 +177,7 @@ public class DocumentoDAO {
     //nao retorna o file em si
     public List<DocumentoPessoal> getDocumentosPessoais(int id) {
         List<DocumentoPessoal> pessoal = new ArrayList<>();
-        sql = "SELECT * FROM documentos_pessoais WHERE ID_CLIENTE = ?";
+        sql = "SELECT * FROM documentos_pessoais WHERE ID_CLIENTE = ? ORDER BY nome";
         try {
             stmt = con.prepareStatement(sql);
             stmt.setInt(1, id);
@@ -208,7 +208,7 @@ public class DocumentoDAO {
      Se o arquivo a ser substituido for criptografado ele deixa de ser,
     para fazer a substituição de um arquivo criptografado tem que excluir o mesmo e fazer o upload
     de novo, informando a chave e etc...
-    */
+     */
     public boolean updateDocumento(File f, int idArquivo, int tipo, int processo) {
         sql = "UPDATE documentos SET nome = ?, modificacao = ?, crip = ?, crip2 = ? , tam = ? WHERE ID_TIPO = ? and ID_PROCESSO = ? and id = ?";
         try {
@@ -239,11 +239,12 @@ public class DocumentoDAO {
             ConnectionFactoryMySQL.closeConnection(con, stmt);
         }
     }
+
     /*
      Se o arquivo a ser substituido for criptografado ele deixa de ser,
     para fazer a substituição de um arquivo criptografado tem que excluir o mesmo e fazer o upload
     de novo, informando a chave e etc...
-    */
+     */
     public boolean updateDocumentoPessoal(File f, int idArquivo) {
         sql = "UPDATE documentos_pessoais SET nome = ?, alteracao = ?, crip = ?, crip2 = ? ,tam = ? WHERE id = ?";
         try {
@@ -314,7 +315,7 @@ public class DocumentoDAO {
     }
 
     /*
-     procedimento que verifica se os documentos postados no DB,
+     procedimento que verifica se os documentos postados no DB tem tamanho,
      caso o documento tenha sido postado sem preencher o campo tam
      então é feito o update desse campo
      */
@@ -325,7 +326,7 @@ public class DocumentoDAO {
 
     /*
      verifica documentos que foram feitos upload sem informar o tamanho do arquivo
-    */
+     */
     private void verificarDocumentos() {
         sql = "SELECT * FROM documentos WHERE tam = 0";
         int[] id = new int[9999];
@@ -349,9 +350,10 @@ public class DocumentoDAO {
             Logger.getLogger(DocumentoDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+
     /*
      verifica documentos que foram feitos upload sem informar o tamanho do arquivo
-    */
+     */
     private void verificarDocumentosPessoais() {
         sql = "SELECT * FROM documentos_pessoais WHERE tam = 0";
         int[] id = new int[9999];
@@ -428,6 +430,40 @@ public class DocumentoDAO {
             return false;
         } finally {
             ConnectionFactoryMySQL.closeConnection(con, stmt, rs);
+        }
+    }
+
+    public boolean renomearDocumento(int id, String novadesc) {
+        sql = "UPDATE documentos SET nome = ? WHERE id = ?";
+        try {
+            stmt = con.prepareStatement(sql);
+            stmt.setString(1, novadesc);
+            stmt.setInt(2, id);
+            stmt.executeUpdate();
+            return true;
+        } catch (SQLException ex) {
+            Logger.getLogger(DocumentoDAO.class.getName()).log(Level.SEVERE, null, ex);
+            GerarLogErro.gerar(ex.getMessage());
+            return false;
+        } finally {
+            ConnectionFactoryMySQL.closeConnection(con, stmt);
+        }
+    }
+    
+    public boolean renomearDocumentoPessoal(int id, String novadesc) {
+        sql = "UPDATE documentos_pessoais SET nome = ? WHERE id = ?";
+        try {
+            stmt = con.prepareStatement(sql);
+            stmt.setString(1, novadesc);
+            stmt.setInt(2, id);
+            stmt.executeUpdate();
+            return true;
+        } catch (SQLException ex) {
+            Logger.getLogger(DocumentoDAO.class.getName()).log(Level.SEVERE, null, ex);
+            GerarLogErro.gerar(ex.getMessage());
+            return false;
+        } finally {
+            ConnectionFactoryMySQL.closeConnection(con, stmt);
         }
     }
 }

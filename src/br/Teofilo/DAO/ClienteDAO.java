@@ -73,7 +73,7 @@ public class ClienteDAO {
 
     public List<Cliente> getClintes() {
         List<Cliente> clientes = new ArrayList<>();
-        sql = "SELECT * FROM clientes";
+        sql = "SELECT * FROM clientes ORDER BY nome";
         try {
             stmt = con.prepareStatement(sql);
             rs = stmt.executeQuery();

@@ -12,6 +12,7 @@ import br.Teofilo.Utilidades.ColorJD;
 import funcoes.CDate;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
@@ -27,6 +28,8 @@ import javax.swing.JProgressBar;
  * @author User
  */
 public class CartaoJD extends javax.swing.JDialog {
+
+    private Point point = new Point();
 
     private Cartao cartao;
     private List<Atividade> atividades;
@@ -84,6 +87,16 @@ public class CartaoJD extends javax.swing.JDialog {
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 2, true));
+        jPanel1.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            public void mouseDragged(java.awt.event.MouseEvent evt) {
+                jPanel1MouseDragged(evt);
+            }
+        });
+        jPanel1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                jPanel1MousePressed(evt);
+            }
+        });
 
         jButton1.setBackground(new java.awt.Color(255, 255, 255));
         jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/Teofilo/IMG/1x/ic_cancel_18px.png"))); // NOI18N
@@ -176,6 +189,11 @@ public class CartaoJD extends javax.swing.JDialog {
         jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/Teofilo/IMG/1x/send-2.png"))); // NOI18N
         jButton2.setText("Lembrete via E-mail");
         jButton2.setBorder(null);
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         removerDataEntregaBtn.setBackground(new java.awt.Color(255, 255, 255));
         removerDataEntregaBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/Teofilo/IMG/1x/ic_indeterminate_check_box_24px.png"))); // NOI18N
@@ -394,6 +412,20 @@ public class CartaoJD extends javax.swing.JDialog {
     private void removerItemCheckListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removerItemCheckListActionPerformed
         removerItemCheck();
     }//GEN-LAST:event_removerItemCheckListActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        new emailDestinatarioJD(null, true, cartao.getId()).setVisible(true);
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jPanel1MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel1MousePressed
+        point.x = evt.getX();
+        point.y = evt.getY();
+    }//GEN-LAST:event_jPanel1MousePressed
+
+    private void jPanel1MouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel1MouseDragged
+        Point p = this.getLocation();
+        this.setLocation(p.x + evt.getX() - point.x, p.y + evt.getY() - point.y);
+    }//GEN-LAST:event_jPanel1MouseDragged
 
     /**
      * @param args the command line arguments
@@ -666,7 +698,7 @@ public class CartaoJD extends javax.swing.JDialog {
         No atividades, quando clicado no botao, o titulo do mesmo é substituido por "abrindo.."
         então esse método faz com que o titulo original seja mostrado de novo, pois
         o botão ja abriu
-    */
+     */
     private void mostrarTiuloOriginalBotaoNovamente(Cartao cartao) {
         String entrega = "";
         if (cartao.getEntrega() != null) {
