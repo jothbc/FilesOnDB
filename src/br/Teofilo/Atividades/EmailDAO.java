@@ -134,7 +134,7 @@ public class EmailDAO {
         }
     }
 
-    public boolean removerDestinatariosDoCartao(int ID_CARTAO){
+    public boolean removerDestinatariosDoCartao(int ID_CARTAO) {
         sql = "DELETE FROM email_for WHERE ID_CARTAO = ?";
         try {
             stmt = con.prepareStatement(sql);
@@ -149,7 +149,7 @@ public class EmailDAO {
             ConnectionFactoryMySQL.closeConnection(con, stmt);
         }
     }
-    
+
     public void enviarLembretes() {
         if (lembretesNaoEnviados()) {
             enviarEmails();
@@ -184,8 +184,8 @@ public class EmailDAO {
         } catch (SQLException ex) {
             Logger.getLogger(EmailDAO.class.getName()).log(Level.SEVERE, null, ex);
             GerarLogErro.gerar(ex.getMessage());
-        }finally{
-            ConnectionFactoryMySQL.closeConnection(con,stmt);
+        } finally {
+            ConnectionFactoryMySQL.closeConnection(con, stmt);
         }
     }
 
@@ -217,8 +217,8 @@ public class EmailDAO {
                         List<Email> emailsDesseCartao = new EmailDAO().getDestinatarios(c.getId());
                         // se o cartao tiver emails cadastrados para enviar a info
                         if (!emailsDesseCartao.isEmpty()) {
-                            String msg = "Lembrete:\nO Catão ''" + c.getTitulo() + "'' está com data de entrega para " + c.getEntrega();
-                            enviarEmail(emailsDesseCartao, msg);
+                            String msg = "Lembrete:\n\nA Atividade com titulo de ''" + c.getTitulo() + "'' está com data de entrega para " + c.getEntrega();
+                            enviarEmail(emailsDesseCartao, msg, "Lembrete de entrega");
                         }
                     }
                 } catch (ParseException ex) {
@@ -249,7 +249,7 @@ public class EmailDAO {
         }
     }
 
-    private void enviarEmail(List<Email> destinatarios, String msg) {
+    public void enviarEmail(List<Email> destinatarios, String msg, String titulo) {
         Email remetente = obterRemetente();
 
         final String username = remetente.getRemetente();
@@ -284,7 +284,7 @@ public class EmailDAO {
                     Message.RecipientType.TO,
                     InternetAddress.parse(destinatariosString)
             );
-            message.setSubject("Lembrete de entrega");
+            message.setSubject(titulo);
             message.setText(msg
                     + "\n\n Por favor, não marcar esse email como spam!"
                     + "\n\n Email enviado automaticamente, não responder.");

@@ -7,6 +7,7 @@ package br.Teofilo.Documentos;
 
 import JDBC.ConnectionFactoryMySQL;
 import br.Teofilo.Atividades.AtividadesJF;
+import br.Teofilo.Atividades.EmailDAO;
 import br.Teofilo.Bean.Cliente;
 import br.Teofilo.Bean.Documento;
 import br.Teofilo.Bean.DocumentoPessoal;
@@ -27,6 +28,7 @@ import br.Teofilo.DAO.UserDAO;
 import br.Teofilo.Menu.MenuJF;
 import br.Teofilo.Utilidades.CadastrarUsuarioJD;
 import funcoes.AES;
+import funcoes.CDate;
 import funcoes.Conv;
 import funcoes.RSA;
 import java.awt.Color;
@@ -39,6 +41,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -62,13 +65,15 @@ public class DocumentoJF extends javax.swing.JFrame {
 
     private User user;
     private boolean conectado = false;
-    List<Cliente> clientes;
-    DefaultListModel listClientes = new DefaultListModel();
-    DefaultListModel listProcessos = new DefaultListModel();
-    DefaultListModel listTipo = new DefaultListModel();
-    DefaultListModel listDocumentos = new DefaultListModel();
+    private List<Cliente> clientes;
+    private DefaultListModel listClientes = new DefaultListModel();
+    private DefaultListModel listProcessos = new DefaultListModel();
+    private DefaultListModel listTipo = new DefaultListModel();
+    private DefaultListModel listDocumentos = new DefaultListModel();
     private boolean btnPessoal = false;
-    ContasClienteJF contasjf;
+    private ContasClienteJF contasjf;
+
+    private String data_abertura_programa;
 
     /**
      * Creates new form DocumentoJF
@@ -808,16 +813,23 @@ public class DocumentoJF extends javax.swing.JFrame {
         } catch (Exception e) {
             GerarLogErro.gerar("Icone não pode ser carregado devido a um erro.\n" + e.getMessage());
         }
+        data_abertura_programa = CDate.DataPTBRAtual();
         testarConexao();
         if (conectado) {
-            verificar_cartao();
             verificar_user();
             jListCliente.setModel(listClientes);
             jListDocumento.setModel(listDocumentos);
             jListProcessos.setModel(listProcessos);
             jListTipos.setModel(listTipo);
             popularListClientes();
+
+            /*
+                funcoes obtidas pelo "param.txt"
+             */
+            verificarParamTXT();
+            verificarDiaPassado();
         }
+
     }
 
     private void popularListClientes() {
@@ -1486,11 +1498,11 @@ public class DocumentoJF extends javax.swing.JFrame {
         }
         /*
             renomeia o arquivo mas mantem a extensão
-        */
+         */
         //System.out.println(nova+obterExtensaoDoAquivo(documento.getNome()));
-        if(new DocumentoDAO().renomearDocumento(documento.getId(), nova+obterExtensaoDoAquivo(documento.getNome()))){
+        if (new DocumentoDAO().renomearDocumento(documento.getId(), nova + obterExtensaoDoAquivo(documento.getNome()))) {
             jListTiposMouseClicked(null); //atualiza os documentos de novo
-        }else{
+        } else {
             JOptionPane.showMessageDialog(null, "Ocorreu um problema ao tentar renomear o arquivo no Banco de Dados.");
         }
     }
@@ -1503,9 +1515,9 @@ public class DocumentoJF extends javax.swing.JFrame {
             return;
         }
         //System.out.println(nova+obterExtensaoDoAquivo(documentoPessoal.getNome()));
-        if(new DocumentoDAO().renomearDocumentoPessoal(documentoPessoal.getId(), nova+obterExtensaoDoAquivo(documentoPessoal.getNome()))){
+        if (new DocumentoDAO().renomearDocumentoPessoal(documentoPessoal.getId(), nova + obterExtensaoDoAquivo(documentoPessoal.getNome()))) {
             dadosPessoaisBtnActionPerformed(null); //atualiza os documentos de novo
-        }else{
+        } else {
             JOptionPane.showMessageDialog(null, "Ocorreu um problema ao tentar renomear o arquivo no Banco de Dados.");
         }
     }
@@ -1521,4 +1533,69 @@ public class DocumentoJF extends javax.swing.JFrame {
         }
         return extensao.substring(ultimoPonto);
     }
+
+    private void verificarParamTXT() {
+        boolean cartao = false;
+        boolean email = false;
+
+        File f = new File("src\\param.txt");
+        try {
+            InputStream os = new FileInputStream(f);
+            byte[] dados = os.readAllBytes();
+            os.close();
+            String param = new String(dados);
+
+            //processo para obter se esta ativo ou inativo os parametros
+            //inicio primeiro parametro
+            int p1 = param.indexOf("[debito_automatico:"); //obtem o local onde esta contido essa frase
+            //obtem o que vem a seguir de : (no caso tem que ser 1 ou 0, representando ativo ou inativo)
+            String p1s = param.substring(p1 + "[debito_automatico:".length(), p1 + "[debito_automatico:".length() + 1);
+            if (p1s.equals("1")) {
+                cartao = true;
+            }
+            //fim primeiro parametro
+
+            int p2 = param.indexOf("[lembrete_via_email_automatico:");
+            String p2s = param.substring(p2 + "[lembrete_via_email_automatico:".length(), p2 + "[lembrete_via_email_automatico:".length() + 1);
+            if (p2s.equals("1")) {
+                email = true;
+            }
+
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(ConnectionFactoryMySQL.class.getName()).log(Level.SEVERE, null, ex);
+            GerarLogErro.gerar(ex.getMessage());
+        } catch (IOException ex) {
+            Logger.getLogger(ConnectionFactoryMySQL.class.getName()).log(Level.SEVERE, null, ex);
+            GerarLogErro.gerar(ex.getMessage());
+        }
+        if (cartao) {
+            verificar_cartao();
+            System.out.println("Débitos Automaticos verificados.");
+        }
+        if (email) {
+            verificar_envio_de_emails();
+            System.out.println("Lembretes via email enviados.");
+        }
+    }
+
+    private synchronized void verificar_envio_de_emails() {
+        new Thread(() -> {
+            new EmailDAO().enviarLembretes();
+        }).start();
+    }
+
+    private synchronized void verificarDiaPassado() {
+        new Thread(() -> {
+            try {
+                if (!data_abertura_programa.equals(CDate.DataPTBRAtual())) {
+                    verificarParamTXT();
+                    data_abertura_programa = CDate.DataPTBRAtual();
+                }
+                Thread.sleep(3600000 * 6); //aguarda 6 horas
+            } catch (InterruptedException ex) {
+                Logger.getLogger(DocumentoJF.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }).start();
+    }
+
 }
