@@ -162,7 +162,10 @@ public class CartaoDAO {
     }
 
     public boolean removeCartao(int id) {
-        return removeCartaoID(id) && new ComentarioDAO().removeComentariosDoCartao(id) && new CheckDAO().removeChecksDoCartao(id);
+        return new ComentarioDAO().removeComentariosDoCartao(id) && 
+                new CheckDAO().removeChecksDoCartao(id) && 
+                new EmailDAO().removerDestinatariosDoCartao(id) && 
+                removeCartaoID(id);
     }
 
     private List<Cartao> getCartoesSemComentarios() {

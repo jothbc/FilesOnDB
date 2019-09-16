@@ -12,10 +12,17 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.mail.*;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 
 /**
  *
@@ -127,6 +134,22 @@ public class EmailDAO {
         }
     }
 
+    public boolean removerDestinatariosDoCartao(int ID_CARTAO){
+        sql = "DELETE FROM email_for WHERE ID_CARTAO = ?";
+        try {
+            stmt = con.prepareStatement(sql);
+            stmt.setInt(1, ID_CARTAO);
+            stmt.execute();
+            return true;
+        } catch (SQLException ex) {
+            Logger.getLogger(EmailDAO.class.getName()).log(Level.SEVERE, null, ex);
+            GerarLogErro.gerar(ex.getMessage());
+            return false;
+        } finally {
+            ConnectionFactoryMySQL.closeConnection(con, stmt);
+        }
+    }
+    
     public void enviarLembretes() {
         if (lembretesNaoEnviados()) {
             enviarEmails();
@@ -135,6 +158,7 @@ public class EmailDAO {
     }
 
     private boolean lembretesNaoEnviados() {
+        con = ConnectionFactoryMySQL.getConnection();
         sql = "SELECT * FROM controle_email WHERE data = ?";
         try {
             stmt = con.prepareStatement(sql);
@@ -151,15 +175,123 @@ public class EmailDAO {
     }
 
     private void marcarComoEnviado() {
-        
+        con = ConnectionFactoryMySQL.getConnection();
+        sql = "INSERT INTO controle_email (data) VALUES (?)";
+        try {
+            stmt = con.prepareStatement(sql);
+            stmt.setString(1, CDate.DataPTBRtoDataMySQL(CDate.DataPTBRAtual()));
+            stmt.execute();
+        } catch (SQLException ex) {
+            Logger.getLogger(EmailDAO.class.getName()).log(Level.SEVERE, null, ex);
+            GerarLogErro.gerar(ex.getMessage());
+        }finally{
+            ConnectionFactoryMySQL.closeConnection(con,stmt);
+        }
     }
 
     private void enviarEmails() {
         List<Cartao> cartoes = new CartaoDAO().findAll();
         for (Cartao c : cartoes) {
-            if (c.getEntrega() != null) {
-
+            /*
+                verifica se o cartao tem prazo de entrega, e também verifica se o cartao
+                nao pertence a lista de concluídos.
+             */
+            if (c.getEntrega() != null && c.getID_LISTA_ATIVIDADES() != 4) {
+                /*
+                    essa string representa o inicio dos avisos por email,
+                    se a entrega for pra dia 05/01/19 entao a partir do 02/01/2019 sera enviado emails com aviso
+                 */
+                String dataInicial = CDate.SomarData(-3, c.getEntrega());
+                /*
+                System.out.println("Cartao: " + c.getTitulo() + " data de entrega: " + c.getEntrega() + " data inicial do envio dos emails: " + dataInicial);
+                 */
+                try {
+                    /*
+                        se hoje for maior ou igual a data inicial de envios de emails então deve enviar o aviso
+                     */
+                    if (new Date().compareTo(new SimpleDateFormat("dd/MM/yyyy").parse(dataInicial)) >= 0) {
+                        /*
+                            obtem uma lista contendo todos os destinatários cadastrados para receber aviso
+                            sobre esse cartao atual.
+                         */
+                        List<Email> emailsDesseCartao = new EmailDAO().getDestinatarios(c.getId());
+                        // se o cartao tiver emails cadastrados para enviar a info
+                        if (!emailsDesseCartao.isEmpty()) {
+                            String msg = "Lembrete:\nO Catão ''" + c.getTitulo() + "'' está com data de entrega para " + c.getEntrega();
+                            enviarEmail(emailsDesseCartao, msg);
+                        }
+                    }
+                } catch (ParseException ex) {
+                    GerarLogErro.gerar(ex.getMessage());
+                }
             }
+        }
+    }
+
+    private Email obterRemetente() {
+        con = ConnectionFactoryMySQL.getConnection();
+        sql = "SELECT * FROM email_from";
+        try {
+            stmt = con.prepareStatement(sql);
+            rs = stmt.executeQuery();
+            rs.first();
+            Email e = new Email();
+            e.setId(rs.getInt("id"));
+            e.setRemetente(rs.getString("email"));
+            e.setSenha(rs.getString("senha"));
+            return e;
+        } catch (SQLException ex) {
+            Logger.getLogger(EmailDAO.class.getName()).log(Level.SEVERE, null, ex);
+            GerarLogErro.gerar(ex.getMessage());
+            return null;
+        } finally {
+            ConnectionFactoryMySQL.closeConnection(con, stmt, rs);
+        }
+    }
+
+    private void enviarEmail(List<Email> destinatarios, String msg) {
+        Email remetente = obterRemetente();
+
+        final String username = remetente.getRemetente();
+        final String password = remetente.getSenha();
+
+        Properties prop = new Properties();
+        prop.put("mail.smtp.host", "smtp.gmail.com");
+        prop.put("mail.smtp.port", "465");
+        prop.put("mail.smtp.auth", "true");
+        prop.put("mail.smtp.socketFactory.port", "465");
+        prop.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+
+        Session session = Session.getInstance(prop,
+                new javax.mail.Authenticator() {
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(username, password);
+            }
+        });
+
+        try {
+            String destinatariosString = "";
+            for (int x = 0; x < destinatarios.size(); x++) {
+                if (x + 1 == destinatarios.size()) {
+                    destinatariosString += destinatarios.get(x).getDestinatario();
+                } else {
+                    destinatariosString += destinatarios.get(x).getDestinatario() + ",";
+                }
+            }
+            Message message = new MimeMessage(session);
+            message.setFrom(new InternetAddress(remetente.getRemetente()));
+            message.setRecipients(
+                    Message.RecipientType.TO,
+                    InternetAddress.parse(destinatariosString)
+            );
+            message.setSubject("Lembrete de entrega");
+            message.setText(msg
+                    + "\n\n Por favor, não marcar esse email como spam!"
+                    + "\n\n Email enviado automaticamente, não responder.");
+            Transport.send(message);
+        } catch (MessagingException e) {
+            e.printStackTrace();
+            GerarLogErro.gerar(e.getMessage());
         }
     }
 }
