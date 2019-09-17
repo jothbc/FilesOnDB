@@ -109,6 +109,13 @@ public class BackupJD extends javax.swing.JDialog {
             }
         });
 
+        caminhotxt.setText("C:\\JCR LOG\\teofilo_backup.sql");
+        caminhotxt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                caminhotxtActionPerformed(evt);
+            }
+        });
+
         jButton2.setBackground(new java.awt.Color(255, 255, 255));
         jButton2.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/Teofilo/IMG/1x/check-circle-07.png"))); // NOI18N
@@ -209,6 +216,10 @@ public class BackupJD extends javax.swing.JDialog {
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         executar();
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void caminhotxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_caminhotxtActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_caminhotxtActionPerformed
 
     /**
      * @param args the command line arguments
