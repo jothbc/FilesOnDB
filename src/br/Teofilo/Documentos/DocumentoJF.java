@@ -24,7 +24,6 @@ import br.Teofilo.DAO.DocumentoDAO;
 import br.Teofilo.DAO.ProcessoDAO;
 import br.Teofilo.DAO.TipoDocDAO;
 import br.Teofilo.DAO.UserDAO;
-import br.Teofilo.Menu.MenuJF;
 import br.Teofilo.Utilidades.BackupJD;
 import br.Teofilo.Utilidades.CadastrarUsuarioJD;
 import funcoes.AES;
@@ -731,7 +730,7 @@ public class DocumentoJF extends javax.swing.JFrame {
             try {
                 Desktop.getDesktop().browse(new URI("https://www.teofilorocha.adv.br/"));
             } catch (URISyntaxException | IOException ex) {
-                Logger.getLogger(MenuJF.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(DocumentoJF.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }//GEN-LAST:event_jLabel13MouseClicked
@@ -838,7 +837,7 @@ public class DocumentoJF extends javax.swing.JFrame {
     // End of variables declaration//GEN-END:variables
 
     private void init() {
-        this.setExtendedState(MenuJF.MAXIMIZED_BOTH);
+        this.setExtendedState(DocumentoJF.MAXIMIZED_BOTH);
         try {
             URL url = this.getClass().getResource("/br/Teofilo/IMG/icon.png");
             Image imagemTitulo = Toolkit.getDefaultToolkit().getImage(url);
@@ -1573,7 +1572,7 @@ public class DocumentoJF extends javax.swing.JFrame {
         }
         if (cartao) {
             verificar_cartao();
-            System.out.println("Débitos Automaticos verificados.");
+            System.out.println("\nDébitos Automaticos verificados.");
         }
         if (email) {
             verificar_envio_de_emails();

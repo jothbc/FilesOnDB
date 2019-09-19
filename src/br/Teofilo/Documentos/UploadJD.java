@@ -7,14 +7,10 @@ package br.Teofilo.Documentos;
 
 import br.Teofilo.Bean.Arquivo;
 import br.Teofilo.Bean.Cliente;
-import br.Teofilo.Bean.DocumentoPessoal;
 import br.Teofilo.Bean.GerarLogErro;
-import static br.Teofilo.Bean.GerarLogErro.PATH;
 import br.Teofilo.Bean.Processo;
 import br.Teofilo.Bean.TipoDoc;
-import br.Teofilo.DAO.ComentarioDAO;
 import br.Teofilo.DAO.DocumentoDAO;
-import br.Teofilo.DAO.UserDAO;
 import funcoes.AES;
 import funcoes.Conv;
 import funcoes.RSA;

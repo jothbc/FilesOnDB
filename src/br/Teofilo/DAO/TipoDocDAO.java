@@ -36,7 +36,7 @@ public class TipoDocDAO {
 
     public List<TipoDoc> findAll() {
         List<TipoDoc> tipos = new ArrayList<>();
-        sql = "SELECT * from tipo";
+        sql = "SELECT * FROM tipo";
         try {
             stmt = con.prepareStatement(sql);
             rs = stmt.executeQuery();
@@ -88,7 +88,7 @@ public class TipoDocDAO {
     }
 
     public boolean existe(String tipodoc, int idProcesso, int idCliente) {
-        sql = "SELECT * from tipo WHERE descricao = ? AND ID_PROCESSO = ? AND ID_CLIENTE =?";
+        sql = "SELECT * FROM tipo WHERE descricao = ? AND ID_PROCESSO = ? AND ID_CLIENTE =?";
         try {
             stmt = con.prepareStatement(sql);
             stmt.setString(1, tipodoc);
@@ -125,7 +125,7 @@ public class TipoDocDAO {
 
     public List<TipoDoc> findAllByClienteEProcesso(Cliente c, Processo p) {
         List<TipoDoc> tipos = new ArrayList<>();
-        sql = "SELECT * from tipo WHERE ID_CLIENTE = ? AND ID_PROCESSO = ? ORDER BY descricao";
+        sql = "SELECT * FROM tipo WHERE ID_CLIENTE = ? AND ID_PROCESSO = ? ORDER BY descricao";
         try {
             stmt = con.prepareStatement(sql);
             stmt.setInt(1, c.getId());
