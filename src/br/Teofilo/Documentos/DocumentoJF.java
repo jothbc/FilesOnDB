@@ -8,6 +8,7 @@ package br.Teofilo.Documentos;
 import JDBC.ConnectionFactoryMySQL;
 import br.Teofilo.Atividades.AtividadesJF;
 import br.Teofilo.Atividades.EmailDAO;
+import br.Teofilo.Bean.Arquivo;
 import br.Teofilo.Bean.Cliente;
 import br.Teofilo.Bean.Documento;
 import br.Teofilo.Bean.DocumentoPessoal;
@@ -16,10 +17,8 @@ import br.Teofilo.Bean.Processo;
 import br.Teofilo.Bean.TipoDoc;
 import br.Teofilo.Bean.User;
 import br.Teofilo.Cliente.ClienteJD;
-import br.Teofilo.Cliente.ClienteJF;
 import br.Teofilo.Conta.ContasClienteJF;
 import br.Teofilo.DAO.ClienteDAO;
-import br.Teofilo.DAO.ComentarioDAO;
 import br.Teofilo.DAO.ContaDAO;
 import br.Teofilo.DAO.DocumentoDAO;
 import br.Teofilo.DAO.ProcessoDAO;
@@ -856,7 +855,6 @@ public class DocumentoJF extends javax.swing.JFrame {
             jListProcessos.setModel(listProcessos);
             jListTipos.setModel(listTipo);
             popularListClientes();
-
             /*
                 funcoes obtidas pelo "param.txt"
              */
@@ -932,22 +930,18 @@ public class DocumentoJF extends javax.swing.JFrame {
         new Thread(() -> {
             informtxt.setText("Carregando..");
             informtxt.setForeground(Color.red);
-            Documento d = null;
-            DocumentoPessoal dp = null;
+            Arquivo arquivo = null;
+            File f = null;
             if (listDocumentos.getElementAt(jListDocumento.getSelectedIndex()) instanceof Documento) {
-                d = (Documento) listDocumentos.getElementAt(jListDocumento.getSelectedIndex());
+                arquivo = (Documento) listDocumentos.getElementAt(jListDocumento.getSelectedIndex());
+                f = new DocumentoDAO().getArquivo(arquivo.getId(), "C:\\JCR LOG\\", "documentos");
+                f.deleteOnExit();
             } else if (listDocumentos.getElementAt(jListDocumento.getSelectedIndex()) instanceof DocumentoPessoal) {
-                dp = (DocumentoPessoal) listDocumentos.getElementAt(jListDocumento.getSelectedIndex());
+                arquivo = (DocumentoPessoal) listDocumentos.getElementAt(jListDocumento.getSelectedIndex());
+                f = new DocumentoDAO().getArquivo(arquivo.getId(), "C:\\JCR LOG\\", "documentos_pessoais");
+                f.deleteOnExit();
             }
-            if (d != null || dp != null) {
-                File f = null;
-                if (d != null) {
-                    f = new DocumentoDAO().getArquivo(d.getId(), "C:\\JCR LOG\\", "documentos");
-                    f.deleteOnExit();
-                } else if (dp != null) {
-                    f = new DocumentoDAO().getArquivo(dp.getId(), "C:\\JCR LOG\\", "documentos_pessoais");
-                    f.deleteOnExit();
-                }
+            if (arquivo != null) {
                 try {
                     Desktop.getDesktop().open(f);
                 } catch (IOException ex) {
@@ -961,22 +955,22 @@ public class DocumentoJF extends javax.swing.JFrame {
     }
 
     private void upload() {
-        Cliente c;
-        TipoDoc t = null;
-        DocumentoPessoal dp = null;
-        Processo p = null;
-        try {
-            c = (Cliente) listClientes.getElementAt(jListCliente.getSelectedIndex());
-        } catch (Exception ex) {
-            String erro = "Sem cliente selecionado para upload.";
-            System.err.println(erro);
-            JOptionPane.showMessageDialog(this, erro, "Cliente", JOptionPane.INFORMATION_MESSAGE);
+        if (jListCliente.getSelectedIndices().length == 0) {
+            JOptionPane.showMessageDialog(this, "Sem cliente selecionado", "Cliente", JOptionPane.INFORMATION_MESSAGE);
             return;
         }
+        if (jListCliente.getSelectedIndices().length > 1) {
+            JOptionPane.showMessageDialog(this, "Selecione apenas um cliente", "Cliente", JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+        Cliente c = (Cliente) listClientes.getElementAt(jListCliente.getSelectedIndex());
+        Arquivo arquivo = null;
+        Processo processo = null;
+        TipoDoc sub_pasta = null;
         try {
             if (!btnPessoal) { //processo
                 try {
-                    p = (Processo) listProcessos.getElementAt(jListProcessos.getSelectedIndex());
+                    processo = (Processo) listProcessos.getElementAt(jListProcessos.getSelectedIndex());
                 } catch (Exception e) {
                     String erro = "Sem processo selecionado para upload.";
                     System.err.println(erro);
@@ -984,7 +978,7 @@ public class DocumentoJF extends javax.swing.JFrame {
                     return;
                 }
                 try {
-                    t = (TipoDoc) listTipo.getElementAt(jListTipos.getSelectedIndex());
+                    sub_pasta = (TipoDoc) listTipo.getElementAt(jListTipos.getSelectedIndex());
                 } catch (Exception e) {
                     String erro = "Sem tipo de documento selecionado para upload.";
                     System.err.println(erro);
@@ -992,17 +986,14 @@ public class DocumentoJF extends javax.swing.JFrame {
                     return;
                 }
             } else if (btnPessoal) { //dados pessoais
-                dp = new DocumentoPessoal();
-                dp.setID_CLIENTE(c.getId());
+                arquivo = new DocumentoPessoal();
+                arquivo.setID_CLIENTE(c.getId());
             }
         } catch (HeadlessException ex) {
-            System.err.println("Sem informar se é Processo ou Dados Pessoais para upload.." + ex);
-            String erro = "Sem cliente selecionado para upload.";
-            System.err.println(erro);
-            JOptionPane.showMessageDialog(this, erro, "Cliente", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(this, ex, "Erro", JOptionPane.INFORMATION_MESSAGE);
             return;
         }
-        UploadJD jd = new UploadJD(null, true, c, t, dp, p);
+        UploadJD jd = new UploadJD(null, true, c, sub_pasta, arquivo, processo);
         jd.setVisible(true);
     }
 
@@ -1146,7 +1137,7 @@ public class DocumentoJF extends javax.swing.JFrame {
                 }
                 tamlbl.setText(Conv.CDblDuasCasas((d.getTamanho() / 1024) / 1024) + "MB");
                 statustxt.setText(d.getStatus());
-                modiftxt.setText(d.getModificacao());
+                modiftxt.setText(d.getAlteracao());
                 abertoEmtxt.setText("");
             } else if (listDocumentos.getElementAt(jListDocumento.getSelectedIndex()) instanceof DocumentoPessoal) {
                 DocumentoPessoal dp = (DocumentoPessoal) listDocumentos.getElementAt(jListDocumento.getSelectedIndex());

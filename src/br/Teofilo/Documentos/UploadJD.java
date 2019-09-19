@@ -5,6 +5,7 @@
  */
 package br.Teofilo.Documentos;
 
+import br.Teofilo.Bean.Arquivo;
 import br.Teofilo.Bean.Cliente;
 import br.Teofilo.Bean.DocumentoPessoal;
 import br.Teofilo.Bean.GerarLogErro;
@@ -43,7 +44,7 @@ public class UploadJD extends javax.swing.JDialog {
     private static Point point = new Point();
     private DefaultListModel arquivos;
     private Cliente cliente;
-    private DocumentoPessoal documentoPessoal;
+    private Arquivo arquivo;
     private Processo processo;
     private TipoDoc tipoDoc;
     private double tam = 0;
@@ -56,17 +57,17 @@ public class UploadJD extends javax.swing.JDialog {
      * @param modal
      * @param c
      * @param t
-     * @param dp
+     * @param arq
      * @param p
      */
-    public UploadJD(java.awt.Frame parent, boolean modal, Cliente c, TipoDoc t, DocumentoPessoal dp, Processo p) {
+    public UploadJD(java.awt.Frame parent, boolean modal, Cliente c, TipoDoc t, Arquivo arq, Processo p) {
         super(parent, modal);
         this.arquivos = new DefaultListModel<>();
         initComponents();
         //jCherCrip.setEnabled(false); /////////////// criado para inpedir de usar atualmente
         cliente = c;
         tipoDoc = t;
-        documentoPessoal = dp;
+        arquivo = arq;
         processo = p;
         init();
     }
@@ -394,7 +395,7 @@ public class UploadJD extends javax.swing.JDialog {
             clientetxt.setText(cliente.getNome());
             if (processo != null) { //verifica se é processo (se for processo tem que ter o numero do processo e o tipo de documento (documento,petição,etc..))
                 obs.setText("Nº Processo: " + processo.getN_processo() + " --> " + tipoDoc.getNome());
-            } else if (documentoPessoal != null) {  //senão é um documento pessoal, e vai ser feito upload na tabela documentos_pessoais
+            } else if (arquivo != null) {  //senão é um documento pessoal, e vai ser feito upload na tabela documentos_pessoais
                 obs.setText("Documento pessoal.");
             }
             jProgressBar1.setVisible(false);
@@ -446,7 +447,7 @@ public class UploadJD extends javax.swing.JDialog {
                 pasta.getParentFile().mkdirs();
             }
             while (arquivos.size() > 0) {
-                File f = (File) arquivos.getElementAt(arquivos.size() - 1);
+                File file = (File) arquivos.getElementAt(arquivos.size() - 1);
                 byte[] aes = null;
                 if (jCherCrip.isSelected()) {
                     /*
@@ -459,38 +460,30 @@ public class UploadJD extends javax.swing.JDialog {
                     SecretKey aesKey = AES.gerarChave(256);
                     //System.out.println("CHAVE AES UTILIZADA EM FORMATO HEXA: "+AES.bytesToHex(aesKey.getEncoded()));
                     //2
-                    f = AES.encrypt(f.getPath(),"C:\\JCR LOG\\CRIP\\" + f.getName(), aesKey);
+                    file = AES.encrypt(file.getPath(),"C:\\JCR LOG\\CRIP\\" + file.getName(), aesKey);
                     //3 e 4
                     aes = RSA.criptografa(AES.bytesToHex(aesKey.getEncoded()), rsaKey);
                 }
                 if (processo != null) {
-                    if (!new DocumentoDAO().addDocumento(f, cliente.getId(), tipoDoc.getId(), processo.getId(), jCherCrip.isSelected(), aes)) {
-                        JOptionPane.showMessageDialog(null, "Erro ao tentar salvar o arquivo " + f.getName() + " no Banco de dados", "Erro", JOptionPane.ERROR_MESSAGE);
+                    if (!new DocumentoDAO().addDocumento(file, cliente.getId(), tipoDoc.getId(), processo.getId(), jCherCrip.isSelected(), aes)) {
+                        JOptionPane.showMessageDialog(null, "Erro ao tentar salvar o arquivo " + file.getName() + " no Banco de dados", "Erro", JOptionPane.ERROR_MESSAGE);
                         return;
                     } else {
-                        String coment = "@Realizou o update de um novo Documento.\n" + f.getName();
-                        if (!new ComentarioDAO().addComentario(coment, new UserDAO().getUser().getId())) {
-                            GerarLogErro.gerar("Erro ao tentar gerar um novo comentario de Documento para o arquivo " + f.getName());
-                        }
                         arquivos.remove(arquivos.getSize() - 1);
                         jProgressBar1.setValue(count);
                         count++;
                     }
-                } else if (documentoPessoal != null) {
-                    if (!new DocumentoDAO().addDocumentoPessoal(f, cliente.getId(), jCherCrip.isSelected(), aes)) {
-                        JOptionPane.showMessageDialog(null, "Erro ao tentar salvar o arquivo " + f.getName() + " no Banco de dados", "Erro", JOptionPane.ERROR_MESSAGE);
+                } else if (arquivo != null) {
+                    if (!new DocumentoDAO().addDocumentoPessoal(file, cliente.getId(), jCherCrip.isSelected(), aes)) {
+                        JOptionPane.showMessageDialog(null, "Erro ao tentar salvar o arquivo " + file.getName() + " no Banco de dados", "Erro", JOptionPane.ERROR_MESSAGE);
                         return;
                     } else {
-                        String coment = "@Realizou o update de um novo Documento Pessoal.\n" + f.getName();
-                        if (!new ComentarioDAO().addComentario(coment, new UserDAO().getUser().getId())) {
-                            GerarLogErro.gerar("Erro ao tentar gerar um novo comentario de Documento para o arquivo " + f.getName());
-                        }
                         arquivos.remove(arquivos.getSize() - 1);
                         jProgressBar1.setValue(count);
                         count++;
                     }
                 }
-                tam -= f.length();
+                tam -= file.length();
                 setTamtxt();
             }
             jProgressBar1.setVisible(false);
@@ -501,8 +494,8 @@ public class UploadJD extends javax.swing.JDialog {
         if (jList1.getSelectedIndex() < 0) {
             return;
         }
-        File f = (File) arquivos.getElementAt(jList1.getSelectedIndex());
-        tam -= f.length();
+        File file = (File) arquivos.getElementAt(jList1.getSelectedIndex());
+        tam -= file.length();
         arquivos.remove(jList1.getSelectedIndex());
         setTamtxt();
     }

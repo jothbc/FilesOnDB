@@ -6,6 +6,9 @@
 package br.Teofilo.Documentos;
 
 import JDBC.ConnectionFactoryMySQL;
+import br.Teofilo.Bean.Arquivo;
+import br.Teofilo.Bean.Documento;
+import br.Teofilo.Bean.DocumentoPessoal;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -17,6 +20,7 @@ import java.util.logging.Logger;
 import java.util.stream.Stream;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import org.junit.Ignore;
 
 /**
  *
@@ -28,6 +32,7 @@ public class DocumentoJFTest {
     }
 
     @Test
+    @Ignore
     public void test_verificarLeituraDoParamTXT() {
         boolean cartao = false;
         boolean email = false;
@@ -67,4 +72,13 @@ public class DocumentoJFTest {
 
     }
 
+    @Test
+    public void testExtends(){
+        Arquivo p = new DocumentoPessoal();
+        Arquivo o = new Documento();
+        
+        System.out.println(p instanceof DocumentoPessoal);
+        System.out.println(o instanceof Documento);
+    }
+    
 }

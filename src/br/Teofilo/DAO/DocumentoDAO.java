@@ -1,6 +1,7 @@
 package br.Teofilo.DAO;
 
 import JDBC.ConnectionFactoryMySQL;
+import br.Teofilo.Bean.Arquivo;
 import br.Teofilo.Bean.Documento;
 import br.Teofilo.Bean.DocumentoPessoal;
 import br.Teofilo.Bean.GerarLogErro;
@@ -154,7 +155,7 @@ public class DocumentoDAO {
                 d.setId(rs.getInt("id"));
                 d.setNome(rs.getString("nome"));
                 if (rs.getString("modificacao") != null) {
-                    d.setModificacao(CDate.DataMySQLtoDataStringPT(rs.getString("modificacao")));
+                    d.setAlteracao(CDate.DataMySQLtoDataStringPT(rs.getString("modificacao")));
                 }
                 d.setStatus(rs.getString("status"));
                 d.setID_PROCESSO(rs.getInt("ID_PROCESSO"));
