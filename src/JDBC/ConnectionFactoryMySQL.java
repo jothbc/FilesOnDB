@@ -83,7 +83,7 @@ public class ConnectionFactoryMySQL {
     }
 
     private static String ip() {
-        File f = new File("src\\ip_db.txt");
+        File f = new File("res\\ip_db.txt");
         try {
             InputStream os = new FileInputStream(f);
             byte[] dados = os.readAllBytes();

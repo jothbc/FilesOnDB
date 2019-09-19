@@ -436,7 +436,7 @@ public class RelatorioContaJD extends javax.swing.JDialog {
             for (LogPago p : list) {
                 total += p.getValor_pago();
             }
-            String src = "src\\PagoCliente.jasper";
+            String src = this.getClass().getResource("/PagoCliente.jasper").getFile();
             JasperPrint js;
             JRBeanCollectionDataSource ds = new JRBeanCollectionDataSource(list);
             HashMap<String, Object> map = new HashMap<>();
@@ -479,7 +479,7 @@ public class RelatorioContaJD extends javax.swing.JDialog {
 
     private void imprimir_em_aberto(List<LogAberto> log, double total_em_aberto, double total, double pago, String inicio, String fim) {
         try {
-            String src = "src\\AbertoCliente.jasper";
+            String src = this.getClass().getResource("/AbertoCliente.jasper").getFile();
             JasperPrint js;
             JRBeanCollectionDataSource ds = new JRBeanCollectionDataSource(log);
             HashMap<String, Object> map = new HashMap<>();
@@ -647,7 +647,7 @@ public class RelatorioContaJD extends javax.swing.JDialog {
 
     private void imprimir_todos(List<LogAberto> log, double total_em_aberto, double total, double pago, String inicio, String fim) {
         try {
-            String src = "src\\TodosCliente.jasper";
+            String src = getClass().getResource("/Todos.Cliente.jasper").getFile();
             JasperPrint js;
             JRBeanCollectionDataSource ds = new JRBeanCollectionDataSource(log);
             HashMap<String, Object> map = new HashMap<>();

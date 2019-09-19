@@ -1129,7 +1129,7 @@ public class DocumentoJF extends javax.swing.JFrame {
         if (listDocumentos.isEmpty()) {
             return;
         }
-        if (jListDocumento.getSelectedIndices().length == 1) {
+        if (jListDocumento.getSelectedIndices().length == 1) { //se for somente um item exibe mais informações
             if (listDocumentos.getElementAt(jListDocumento.getSelectedIndex()) instanceof Documento) {
                 Documento d = (Documento) listDocumentos.getElementAt(jListDocumento.getSelectedIndex());
                 if (d.isCrip()) {
@@ -1167,7 +1167,7 @@ public class DocumentoJF extends javax.swing.JFrame {
                 modiftxt.setText(dp.getAlteracao());
                 abertoEmtxt.setText("");
             }
-        } else {
+        } else { //se forem varios itens mostra a soma em MB deles somente.
             statustxt.setText("");
             modiftxt.setText("");
             abertoEmtxt.setText("");
@@ -1241,25 +1241,13 @@ public class DocumentoJF extends javax.swing.JFrame {
                 if (d != null && tp != null && p != null) {
                     if (!new DocumentoDAO().updateDocumento(f, d.getId(), tp.getId(), p.getId())) {
                         JOptionPane.showMessageDialog(null, "Erro ao tentar atualizar o arquivo no banco de dados.", "Erro", JOptionPane.ERROR_MESSAGE);
-                    } else {
-                        //ação ao concluir edit
-                        String coment = "@Editou um Documento.\n" + f.getName();
-                        if (!new ComentarioDAO().addComentario(coment, new UserDAO().getUser().getId())) {
-                            GerarLogErro.gerar("Erro ao tentar comentar uma edição de um Documento " + f.getName());
-                        }
-                        carregarDocumentosDoTipoEProcessoSelecionado();
                     }
+                    carregarDocumentosDoTipoEProcessoSelecionado();
                 } else if (dp != null && c != null) {
                     if (!new DocumentoDAO().updateDocumentoPessoal(f, dp.getId())) {
                         JOptionPane.showMessageDialog(null, "Erro ao tentar atualizar o arquivo no banco de dados.", "Erro", JOptionPane.ERROR_MESSAGE);
-                    } else {
-                        //ação ao concluir um edit
-                        String coment = "@Editou um Documento Pessoal.\n" + f.getName();
-                        if (!new ComentarioDAO().addComentario(coment, new UserDAO().getUser().getId())) {
-                            GerarLogErro.gerar("Erro ao tentar comentar uma edição de um Documento Pessoal " + f.getName());
-                        }
-                        carregarDadosPessoaisDoClienteSelecionado(c);
                     }
+                    carregarDadosPessoaisDoClienteSelecionado(c);
                 }
             }
         }
@@ -1387,11 +1375,6 @@ public class DocumentoJF extends javax.swing.JFrame {
                     if (moveToTrash) {
                         if (!new DocumentoDAO().removeDocumento(d[x])) {
                             JOptionPane.showMessageDialog(null, "Erro ao tentar remover o documento do Bando de Dados.", "Erro", JOptionPane.ERROR_MESSAGE);
-                        } else {
-                            String coment = "@Removeu um Documento.\n" + d[x].getNome();
-                            if (!new ComentarioDAO().addComentario(coment, new UserDAO().getUser().getId())) {
-                                GerarLogErro.gerar("Erro ao tentar comentar a remoção de um documento " + d[x].getNome());
-                            }
                         }
                     }
                 }
@@ -1407,11 +1390,6 @@ public class DocumentoJF extends javax.swing.JFrame {
                     if (moveToTrash) {
                         if (!new DocumentoDAO().removeDocumentoPessoal(dp[x])) {
                             JOptionPane.showMessageDialog(null, "Erro ao tentar remover o documento pessoal do Bando de Dados.", "Erro", JOptionPane.ERROR_MESSAGE);
-                        } else {
-                            String coment = "@Removeu um Documento`Pessoal.\n" + dp[x].getNome();
-                            if (!new ComentarioDAO().addComentario(coment, new UserDAO().getUser().getId())) {
-                                GerarLogErro.gerar("Erro ao tentar comentar a remoção de um Documento Pessoal " + dp[x].getNome());
-                            }
                         }
                     }
                 }
@@ -1572,7 +1550,7 @@ public class DocumentoJF extends javax.swing.JFrame {
         boolean cartao = false;
         boolean email = false;
 
-        File f = new File("src\\param.txt");
+        File f = new File(this.getClass().getResource("/param.txt").getFile());
         try {
             InputStream os = new FileInputStream(f);
             byte[] dados = os.readAllBytes();

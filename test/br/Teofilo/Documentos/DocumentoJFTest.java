@@ -11,8 +11,10 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Stream;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -30,7 +32,8 @@ public class DocumentoJFTest {
         boolean cartao = false;
         boolean email = false;
 
-        File f = new File("src\\param.txt");
+        String stream = this.getClass().getResource("/param.txt").getFile();
+        File f = new File(stream);
         try {
             InputStream os = new FileInputStream(f);
             byte[] dados = os.readAllBytes();
@@ -55,7 +58,7 @@ public class DocumentoJFTest {
 
             System.out.println(cartao);
             System.out.println(email);
-            
+
         } catch (FileNotFoundException ex) {
             Logger.getLogger(ConnectionFactoryMySQL.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
