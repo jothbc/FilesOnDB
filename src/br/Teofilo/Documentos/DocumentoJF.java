@@ -68,6 +68,8 @@ import javax.swing.JOptionPane;
  */
 public class DocumentoJF extends javax.swing.JFrame {
 
+    public static final String PATH = "C:\\JCR\\";
+
     private User user;
     private boolean conectado = false;
     private List<Cliente> clientes;
@@ -1546,7 +1548,8 @@ public class DocumentoJF extends javax.swing.JFrame {
         boolean cartao = false;
         boolean email = false;
 
-        File f = new File(this.getClass().getResource("/param.txt").getFile());
+        //File f = new File(this.getClass().getResource("param.txt").getFile());
+        File f = new File(PATH + "param.txt");
         try {
             InputStream os = new FileInputStream(f);
             byte[] dados = os.readAllBytes();
@@ -1568,7 +1571,6 @@ public class DocumentoJF extends javax.swing.JFrame {
             if (p2s.equals("1")) {
                 email = true;
             }
-
         } catch (FileNotFoundException ex) {
             Logger.getLogger(ConnectionFactoryMySQL.class
                     .getName()).log(Level.SEVERE, null, ex);
@@ -1612,22 +1614,22 @@ public class DocumentoJF extends javax.swing.JFrame {
 
     private synchronized void chatServer() {
         new Thread(() -> {
-            //if (user.getIp().equals(ConnectionFactoryMySQL.ip())) {
-            try {
-                ServerSocket server;
-                server = new ServerSocket(12345);
-                System.out.println("Servidor ativo na porta 12345");
-                while (true) {
-                    System.out.println("Aguardando conexão...");
-                    Socket con = server.accept();
-                    System.out.println("Cliente conectado...");
-                    Thread t = new ChatServidor(con);
-                    t.start();
+            if (user.getIp().equals(ConnectionFactoryMySQL.ip())) {
+                try {
+                    ServerSocket server;
+                    server = new ServerSocket(12345);
+                    System.out.println("Servidor ativo na porta 12345");
+                    while (true) {
+                        System.out.println("Aguardando conexão...");
+                        Socket con = server.accept();
+                        System.out.println("Cliente conectado...");
+                        Thread t = new ChatServidor(con);
+                        t.start();
+                    }
+                } catch (IOException ex) {
+                    Logger.getLogger(DocumentoJF.class.getName()).log(Level.SEVERE, null, ex);
                 }
-            } catch (IOException ex) {
-                Logger.getLogger(DocumentoJF.class.getName()).log(Level.SEVERE, null, ex);
             }
-            //}
         }).start();
     }
 

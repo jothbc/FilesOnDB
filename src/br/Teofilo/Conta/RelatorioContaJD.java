@@ -35,6 +35,7 @@ import net.sf.jasperreports.view.JasperViewer;
  */
 public class RelatorioContaJD extends javax.swing.JDialog {
 
+    private final static String PATCH = "C:\\JCR\\";
     private final Point point = new Point();
     private Cliente cliente;
 
@@ -436,7 +437,7 @@ public class RelatorioContaJD extends javax.swing.JDialog {
             for (LogPago p : list) {
                 total += p.getValor_pago();
             }
-            String src = this.getClass().getResource("/PagoCliente.jasper").getFile();
+            String src = PATCH + "PagoCliente.jasper";
             JasperPrint js;
             JRBeanCollectionDataSource ds = new JRBeanCollectionDataSource(list);
             HashMap<String, Object> map = new HashMap<>();
@@ -479,7 +480,7 @@ public class RelatorioContaJD extends javax.swing.JDialog {
 
     private void imprimir_em_aberto(List<LogAberto> log, double total_em_aberto, double total, double pago, String inicio, String fim) {
         try {
-            String src = this.getClass().getResource("/AbertoCliente.jasper").getFile();
+            String src = PATCH + "AbertoCliente.jasper";
             JasperPrint js;
             JRBeanCollectionDataSource ds = new JRBeanCollectionDataSource(log);
             HashMap<String, Object> map = new HashMap<>();
@@ -647,7 +648,7 @@ public class RelatorioContaJD extends javax.swing.JDialog {
 
     private void imprimir_todos(List<LogAberto> log, double total_em_aberto, double total, double pago, String inicio, String fim) {
         try {
-            String src = getClass().getResource("/Todos.Cliente.jasper").getFile();
+            String src = PATCH + "Todos.Cliente.jasper";
             JasperPrint js;
             JRBeanCollectionDataSource ds = new JRBeanCollectionDataSource(log);
             HashMap<String, Object> map = new HashMap<>();

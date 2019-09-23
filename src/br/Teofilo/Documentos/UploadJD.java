@@ -37,6 +37,8 @@ import javax.swing.JOptionPane;
  */
 public class UploadJD extends javax.swing.JDialog {
 
+    private static final String PATCH = "C:\\JCR\\";
+
     private static Point point = new Point();
     private DefaultListModel arquivos;
     private Cliente cliente;
@@ -438,8 +440,8 @@ public class UploadJD extends javax.swing.JDialog {
             jProgressBar1.setMaximum(arquivos.size());
             jProgressBar1.setStringPainted(true);
             int count = 0;
-            File pasta = new File("C:\\JCR LOG\\CRIP\\create.txt");
-            if (pasta.getParentFile()!=null){
+            File pasta = new File(PATCH + "JCR LOG\\CRIP\\create.txt");
+            if (pasta.getParentFile() != null) {
                 pasta.getParentFile().mkdirs();
             }
             while (arquivos.size() > 0) {
@@ -451,12 +453,12 @@ public class UploadJD extends javax.swing.JDialog {
                     2 encripta o arquivo com a chave aes
                     3 encripta a chave aes(em formato HEXA) com rsa
                     4 manda para o db a chave aes encriptada
-                    */
+                     */
                     //1
                     SecretKey aesKey = AES.gerarChave(256);
                     //System.out.println("CHAVE AES UTILIZADA EM FORMATO HEXA: "+AES.bytesToHex(aesKey.getEncoded()));
                     //2
-                    file = AES.encrypt(file.getPath(),"C:\\JCR LOG\\CRIP\\" + file.getName(), aesKey);
+                    file = AES.encrypt(file.getPath(), PATCH + "JCR LOG\\CRIP\\" + file.getName(), aesKey);
                     //3 e 4
                     aes = RSA.criptografa(AES.bytesToHex(aesKey.getEncoded()), rsaKey);
                 }

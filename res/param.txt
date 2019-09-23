@@ -1,2 +1,0 @@
-[debito_automatico:1]
-[lembrete_via_email_automatico:1]

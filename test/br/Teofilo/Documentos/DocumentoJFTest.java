@@ -9,6 +9,7 @@ import JDBC.ConnectionFactoryMySQL;
 import br.Teofilo.Bean.Arquivo;
 import br.Teofilo.Bean.Documento;
 import br.Teofilo.Bean.DocumentoPessoal;
+import br.Teofilo.Bean.GerarLogErro;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -73,12 +74,36 @@ public class DocumentoJFTest {
     }
 
     @Test
-    public void testExtends(){
+    @Ignore
+    public void testExtends() {
         Arquivo p = new DocumentoPessoal();
         Arquivo o = new Documento();
-        
+
         System.out.println(p instanceof DocumentoPessoal);
         System.out.println(o instanceof Documento);
     }
-    
+
+    @Test
+    public void localpasta() {
+        try {
+//            System.out.println("/ -> " + new File("/").getCanonicalPath());
+//            System.out.println("… -> " + new File("…").getCanonicalPath());
+//            System.out.println(". -> " + new File(".").getCanonicalPath());
+//            System.out.println("\\ -> " + new File("\\").getCanonicalPath());
+            
+//            String test = this.getClass().getCanonicalName();
+//            System.out.println(test);
+            
+            URL a = this.getClass().getResource("");
+            String aa = a.toString();
+            //File f = new File(a);
+            System.out.println(aa);
+            //File f = new File(this.getClass().getResource("/param.txt").getPath());
+            //System.out.println(f.getCanonicalPath());
+            GerarLogErro.gerar("test");
+        } catch (Exception e) {
+            e.printStackTrace();
+            
+        }
+    }
 }

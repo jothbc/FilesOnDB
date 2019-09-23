@@ -22,7 +22,6 @@ public class Arquivo {
     public Arquivo() {
     }
 
-    
     public Arquivo(int id, String nome, int ID_CLIENTE, String alteracao, boolean crip, byte[] crip2, double tamanho) {
         this.id = id;
         this.nome = nome;
@@ -33,7 +32,6 @@ public class Arquivo {
         this.tamanho = tamanho;
     }
 
-    
     /**
      * @return the id
      */
@@ -131,6 +129,8 @@ public class Arquivo {
     public void setTamanho(double tamanho) {
         this.tamanho = tamanho;
     }
-    
-    
+
+    public String toString() {
+        return this.nome;
+    }
 }

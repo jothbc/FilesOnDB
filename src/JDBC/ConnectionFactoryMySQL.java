@@ -38,6 +38,7 @@ public class ConnectionFactoryMySQL {
 //    private static final String URL = "jdbc:mysql://localhost/" + DATABASE;
     private static final String USER = "root";
     private static final String PASS = "";
+    public static final String PATH = "C:\\JCR\\";
 
     public static Connection getConnection() {
         try {
@@ -83,7 +84,12 @@ public class ConnectionFactoryMySQL {
     }
 
     public static String ip() {
-        File f = new File("res\\ip_db.txt");
+        //File f = new File(ConnectionFactoryMySQL.class.getResource("/JDBC/ip_db.txt").getFile());
+        //InputStream test = Thread.currentThread().getClass().getResourceAsStream("/JDBC/ip_db.txt");
+        //System.out.println(test);
+        //File f = new File(test.toString());
+        //File f = new File("ip_db.txt");
+        File f = new File(PATH + "ip_db.txt");
         try {
             InputStream os = new FileInputStream(f);
             byte[] dados = os.readAllBytes();
@@ -93,8 +99,10 @@ public class ConnectionFactoryMySQL {
             return ipString;
         } catch (FileNotFoundException ex) {
             Logger.getLogger(ConnectionFactoryMySQL.class.getName()).log(Level.SEVERE, null, ex);
+            GerarLogErro.gerar(ex.getMessage());
         } catch (IOException ex) {
             Logger.getLogger(ConnectionFactoryMySQL.class.getName()).log(Level.SEVERE, null, ex);
+            GerarLogErro.gerar(ex.getMessage());
         }
         return "localhost";
     }
