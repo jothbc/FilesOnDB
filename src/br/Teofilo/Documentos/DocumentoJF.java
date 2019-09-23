@@ -941,11 +941,11 @@ public class DocumentoJF extends javax.swing.JFrame {
             File f = null;
             if (listDocumentos.getElementAt(jListDocumento.getSelectedIndex()) instanceof Documento) {
                 arquivo = (Documento) listDocumentos.getElementAt(jListDocumento.getSelectedIndex());
-                f = new DocumentoDAO().getArquivo(arquivo.getId(), "C:\\JCR LOG\\", "documentos");
+                f = new DocumentoDAO().getArquivo(arquivo.getId(), PATH + "JCR LOG\\", "documentos");
                 f.deleteOnExit();
             } else if (listDocumentos.getElementAt(jListDocumento.getSelectedIndex()) instanceof DocumentoPessoal) {
                 arquivo = (DocumentoPessoal) listDocumentos.getElementAt(jListDocumento.getSelectedIndex());
-                f = new DocumentoDAO().getArquivo(arquivo.getId(), "C:\\JCR LOG\\", "documentos_pessoais");
+                f = new DocumentoDAO().getArquivo(arquivo.getId(), PATH + "JCR LOG\\", "documentos_pessoais");
                 f.deleteOnExit();
             }
             if (arquivo != null) {
@@ -1368,7 +1368,7 @@ public class DocumentoJF extends javax.swing.JFrame {
                     d[x] = (Documento) listDocumentos.getElementAt(jListDocumento.getSelectedIndices()[x]);
                 }
                 for (int x = 0; x < d.length; x++) {
-                    File f = new DocumentoDAO().getArquivo(d[x].getId(), "C:\\JCR LOG\\", "documentos");
+                    File f = new DocumentoDAO().getArquivo(d[x].getId(), PATH + "JCR LOG\\", "documentos");
                     boolean moveToTrash = Desktop.getDesktop().moveToTrash(f);
                     if (moveToTrash) {
                         if (!new DocumentoDAO().removeDocumento(d[x])) {
@@ -1383,7 +1383,7 @@ public class DocumentoJF extends javax.swing.JFrame {
                     dp[x] = (DocumentoPessoal) listDocumentos.getElementAt(jListDocumento.getSelectedIndices()[x]);
                 }
                 for (int x = 0; x < dp.length; x++) {
-                    File f = new DocumentoDAO().getArquivo(dp[x].getId(), "C:\\JCR LOG\\", "documentos_pessoais");
+                    File f = new DocumentoDAO().getArquivo(dp[x].getId(), PATH + "JCR LOG\\", "documentos_pessoais");
                     boolean moveToTrash = Desktop.getDesktop().moveToTrash(f);
                     if (moveToTrash) {
                         if (!new DocumentoDAO().removeDocumentoPessoal(dp[x])) {

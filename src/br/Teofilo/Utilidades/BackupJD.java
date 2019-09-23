@@ -295,7 +295,7 @@ public class BackupJD extends javax.swing.JDialog {
             "@echo off",
             "echo Realizando backup do MySQL...",
             "cd C:\\xampp\\mysql\\bin\\",
-            "mysqldump -u root teofilo> " + caminhotxt.getText(),
+            "mysqldump -uteofilo -p35v2l3x6AtWIglMg --max_allowed_packet=512M teofilo > " + caminhotxt.getText(),
             "echo Backup concluido com sucesso."
         };
         try {

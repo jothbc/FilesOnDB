@@ -35,9 +35,9 @@ public class ConnectionFactoryMySQL {
     private static final String DATABASE = "teofilo";
     private static final String DRIVER = "com.mysql.jdbc.Driver";
     private static final String URL = "jdbc:mysql://" + ip() + "/" + DATABASE;
-//    private static final String URL = "jdbc:mysql://localhost/" + DATABASE;
-    private static final String USER = "root";
-    private static final String PASS = "";
+    //private static final String URL = "jdbc:mysql://localhost/" + DATABASE;
+    private static final String USER = "teofilo";
+    private static final String PASS = "35v2l3x6AtWIglMg";
     public static final String PATH = "C:\\JCR\\";
 
     public static Connection getConnection() {
