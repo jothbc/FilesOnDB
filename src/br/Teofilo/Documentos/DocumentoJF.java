@@ -1619,6 +1619,7 @@ public class DocumentoJF extends javax.swing.JFrame {
                     ServerSocket server;
                     server = new ServerSocket(12345);
                     System.out.println("Servidor ativo na porta 12345");
+                    ChatServidor chatServidor = new ChatServidor(); //somente para instanciar lista de clientes
                     while (true) {
                         System.out.println("Aguardando conexão...");
                         Socket con = server.accept();
@@ -1634,6 +1635,16 @@ public class DocumentoJF extends javax.swing.JFrame {
     }
 
     private synchronized void chat() {
-        new ChatJF().setVisible(true);
+        new Thread(() -> {
+            try {
+                ChatJF chat = new ChatJF();
+                chat.setVisible(true);
+                chat.conectar();
+                chat.escutar();
+            } catch (IOException ex) {
+                Logger.getLogger(DocumentoJF.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }).start();
+
     }
 }

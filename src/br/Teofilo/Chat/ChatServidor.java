@@ -25,6 +25,10 @@ public class ChatServidor extends Thread {
     private InputStreamReader inr;
     private BufferedReader bfr;
 
+    public ChatServidor() {
+        clientes = new ArrayList<>();
+    }
+
     /**
      * Método construtor
      *
@@ -45,7 +49,6 @@ public class ChatServidor extends Thread {
      * Método run
      */
     public void run() {
-
         try {
             String msg;
             OutputStream ou = this.con.getOutputStream();
@@ -100,7 +103,7 @@ public class ChatServidor extends Thread {
 //            JOptionPane.showMessageDialog(null, texts);
             //server = new ServerSocket(Integer.parseInt(txtPorta.getText()));
             server = new ServerSocket(12345);
-            clientes = new ArrayList<BufferedWriter>();
+            clientes = new ArrayList<>();
             //JOptionPane.showMessageDialog(null,"Servidor ativo na porta: "+ txtPorta.getText());
             System.out.println("Servidor ativo na porta 12345");
             while (true) {

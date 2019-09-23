@@ -60,6 +60,7 @@ public class ChatJF extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         jButton1 = new javax.swing.JButton();
+        status = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTextArea1 = new javax.swing.JTextArea();
         sendtxt = new javax.swing.JTextField();
@@ -81,19 +82,27 @@ public class ChatJF extends javax.swing.JFrame {
             }
         });
 
+        status.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        status.setForeground(new java.awt.Color(255, 255, 255));
+        status.setText("Desconectado");
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
+                .addGap(139, 139, 139)
+                .addComponent(status, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jButton1))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jButton1)
+            .addComponent(status)
         );
 
+        jTextArea1.setEditable(false);
         jTextArea1.setColumns(20);
         jTextArea1.setRows(5);
         jScrollPane1.setViewportView(jTextArea1);
@@ -142,6 +151,9 @@ public class ChatJF extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void sendtxtKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_sendtxtKeyPressed
+        if (status.getText().equals("Desconectado")) {
+            return;
+        }
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             try {
                 enviarMensagem(sendtxt.getText());
@@ -155,11 +167,16 @@ public class ChatJF extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) throws IOException {
+    public final static void main(String args[]) throws IOException {
         ChatJF app = new ChatJF();
         app.setVisible(true);
-        app.conectar();
-        app.escutar();
+        try {
+            app.conectar();
+            app.escutar();
+        } catch (IOException ex) {
+            Logger.getLogger(ChatJF.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
@@ -168,11 +185,19 @@ public class ChatJF extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextArea jTextArea1;
     private javax.swing.JTextField sendtxt;
+    private javax.swing.JLabel status;
     // End of variables declaration//GEN-END:variables
 
     private void iniciar() {
         JLabel lblMessage = new JLabel("Verificar!");
-        txtIP = new JTextField(ConnectionFactoryMySQL.ip());
+        String ip = ConnectionFactoryMySQL.ip();
+        int index = 0;
+        for (int x = 0; x < ip.length(); x++) {
+            if (ip.charAt(x) == ':') {
+                index = x;
+            }
+        }
+        txtIP = new JTextField(ip.substring(0, index));
         txtPorta = new JTextField("12345");
         Object[] texts = {lblMessage, txtIP, txtPorta};
         JOptionPane.showMessageDialog(null, texts);
@@ -184,15 +209,20 @@ public class ChatJF extends javax.swing.JFrame {
      * Método usado para conectar no server socket, retorna IO Exception caso dê
      * algum erro.
      *
-     * @throws IOException
      */
-    public void conectar() throws IOException {
-        socket = new Socket(txtIP.getText(), Integer.parseInt(txtPorta.getText()));
-        ou = socket.getOutputStream();
-        ouw = new OutputStreamWriter(ou);
-        bfw = new BufferedWriter(ouw);
-        bfw.write(usuario.getNome() + "\r\n");
-        bfw.flush();
+    public void conectar() {
+        try {
+            socket = new Socket(txtIP.getText(), Integer.parseInt(txtPorta.getText()));
+            ou = socket.getOutputStream();
+            ouw = new OutputStreamWriter(ou);
+            bfw = new BufferedWriter(ouw);
+            bfw.write(usuario.getNome() + "\r\n");
+            bfw.flush();
+            status.setText("Conectado");
+        } catch (IOException ex) {
+            status.setText("Desconectado");
+            Logger.getLogger(ChatJF.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -210,7 +240,7 @@ public class ChatJF extends javax.swing.JFrame {
             dispose();
         } else {
             bfw.write(msg + "\r\n");
-            jTextArea1.append("["+usuario.getNome() + "]\n" + sendtxt.getText() + "\r\n");
+            jTextArea1.append("[" + usuario.getNome() + "]\n" + sendtxt.getText() + "\r\n");
         }
         bfw.flush();
         sendtxt.setText("");
@@ -254,4 +284,5 @@ public class ChatJF extends javax.swing.JFrame {
         ou.close();
         socket.close();
     }
+
 }
