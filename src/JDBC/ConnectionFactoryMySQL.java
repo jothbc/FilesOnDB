@@ -82,7 +82,7 @@ public class ConnectionFactoryMySQL {
         closeConnection(con, stmt);
     }
 
-    private static String ip() {
+    public static String ip() {
         File f = new File("res\\ip_db.txt");
         try {
             InputStream os = new FileInputStream(f);

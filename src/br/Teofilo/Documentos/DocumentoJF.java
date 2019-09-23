@@ -16,6 +16,8 @@ import br.Teofilo.Bean.GerarLogErro;
 import br.Teofilo.Bean.Processo;
 import br.Teofilo.Bean.TipoDoc;
 import br.Teofilo.Bean.User;
+import br.Teofilo.Chat.ChatJF;
+import br.Teofilo.Chat.ChatServidor;
 import br.Teofilo.Cliente.ClienteJD;
 import br.Teofilo.Conta.ContasClienteJF;
 import br.Teofilo.DAO.ClienteDAO;
@@ -36,17 +38,21 @@ import java.awt.HeadlessException;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.security.PrivateKey;
 import java.sql.Connection;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -754,7 +760,7 @@ public class DocumentoJF extends javax.swing.JFrame {
     }//GEN-LAST:event_jListDocumentoKeyPressed
 
     private void chatBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chatBtnActionPerformed
-        // TODO add your handling code here:
+        chat();
     }//GEN-LAST:event_chatBtnActionPerformed
 
     /**
@@ -1564,10 +1570,12 @@ public class DocumentoJF extends javax.swing.JFrame {
             }
 
         } catch (FileNotFoundException ex) {
-            Logger.getLogger(ConnectionFactoryMySQL.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ConnectionFactoryMySQL.class
+                    .getName()).log(Level.SEVERE, null, ex);
             GerarLogErro.gerar(ex.getMessage());
         } catch (IOException ex) {
-            Logger.getLogger(ConnectionFactoryMySQL.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ConnectionFactoryMySQL.class
+                    .getName()).log(Level.SEVERE, null, ex);
             GerarLogErro.gerar(ex.getMessage());
         }
         if (cartao) {
@@ -1578,6 +1586,7 @@ public class DocumentoJF extends javax.swing.JFrame {
             verificar_envio_de_emails();
             System.out.println("Lembretes via email enviados.");
         }
+        chatServer();
     }
 
     private synchronized void verificar_envio_de_emails() {
@@ -1595,9 +1604,34 @@ public class DocumentoJF extends javax.swing.JFrame {
                 }
                 Thread.sleep(3600000 * 6); //aguarda 6 horas
             } catch (InterruptedException ex) {
-                Logger.getLogger(DocumentoJF.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(DocumentoJF.class
+                        .getName()).log(Level.SEVERE, null, ex);
             }
         }).start();
     }
 
+    private synchronized void chatServer() {
+        new Thread(() -> {
+            //if (user.getIp().equals(ConnectionFactoryMySQL.ip())) {
+            try {
+                ServerSocket server;
+                server = new ServerSocket(12345);
+                System.out.println("Servidor ativo na porta 12345");
+                while (true) {
+                    System.out.println("Aguardando conexão...");
+                    Socket con = server.accept();
+                    System.out.println("Cliente conectado...");
+                    Thread t = new ChatServidor(con);
+                    t.start();
+                }
+            } catch (IOException ex) {
+                Logger.getLogger(DocumentoJF.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            //}
+        }).start();
+    }
+
+    private synchronized void chat() {
+        new ChatJF().setVisible(true);
+    }
 }
