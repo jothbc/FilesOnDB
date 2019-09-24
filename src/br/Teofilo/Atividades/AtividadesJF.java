@@ -110,11 +110,6 @@ public class AtividadesJF extends javax.swing.JFrame {
         atv1.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         atv1.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         atv1.setBorder(null);
-        atv1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                atv1ActionPerformed(evt);
-            }
-        });
         atv1.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 atv1KeyPressed(evt);
@@ -507,10 +502,6 @@ public class AtividadesJF extends javax.swing.JFrame {
     private void addBtn_3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addBtn_3ActionPerformed
         adicionarTarefa(QUARTA_TABELA, atv4.getName());
     }//GEN-LAST:event_addBtn_3ActionPerformed
-
-    private void atv1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_atv1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_atv1ActionPerformed
 
     private void atv1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_atv1KeyPressed
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {

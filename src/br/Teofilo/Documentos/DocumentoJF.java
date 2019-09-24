@@ -82,6 +82,8 @@ public class DocumentoJF extends javax.swing.JFrame {
 
     private String data_abertura_programa;
 
+    private AtividadesJF atividadesJF = null;
+
     /**
      * Creates new form DocumentoJF
      */
@@ -1483,8 +1485,7 @@ public class DocumentoJF extends javax.swing.JFrame {
 
     private synchronized void atividades() {
         new Thread(() -> {
-            AtividadesJF jf = new AtividadesJF();
-            jf.setVisible(true);
+            new AtividadesJF().setVisible(true);
         }).start();
     }
 
@@ -1614,7 +1615,14 @@ public class DocumentoJF extends javax.swing.JFrame {
 
     private synchronized void chatServer() {
         new Thread(() -> {
-            if (user.getIp().equals(ConnectionFactoryMySQL.ip())) {
+            String ip = ConnectionFactoryMySQL.ip();
+            int index = 0;
+            for (int x = 0; x < ip.length(); x++) {
+                if (ip.charAt(x) == ':') {
+                    index = x;
+                }
+            }
+            if (user.getIp().equals(ip.substring(0, index))) {
                 try {
                     ServerSocket server;
                     server = new ServerSocket(12345);
