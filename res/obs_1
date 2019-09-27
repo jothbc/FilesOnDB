@@ -1,0 +1,23 @@
+banco de dados criados com LONGBLOB para armazenar os Arquivos..
+
+presets do banco de dados;
+innodb_log_file_size = 512M
+max_allowed_packet = 512M
+wait_timeout = 3600
+innodb_buffer_pool_size = 3072M
+
+
+
+garantir acesso ao db
+
+use teofilo;
+GRANT ALL PRIVILEGES ON 
+teofilo.* 
+TO 
+'root'@'%' ;
+
+FLUSH PRIVILEGES;
+
+
+//ip do jadsom
+http://181.221.149.14:888/phpmyadmin/
