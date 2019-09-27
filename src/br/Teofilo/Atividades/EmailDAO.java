@@ -23,6 +23,11 @@ import java.util.logging.Logger;
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import java.text.Normalizer;
+import java.util.regex.Pattern;
+import org.apache.commons.mail.DefaultAuthenticator;
+import org.apache.commons.mail.EmailAttachment;
+import org.apache.commons.mail.MultiPartEmail;
 
 /**
  *
@@ -293,5 +298,44 @@ public class EmailDAO {
             e.printStackTrace();
             GerarLogErro.gerar(e.getMessage());
         }
+    }
+
+    public void enviarEmailAnexo(String caminho_arq, String nome_arq, String destinatario, String assunto, String mensagem) {
+        Email remetente = obterRemetente();
+
+        MultiPartEmail email = new MultiPartEmail();
+        email.setHostName("smtp.gmail.com");
+        email.setSslSmtpPort("465");
+        email.setStartTLSRequired(true);
+        email.setStartTLSEnabled(true);
+        email.setSSLOnConnect(true);
+
+        email.setAuthenticator(new DefaultAuthenticator(remetente.getRemetente(), remetente.getSenha()));
+        try {
+            email.setFrom(remetente.getRemetente());
+            email.setSubject(assunto);
+            email.setMsg(mensagem);
+            email.addTo(destinatario);
+
+            EmailAttachment attachment = new EmailAttachment();
+            attachment.setPath(caminho_arq);
+            attachment.setDisposition(EmailAttachment.ATTACHMENT);
+            attachment.setDescription(deAccent(nome_arq));
+            attachment.setName(deAccent(nome_arq));
+
+            email.attach(attachment);
+            //email.setContent(attachment);
+            email.send();
+            System.out.println("enviado.");
+        } catch (Exception e) {
+            System.err.println(e);
+        }
+
+    }
+
+    public static final String deAccent(String str) {
+        String nfdNormalizedString = Normalizer.normalize(str, Normalizer.Form.NFD);
+        Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
+        return pattern.matcher(nfdNormalizedString).replaceAll("");
     }
 }

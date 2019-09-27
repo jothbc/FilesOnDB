@@ -1417,8 +1417,7 @@ public class DocumentoJF extends javax.swing.JFrame {
     }
 
     private void gerenciarClientes() {
-        ClienteJD clientejd = new ClienteJD(null, true);
-        clientejd.setVisible(true);
+        new ClienteJD(null, true).setVisible(true);
         popularListClientes();
     }
 
