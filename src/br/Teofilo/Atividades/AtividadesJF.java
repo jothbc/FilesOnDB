@@ -32,13 +32,13 @@ public class AtividadesJF extends javax.swing.JFrame {
     private static final int QUARTA_TABELA = 4;
 
     private static final int QTD_QUADROS = 4;
-    JScrollPane[] jsp = new JScrollPane[QTD_QUADROS];
-    JPanel[] jspp = new JPanel[QTD_QUADROS];
-    JTextField[] titulos = new JTextField[QTD_QUADROS];
+    private JScrollPane[] jsp = new JScrollPane[QTD_QUADROS];
+    private JPanel[] jspp = new JPanel[QTD_QUADROS];
+    private JTextField[] titulos = new JTextField[QTD_QUADROS];
 
     private final Point point = new Point();
-    List<Atividade> atividades;
-    List<Cartao> cartoes;
+    private List<Atividade> atividades;
+    private List<Cartao> cartoes;
 
     /**
      * Creates new form AtividadesJF
@@ -96,7 +96,7 @@ public class AtividadesJF extends javax.swing.JFrame {
         removeBtn3 = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jButton1 = new javax.swing.JButton();
-        jLabel1 = new javax.swing.JLabel();
+        lbl_titulo = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setUndecorated(true);
@@ -426,10 +426,10 @@ public class AtividadesJF extends javax.swing.JFrame {
             }
         });
 
-        jLabel1.setFont(new java.awt.Font("Tahoma", 3, 18)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setText("Atividades");
+        lbl_titulo.setFont(new java.awt.Font("Tahoma", 3, 18)); // NOI18N
+        lbl_titulo.setForeground(new java.awt.Color(255, 255, 255));
+        lbl_titulo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lbl_titulo.setText("Atividades");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -437,7 +437,7 @@ public class AtividadesJF extends javax.swing.JFrame {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 820, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(lbl_titulo, javax.swing.GroupLayout.PREFERRED_SIZE, 820, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jButton1)
                 .addGap(19, 19, 19))
@@ -447,7 +447,7 @@ public class AtividadesJF extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1)
+                    .addComponent(lbl_titulo)
                     .addComponent(jButton1))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -592,7 +592,6 @@ public class AtividadesJF extends javax.swing.JFrame {
     private javax.swing.JTextField atv3;
     private javax.swing.JTextField atv4;
     private javax.swing.JButton jButton1;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jp;
     private javax.swing.JPanel jp_1;
@@ -606,6 +605,7 @@ public class AtividadesJF extends javax.swing.JFrame {
     private javax.swing.JPanel jspp_1;
     private javax.swing.JPanel jspp_2;
     private javax.swing.JPanel jspp_3;
+    private javax.swing.JLabel lbl_titulo;
     private javax.swing.JPanel panelFundo;
     private javax.swing.JButton removeBtn;
     private javax.swing.JButton removeBtn1;
@@ -613,20 +613,23 @@ public class AtividadesJF extends javax.swing.JFrame {
     private javax.swing.JButton removeBtn3;
     // End of variables declaration//GEN-END:variables
 
-    private void init() {
+    public void init() {
         //inicializa atividades
-        atividades = new AtividadeDAO().findAll();
-        int count = 0;
-        for (Atividade a : atividades) {
-            titulos[count].setText(a.getNome());
-            count++;
-            if (count == QTD_QUADROS) {
-                break;
+        lbl_titulo.setText("Carregando...");
+        new Thread(() -> {
+            atividades = new AtividadeDAO().findAll();
+            int count = 0;
+            for (Atividade a : atividades) {
+                titulos[count].setText(a.getNome());
+                count++;
+                if (count == QTD_QUADROS) {
+                    break;
+                }
             }
-        }
-        //carrega botoes do banco de dados
-        atualizarBotoes();
-
+            //carrega botoes do banco de dados
+            atualizarBotoes();
+        }).start();
+        lbl_titulo.setText("Atividades");
     }
 
     private void adicionarTarefa(int tabela, String tituloTabela) {
@@ -659,10 +662,13 @@ public class AtividadesJF extends javax.swing.JFrame {
      */
     private void tarefaBotao(ActionEvent evt, JButton botao) {
         new Thread(() -> {
+            botao.setEnabled(false);
             botao.setText("Abrindo...");
             botao.setForeground(Color.BLUE);
             CartaoJD jd = new CartaoJD(null, true, botao);
             jd.setVisible(true);
+            botao.setForeground(Color.BLACK);
+            botao.setEnabled(true);
             if (jd.atualizarExterno()) {
                 atualizarBotoes();
             }

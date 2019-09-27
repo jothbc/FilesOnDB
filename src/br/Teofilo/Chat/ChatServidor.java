@@ -56,7 +56,6 @@ public class ChatServidor extends Thread {
             BufferedWriter bfw = new BufferedWriter(ouw);
             clientes.add(bfw);
             nome = msg = bfr.readLine();
-
             while (!"Sair".equalsIgnoreCase(msg) && msg != null) {
                 msg = bfr.readLine();
                 sendToAll(bfw, msg);
@@ -64,7 +63,6 @@ public class ChatServidor extends Thread {
             }
         } catch (Exception e) {
             e.printStackTrace();
-
         }
     }
 

@@ -40,33 +40,32 @@ public class UploadJD extends javax.swing.JDialog {
     private static final String PATCH = "C:\\JCR\\";
 
     private static Point point = new Point();
-    private DefaultListModel arquivos;
+    private DefaultListModel lista_arquivos;
     private Cliente cliente;
     private Arquivo arquivo;
     private Processo processo;
-    private TipoDoc tipoDoc;
-    private double tam = 0;
-    private PublicKey rsaKey;
+    private TipoDoc sub_pasta;
+    private double tamanho_doc = 0;
+    private PublicKey RSA_KEY;
 
     /**
      * Creates new form UploadJD
      *
      * @param parent
      * @param modal
-     * @param c
-     * @param t
-     * @param arq
-     * @param p
+     * @param cliente_
+     * @param sub_pasta_
+     * @param arquivo_
+     * @param processo_
      */
-    public UploadJD(java.awt.Frame parent, boolean modal, Cliente c, TipoDoc t, Arquivo arq, Processo p) {
+    public UploadJD(java.awt.Frame parent, boolean modal, Cliente cliente_, TipoDoc sub_pasta_, Arquivo arquivo_, Processo processo_) {
         super(parent, modal);
-        this.arquivos = new DefaultListModel<>();
+        this.lista_arquivos = new DefaultListModel<>();
         initComponents();
-        //jCherCrip.setEnabled(false); /////////////// criado para inpedir de usar atualmente
-        cliente = c;
-        tipoDoc = t;
-        arquivo = arq;
-        processo = p;
+        this.cliente = cliente_;
+        this.sub_pasta = sub_pasta_;
+        this.arquivo = arquivo_;
+        this.processo = processo_;
         init();
     }
 
@@ -319,7 +318,7 @@ public class UploadJD extends javax.swing.JDialog {
         if (jCherCrip.isSelected()) {
             selecionarPK();
         } else {
-            rsaKey = null;
+            RSA_KEY = null;
         }
     }//GEN-LAST:event_jCherCripActionPerformed
 
@@ -386,13 +385,13 @@ public class UploadJD extends javax.swing.JDialog {
     // End of variables declaration//GEN-END:variables
 
     private void init() {
-        jList1.setModel(arquivos);
+        jList1.setModel(lista_arquivos);
         bg.add(jCheckBox1);
         bg.add(jCheckBox2);
         if (cliente != null) {
             clientetxt.setText(cliente.getNome());
             if (processo != null) { //verifica se é processo (se for processo tem que ter o numero do processo e o tipo de documento (documento,petição,etc..))
-                obs.setText("Nº Processo: " + processo.getN_processo() + " --> " + tipoDoc.getNome());
+                obs.setText("Nº Processo: " + processo.getN_processo() + " --> " + sub_pasta.getNome());
             } else if (arquivo != null) {  //senão é um documento pessoal, e vai ser feito upload na tabela documentos_pessoais
                 obs.setText("Documento pessoal.");
             }
@@ -413,20 +412,20 @@ public class UploadJD extends javax.swing.JDialog {
             if (fl.getSelectedFile().isDirectory()) { //verifica se é diretório
                 File diretorio = fl.getSelectedFile();  //somente diretório sem \\ no fim
                 caminhotxt.setText(diretorio.getPath() + "\\");
-                String[] arq_string = fl.getSelectedFile().list();        //contém o caminho completo de todos os arquivos dentro da pasta arquivo
+                String[] arq_string = fl.getSelectedFile().list(); //contém o caminho completo de todos os arquivos dentro da pasta arquivo
                 for (String f : arq_string) {
                     File f_temp = new File(diretorio + "\\" + f);
                     if (f_temp.isFile()) {
-                        arquivos.addElement(f_temp);
-                        tam += f_temp.length();
+                        lista_arquivos.addElement(f_temp);
+                        tamanho_doc += f_temp.length();
                     }
                 }
-            } else {                                //senao é arquivo
+            } else { //senao é arquivo
                 caminhotxt.setText(fl.getSelectedFile().getPath());
                 File f_temp = fl.getSelectedFile();
                 if (f_temp.isFile()) {
-                    arquivos.addElement(f_temp);
-                    tam += f_temp.length();
+                    lista_arquivos.addElement(f_temp);
+                    tamanho_doc += f_temp.length();
                 }
             }
         }
@@ -437,15 +436,15 @@ public class UploadJD extends javax.swing.JDialog {
         new Thread(() -> {
             jProgressBar1.setVisible(true);
             jProgressBar1.setMinimum(0);
-            jProgressBar1.setMaximum(arquivos.size());
+            jProgressBar1.setMaximum(lista_arquivos.size());
             jProgressBar1.setStringPainted(true);
             int count = 0;
             File pasta = new File(PATCH + "JCR LOG\\CRIP\\create.txt");
             if (pasta.getParentFile() != null) {
                 pasta.getParentFile().mkdirs();
             }
-            while (arquivos.size() > 0) {
-                File file = (File) arquivos.getElementAt(arquivos.size() - 1);
+            while (lista_arquivos.size() > 0) {
+                File file = (File) lista_arquivos.getElementAt(lista_arquivos.size() - 1);
                 byte[] aes = null;
                 if (jCherCrip.isSelected()) {
                     /*
@@ -460,14 +459,14 @@ public class UploadJD extends javax.swing.JDialog {
                     //2
                     file = AES.encrypt(file.getPath(), PATCH + "JCR LOG\\CRIP\\" + file.getName(), aesKey);
                     //3 e 4
-                    aes = RSA.criptografa(AES.bytesToHex(aesKey.getEncoded()), rsaKey);
+                    aes = RSA.criptografa(AES.bytesToHex(aesKey.getEncoded()), RSA_KEY);
                 }
                 if (processo != null) {
-                    if (!new DocumentoDAO().addDocumento(file, cliente.getId(), tipoDoc.getId(), processo.getId(), jCherCrip.isSelected(), aes)) {
+                    if (!new DocumentoDAO().addDocumento(file, cliente.getId(), sub_pasta.getId(), processo.getId(), jCherCrip.isSelected(), aes)) {
                         JOptionPane.showMessageDialog(null, "Erro ao tentar salvar o arquivo " + file.getName() + " no Banco de dados", "Erro", JOptionPane.ERROR_MESSAGE);
                         return;
                     } else {
-                        arquivos.remove(arquivos.getSize() - 1);
+                        lista_arquivos.remove(lista_arquivos.getSize() - 1);
                         jProgressBar1.setValue(count);
                         count++;
                     }
@@ -476,12 +475,12 @@ public class UploadJD extends javax.swing.JDialog {
                         JOptionPane.showMessageDialog(null, "Erro ao tentar salvar o arquivo " + file.getName() + " no Banco de dados", "Erro", JOptionPane.ERROR_MESSAGE);
                         return;
                     } else {
-                        arquivos.remove(arquivos.getSize() - 1);
+                        lista_arquivos.remove(lista_arquivos.getSize() - 1);
                         jProgressBar1.setValue(count);
                         count++;
                     }
                 }
-                tam -= file.length();
+                tamanho_doc -= file.length();
                 setTamtxt();
             }
             jProgressBar1.setVisible(false);
@@ -492,9 +491,9 @@ public class UploadJD extends javax.swing.JDialog {
         if (jList1.getSelectedIndex() < 0) {
             return;
         }
-        File file = (File) arquivos.getElementAt(jList1.getSelectedIndex());
-        tam -= file.length();
-        arquivos.remove(jList1.getSelectedIndex());
+        File file = (File) lista_arquivos.getElementAt(jList1.getSelectedIndex());
+        tamanho_doc -= file.length();
+        lista_arquivos.remove(jList1.getSelectedIndex());
         setTamtxt();
     }
 
@@ -503,14 +502,14 @@ public class UploadJD extends javax.swing.JDialog {
             return;
         }
         try {
-            Desktop.getDesktop().open((File) arquivos.getElementAt(jList1.getSelectedIndex()));
+            Desktop.getDesktop().open((File) lista_arquivos.getElementAt(jList1.getSelectedIndex()));
         } catch (IOException ex) {
             Logger.getLogger(UploadJD.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
     private void setTamtxt() {
-        tamtxt.setText("Tamanho total " + Conv.CDblDuasCasas(((tam / 1024) / 1024)) + "MB");
+        tamtxt.setText("Tamanho total " + Conv.CDblDuasCasas(((tamanho_doc / 1024) / 1024)) + "MB");
     }
 
     private void selecionarPK() {
@@ -523,18 +522,18 @@ public class UploadJD extends javax.swing.JDialog {
                 //carrega a chave publica para variável pk
                 ObjectInputStream inputStream = null;
                 inputStream = new ObjectInputStream(new FileInputStream(fl.getSelectedFile()));
-                rsaKey = (PublicKey) inputStream.readObject();
+                RSA_KEY = (PublicKey) inputStream.readObject();
             } catch (FileNotFoundException ex) {
                 Logger.getLogger(UploadJD.class.getName()).log(Level.SEVERE, null, ex);
                 GerarLogErro.gerar(ex.getMessage());
                 JOptionPane.showMessageDialog(null, "Algo deu errado, chave não carregada.");
-                rsaKey = null;
+                RSA_KEY = null;
                 jCherCrip.setSelected(false);
             } catch (IOException | ClassNotFoundException ex) {
                 Logger.getLogger(UploadJD.class.getName()).log(Level.SEVERE, null, ex);
                 GerarLogErro.gerar(ex.getMessage());
                 JOptionPane.showMessageDialog(null, "Algo deu errado, chave não carregada.");
-                rsaKey = null;
+                RSA_KEY = null;
                 jCherCrip.setSelected(false);
             }
         }

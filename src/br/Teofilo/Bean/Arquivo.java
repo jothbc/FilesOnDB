@@ -133,4 +133,16 @@ public class Arquivo {
     public String toString() {
         return this.nome;
     }
+    
+    public static String obterExtensaoDoAquivo(String nome) {
+        String extensao = nome;
+        char[] f = extensao.toCharArray();
+        int ultimoPonto = 0;
+        for (int x = 0; x < f.length; x++) {
+            if (f[x] == '.') {
+                ultimoPonto = x;
+            }
+        }
+        return extensao.substring(ultimoPonto);
+    }
 }

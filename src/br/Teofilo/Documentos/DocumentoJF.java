@@ -82,7 +82,9 @@ public class DocumentoJF extends javax.swing.JFrame {
 
     private String data_abertura_programa;
 
-    private AtividadesJF atividadesJF = null;
+    private AtividadesJF atvJF = null;
+
+    private boolean isRunning = false;
 
     /**
      * Creates new form DocumentoJF
@@ -145,11 +147,9 @@ public class DocumentoJF extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Advocacia Teófilo Rocha");
-        addWindowFocusListener(new java.awt.event.WindowFocusListener() {
-            public void windowGainedFocus(java.awt.event.WindowEvent evt) {
-                formWindowGainedFocus(evt);
-            }
-            public void windowLostFocus(java.awt.event.WindowEvent evt) {
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
             }
         });
 
@@ -729,12 +729,6 @@ public class DocumentoJF extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_contasBtnActionPerformed
 
-    private void formWindowGainedFocus(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowGainedFocus
-        if (contasjf != null) {
-            contasjf.dispose();
-        }
-    }//GEN-LAST:event_formWindowGainedFocus
-
     private void jLabel13MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel13MouseClicked
         if (evt.getClickCount() == 2) {
             try {
@@ -766,6 +760,11 @@ public class DocumentoJF extends javax.swing.JFrame {
     private void chatBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chatBtnActionPerformed
         chat();
     }//GEN-LAST:event_chatBtnActionPerformed
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        isRunning = false;
+        System.out.println("\nisRunning = false;");
+    }//GEN-LAST:event_formWindowClosing
 
     /**
      * @param args the command line arguments
@@ -858,12 +857,14 @@ public class DocumentoJF extends javax.swing.JFrame {
         data_abertura_programa = CDate.DataPTBRAtual();
         testarConexao();
         if (conectado) {
+            isRunning = true;
             verificar_user();
             jListCliente.setModel(listClientes);
             jListDocumento.setModel(listDocumentos);
             jListProcessos.setModel(listProcessos);
             jListTipos.setModel(listTipo);
             popularListClientes();
+            initJFramesAux();
             /*
                 funcoes obtidas pelo "param.txt"
              */
@@ -972,7 +973,7 @@ public class DocumentoJF extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Selecione apenas um cliente", "Cliente", JOptionPane.INFORMATION_MESSAGE);
             return;
         }
-        Cliente c = (Cliente) listClientes.getElementAt(jListCliente.getSelectedIndex());
+        Cliente cliente = (Cliente) listClientes.getElementAt(jListCliente.getSelectedIndex());
         Arquivo arquivo = null;
         Processo processo = null;
         TipoDoc sub_pasta = null;
@@ -996,13 +997,13 @@ public class DocumentoJF extends javax.swing.JFrame {
                 }
             } else if (btnPessoal) { //dados pessoais
                 arquivo = new DocumentoPessoal();
-                arquivo.setID_CLIENTE(c.getId());
+                arquivo.setID_CLIENTE(cliente.getId());
             }
         } catch (HeadlessException ex) {
             JOptionPane.showMessageDialog(this, ex, "Erro", JOptionPane.INFORMATION_MESSAGE);
             return;
         }
-        UploadJD jd = new UploadJD(null, true, c, sub_pasta, arquivo, processo);
+        UploadJD jd = new UploadJD(null, true, cliente, sub_pasta, arquivo, processo);
         jd.setVisible(true);
     }
 
@@ -1485,7 +1486,10 @@ public class DocumentoJF extends javax.swing.JFrame {
 
     private synchronized void atividades() {
         new Thread(() -> {
-            new AtividadesJF().setVisible(true);
+            if (!atvJF.isVisible()) {
+                atvJF.init();
+                atvJF.setVisible(true);
+            }
         }).start();
     }
 
@@ -1511,7 +1515,7 @@ public class DocumentoJF extends javax.swing.JFrame {
             renomeia o arquivo mas mantem a extensão
          */
         //System.out.println(nova+obterExtensaoDoAquivo(documento.getNome()));
-        if (new DocumentoDAO().renomearDocumento(documento.getId(), nova + obterExtensaoDoAquivo(documento.getNome()))) {
+        if (new DocumentoDAO().renomearDocumento(documento.getId(), nova + Arquivo.obterExtensaoDoAquivo(documento.getNome()))) {
             jListTiposMouseClicked(null); //atualiza os documentos de novo
         } else {
             JOptionPane.showMessageDialog(null, "Ocorreu um problema ao tentar renomear o arquivo no Banco de Dados.");
@@ -1526,23 +1530,11 @@ public class DocumentoJF extends javax.swing.JFrame {
             return;
         }
         //System.out.println(nova+obterExtensaoDoAquivo(documentoPessoal.getNome()));
-        if (new DocumentoDAO().renomearDocumentoPessoal(documentoPessoal.getId(), nova + obterExtensaoDoAquivo(documentoPessoal.getNome()))) {
+        if (new DocumentoDAO().renomearDocumentoPessoal(documentoPessoal.getId(), nova + Arquivo.obterExtensaoDoAquivo(documentoPessoal.getNome()))) {
             dadosPessoaisBtnActionPerformed(null); //atualiza os documentos de novo
         } else {
             JOptionPane.showMessageDialog(null, "Ocorreu um problema ao tentar renomear o arquivo no Banco de Dados.");
         }
-    }
-
-    private String obterExtensaoDoAquivo(String nome) {
-        String extensao = nome;
-        char[] f = extensao.toCharArray();
-        int ultimoPonto = 0;
-        for (int x = 0; x < f.length; x++) {
-            if (f[x] == '.') {
-                ultimoPonto = x;
-            }
-        }
-        return extensao.substring(ultimoPonto);
     }
 
     private void verificarParamTXT() {
@@ -1572,6 +1564,12 @@ public class DocumentoJF extends javax.swing.JFrame {
             if (p2s.equals("1")) {
                 email = true;
             }
+
+            int p3 = param.indexOf("[porta_chat:");
+            String p3s = param.substring(p3 + "[porta_chat:".length(), p3 + "[porta_chat:".length() + 4);
+            System.out.println("\nporta: " + p3s);
+            chatServer(p3s);
+
         } catch (FileNotFoundException ex) {
             Logger.getLogger(ConnectionFactoryMySQL.class
                     .getName()).log(Level.SEVERE, null, ex);
@@ -1589,7 +1587,7 @@ public class DocumentoJF extends javax.swing.JFrame {
             verificar_envio_de_emails();
             System.out.println("Lembretes via email enviados.");
         }
-        chatServer();
+
     }
 
     private synchronized void verificar_envio_de_emails() {
@@ -1601,11 +1599,13 @@ public class DocumentoJF extends javax.swing.JFrame {
     private synchronized void verificarDiaPassado() {
         new Thread(() -> {
             try {
-                if (!data_abertura_programa.equals(CDate.DataPTBRAtual())) {
-                    verificarParamTXT();
-                    data_abertura_programa = CDate.DataPTBRAtual();
+                while (isRunning) {
+                    if (!data_abertura_programa.equals(CDate.DataPTBRAtual())) {
+                        verificarParamTXT();
+                        data_abertura_programa = CDate.DataPTBRAtual();
+                    }
+                    Thread.sleep(3600000 * 6); //aguarda 6 horas
                 }
-                Thread.sleep(3600000 * 6); //aguarda 6 horas
             } catch (InterruptedException ex) {
                 Logger.getLogger(DocumentoJF.class
                         .getName()).log(Level.SEVERE, null, ex);
@@ -1613,7 +1613,7 @@ public class DocumentoJF extends javax.swing.JFrame {
         }).start();
     }
 
-    private synchronized void chatServer() {
+    private synchronized void chatServer(String porta) {
         new Thread(() -> {
             String ip = ConnectionFactoryMySQL.ip();
             int index = 0;
@@ -1625,10 +1625,10 @@ public class DocumentoJF extends javax.swing.JFrame {
             if (user.getIp().equals(ip.substring(0, index))) {
                 try {
                     ServerSocket server;
-                    server = new ServerSocket(12345);
-                    System.out.println("Servidor ativo na porta 12345");
+                    server = new ServerSocket(Integer.parseInt(porta));
+                    System.out.println("Servidor ativo na porta " + porta);
                     ChatServidor chatServidor = new ChatServidor(); //somente para instanciar lista de clientes
-                    while (true) {
+                    while (isRunning) {
                         System.out.println("Aguardando conexão...");
                         Socket con = server.accept();
                         System.out.println("Cliente conectado...");
@@ -1654,5 +1654,12 @@ public class DocumentoJF extends javax.swing.JFrame {
             }
         }).start();
 
+    }
+
+    private void initJFramesAux() {
+        new Thread(() -> {
+            //inicia jframes auxiliares, para poder ter o controle de instancia-los somente uma vez
+            atvJF = new AtividadesJF();
+        }).start();
     }
 }
