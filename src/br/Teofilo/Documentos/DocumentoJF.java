@@ -1564,10 +1564,14 @@ public class DocumentoJF extends javax.swing.JFrame {
                 email = true;
             }
 
-            int p3 = param.indexOf("[porta_chat:");
-            String p3s = param.substring(p3 + "[porta_chat:".length(), p3 + "[porta_chat:".length() + 4);
-            System.out.println("\nporta: " + p3s);
-            chatServer(p3s);
+            int p4 = param.indexOf("[iniciar_chat_servidor:");
+            String p4s = param.substring(p4 + "[iniciar_chat_servidor:".length(), p4 + "[iniciar_chat_servidor:".length() + 1);
+            if (p4s.equals("1")) {
+                int p3 = param.indexOf("[porta_chat:");
+                String p3s = param.substring(p3 + "[porta_chat:".length(), p3 + "[porta_chat:".length() + 4);
+                System.out.println("\nporta: " + p3s);
+                chatServer(p3s);
+            };
 
         } catch (FileNotFoundException ex) {
             Logger.getLogger(ConnectionFactoryMySQL.class
@@ -1614,29 +1618,20 @@ public class DocumentoJF extends javax.swing.JFrame {
 
     private synchronized void chatServer(String porta) {
         new Thread(() -> {
-            String ip = ConnectionFactoryMySQL.ip();
-            int index = 0;
-            for (int x = 0; x < ip.length(); x++) {
-                if (ip.charAt(x) == ':') {
-                    index = x;
+            try {
+                ServerSocket server;
+                server = new ServerSocket(Integer.parseInt(porta));
+                System.out.println("Servidor ativo na porta " + porta);
+                ChatServidor chatServidor = new ChatServidor(); //somente para instanciar lista de clientes
+                while (isRunning) {
+                    System.out.println("Aguardando conexão...");
+                    Socket con = server.accept();
+                    System.out.println("Cliente conectado...");
+                    Thread t = new ChatServidor(con);
+                    t.start();
                 }
-            }
-            if (user.getIp().equals(ip.substring(0, index))) {
-                try {
-                    ServerSocket server;
-                    server = new ServerSocket(Integer.parseInt(porta));
-                    System.out.println("Servidor ativo na porta " + porta);
-                    ChatServidor chatServidor = new ChatServidor(); //somente para instanciar lista de clientes
-                    while (isRunning) {
-                        System.out.println("Aguardando conexão...");
-                        Socket con = server.accept();
-                        System.out.println("Cliente conectado...");
-                        Thread t = new ChatServidor(con);
-                        t.start();
-                    }
-                } catch (IOException ex) {
-                    Logger.getLogger(DocumentoJF.class.getName()).log(Level.SEVERE, null, ex);
-                }
+            } catch (IOException ex) {
+                Logger.getLogger(DocumentoJF.class.getName()).log(Level.SEVERE, null, ex);
             }
         }).start();
     }

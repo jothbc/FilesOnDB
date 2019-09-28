@@ -1,4 +1,4 @@
 [debito_automatico:1]
-
 [lembrete_via_email_automatico:1]
 [porta_chat:5662]
+[iniciar_chat_servidor:1]

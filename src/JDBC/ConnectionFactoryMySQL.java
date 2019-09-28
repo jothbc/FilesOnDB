@@ -20,7 +20,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JOptionPane;
 
 /**
  * @author JCR
@@ -47,7 +46,6 @@ public class ConnectionFactoryMySQL {
             Class.forName(DRIVER);
             return DriverManager.getConnection(URL, USER, PASS);
         } catch (ClassNotFoundException | SQLException ex) {
-            //JOptionPane.showMessageDialog(null, "Erro na conexão com o Banco de dados.","Erro",JOptionPane.ERROR_MESSAGE);
             GerarLogErro.gerar(ex.getMessage());
             throw new RuntimeException("Erro na conexão MySQL", ex);
         }
