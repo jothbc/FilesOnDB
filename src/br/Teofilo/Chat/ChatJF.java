@@ -198,7 +198,7 @@ public class ChatJF extends javax.swing.JFrame {
             }
         }
         txtIP = new JTextField(ip.substring(0, index));
-        txtPorta = new JTextField("12345");
+        txtPorta = new JTextField("5662");
         Object[] texts = {lblMessage, txtIP, txtPorta};
         JOptionPane.showMessageDialog(null, texts);
         usuario = new UserDAO().getUser();

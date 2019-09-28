@@ -5,8 +5,18 @@
  */
 package br.Teofilo.Cliente;
 
+import br.Teofilo.Atividades.Email;
+import br.Teofilo.Atividades.EmailDAO;
+import java.awt.event.KeyEvent;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.DefaultListModel;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+import javax.swing.text.BadLocationException;
 
 /**
  *
@@ -14,14 +24,18 @@ import javax.swing.JFileChooser;
  */
 public class EnviarEmailJD extends javax.swing.JDialog {
 
-    private File file = null;
+    private List<File> file;
+    private DefaultListModel lista = new DefaultListModel();
 
     /**
      * Creates new form EnviarEmailJD
      */
-    public EnviarEmailJD(java.awt.Frame parent, boolean modal) {
+    public EnviarEmailJD(java.awt.Frame parent, boolean modal, String destinatario_) {
         super(parent, modal);
         initComponents();
+        jList1.setModel(lista);
+        txt_destinatario.setText(destinatario_);
+        file = new ArrayList<>();
     }
 
     /**
@@ -34,15 +48,64 @@ public class EnviarEmailJD extends javax.swing.JDialog {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
-        jTextField1 = new javax.swing.JTextField();
+        btn_anexos = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jList1 = new javax.swing.JList<>();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        txt_mensagem = new javax.swing.JTextArea();
+        txt_titulo = new javax.swing.JTextField();
+        txt_destinatario = new javax.swing.JTextField();
+        btn_enviar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-        jButton1.setText("Buscar Arquivo");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
+
+        btn_anexos.setBackground(new java.awt.Color(255, 255, 255));
+        btn_anexos.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        btn_anexos.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/Teofilo/IMG/1x/archive-2.png"))); // NOI18N
+        btn_anexos.setText("Anexos");
+        btn_anexos.setBorder(null);
+        btn_anexos.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                btn_anexosActionPerformed(evt);
+            }
+        });
+
+        jList1.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        jList1.setToolTipText("Del para remover o anexo");
+        jList1.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                jList1KeyPressed(evt);
+            }
+        });
+        jScrollPane1.setViewportView(jList1);
+
+        txt_mensagem.setColumns(20);
+        txt_mensagem.setLineWrap(true);
+        txt_mensagem.setRows(5);
+        txt_mensagem.setTabSize(5);
+        txt_mensagem.setBorder(javax.swing.BorderFactory.createTitledBorder("Mensagem"));
+        jScrollPane2.setViewportView(txt_mensagem);
+
+        txt_titulo.setBorder(javax.swing.BorderFactory.createTitledBorder("Título"));
+
+        txt_destinatario.setToolTipText("Utilize \",\" caso queira enviar para mais de um e-mail");
+        txt_destinatario.setBorder(javax.swing.BorderFactory.createTitledBorder("Destinatário"));
+        txt_destinatario.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txt_destinatarioActionPerformed(evt);
+            }
+        });
+
+        btn_enviar.setBackground(new java.awt.Color(255, 255, 255));
+        btn_enviar.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        btn_enviar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/Teofilo/IMG/1x/send-2.png"))); // NOI18N
+        btn_enviar.setText("Enviar");
+        btn_enviar.setBorder(null);
+        btn_enviar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_enviarActionPerformed(evt);
             }
         });
 
@@ -50,21 +113,44 @@ public class EnviarEmailJD extends javax.swing.JDialog {
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(342, 342, 342))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txt_titulo)
+                            .addComponent(txt_destinatario)
+                            .addComponent(jScrollPane2)))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(10, 10, 10)
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 547, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(btn_anexos, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(btn_enviar, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(62, 62, 62)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(268, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(txt_destinatario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(txt_titulo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 192, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btn_anexos, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btn_enviar)
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -77,24 +163,51 @@ public class EnviarEmailJD extends javax.swing.JDialog {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        JFileChooser jf = new JFileChooser();
-        jf.setDialogTitle("Escolha o arquivo");
-        jf.setFileSelectionMode(JFileChooser.FILES_ONLY);
-        int op = jf.showOpenDialog(null);
-        if (op == JFileChooser.APPROVE_OPTION) {
-            file = jf.getSelectedFile();
-            jTextField1.setText(file.getAbsolutePath());
+    private void btn_anexosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_anexosActionPerformed
+        addAnexo();
+    }//GEN-LAST:event_btn_anexosActionPerformed
+
+    private void txt_destinatarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_destinatarioActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txt_destinatarioActionPerformed
+
+    private void jList1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jList1KeyPressed
+        if (evt.getKeyCode() == KeyEvent.VK_DELETE) {
+            if (jList1.getSelectedIndex() >= 0) {
+                lista.removeElementAt(jList1.getSelectedIndex());
+            }
         }
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_jList1KeyPressed
+
+    private void btn_enviarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_enviarActionPerformed
+        Email remetente = new EmailDAO().obterRemetente();
+        if (remetente != null) {
+            String destinatarios = txt_destinatario.getText();
+            String titulo = txt_titulo.getText();
+            String mensagem = txt_mensagem.getText();
+            for (int x = 0; x < lista.size(); x++) {
+                file.add((File) lista.getElementAt(x));
+            }
+            btn_enviar.setText("Enviando...");
+            btn_enviar.setEnabled(false);
+            new Thread(() -> {
+                if (EmailDAO.enviarEmailAnexo(remetente, file, destinatarios, titulo, mensagem)) {
+                    btn_enviar.setText("Enviar");
+                    btn_enviar.setEnabled(true);
+                    JOptionPane.showMessageDialog(null, "Email Enviado!");
+                }
+            }).start();
+        }else{
+            JOptionPane.showMessageDialog(null, "Problemas ao tentar obter o remetente do banco de dados.");
+        }
+    }//GEN-LAST:event_btn_enviarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -126,7 +239,7 @@ public class EnviarEmailJD extends javax.swing.JDialog {
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                EnviarEmailJD dialog = new EnviarEmailJD(new javax.swing.JFrame(), true);
+                EnviarEmailJD dialog = new EnviarEmailJD(new javax.swing.JFrame(), true, "jothbc@gmail.com");
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {
@@ -139,8 +252,41 @@ public class EnviarEmailJD extends javax.swing.JDialog {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton btn_anexos;
+    private javax.swing.JButton btn_enviar;
+    private javax.swing.JList<String> jList1;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JTextField jTextField1;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JTextField txt_destinatario;
+    private javax.swing.JTextArea txt_mensagem;
+    private javax.swing.JTextField txt_titulo;
     // End of variables declaration//GEN-END:variables
+
+    private void addAnexo() {
+        JFileChooser jf = new JFileChooser();
+        jf.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+        jf.setDialogTitle("Anexo");
+        int op = jf.showOpenDialog(null);
+        if (op == JFileChooser.APPROVE_OPTION) {
+            if (jf.getSelectedFile().isDirectory()) { //verifica se é diretório
+                File diretorio = jf.getSelectedFile();  //somente diretório sem \\ no fim
+                //caminhotxt.setText(diretorio.getPath() + "\\");
+                String[] arq_string = jf.getSelectedFile().list(); //contém o caminho completo de todos os arquivos dentro da pasta arquivo
+                for (String f : arq_string) {
+                    File f_temp = new File(diretorio + "\\" + f);
+                    if (f_temp.isFile()) {
+                        //file.add(f_temp);
+                        lista.addElement(f_temp);
+                    }
+                }
+            } else { //senao é arquivo
+                File f_temp = jf.getSelectedFile();
+                if (f_temp.isFile()) {
+                    //file.add(f_temp);
+                    lista.addElement(f_temp);
+                }
+            }
+        }
+    }
 }

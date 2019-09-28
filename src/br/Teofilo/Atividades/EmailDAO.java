@@ -8,6 +8,7 @@ package br.Teofilo.Atividades;
 import JDBC.ConnectionFactoryMySQL;
 import br.Teofilo.Bean.GerarLogErro;
 import funcoes.CDate;
+import java.io.File;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -25,6 +26,12 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.text.Normalizer;
 import java.util.regex.Pattern;
+import javax.activation.DataHandler;
+import javax.activation.DataSource;
+import javax.activation.FileDataSource;
+import javax.mail.internet.MimeBodyPart;
+import javax.mail.internet.MimeMultipart;
+import javax.swing.JTextArea;
 import org.apache.commons.mail.DefaultAuthenticator;
 import org.apache.commons.mail.EmailAttachment;
 import org.apache.commons.mail.MultiPartEmail;
@@ -233,7 +240,7 @@ public class EmailDAO {
         }
     }
 
-    private Email obterRemetente() {
+    public Email obterRemetente() {
         con = ConnectionFactoryMySQL.getConnection();
         sql = "SELECT * FROM email_from";
         try {
@@ -300,37 +307,59 @@ public class EmailDAO {
         }
     }
 
-    public void enviarEmailAnexo(String caminho_arq, String nome_arq, String destinatario, String assunto, String mensagem) {
-        Email remetente = obterRemetente();
+    public static boolean enviarEmailAnexo(Email remetente,List<File> files, String destinatario, String titulo, String mensagem) {
+//        Email remetente = new Email();
+//        remetente.setRemetente("jothbc@gmail.com");
+//        remetente.setSenha("sbjzgrsfcsgldsnm");
+        //salva as propriedados do servidor de emails
+        Properties prop = new Properties();
+        prop.put("mail.smtp.host", "smtp.gmail.com");
+        prop.put("mail.smtp.port", "465");
+        prop.put("mail.smtp.auth", "true");
+        prop.put("mail.smtp.socketFactory.port", "465");
+        prop.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
 
-        MultiPartEmail email = new MultiPartEmail();
-        email.setHostName("smtp.gmail.com");
-        email.setSslSmtpPort("465");
-        email.setStartTLSRequired(true);
-        email.setStartTLSEnabled(true);
-        email.setSSLOnConnect(true);
+        Session session = Session.getInstance(prop,
+                new DefaultAuthenticator(remetente.getRemetente(), remetente.getSenha()));
 
-        email.setAuthenticator(new DefaultAuthenticator(remetente.getRemetente(), remetente.getSenha()));
+        MimeMessage msg = new MimeMessage(session);
+
         try {
-            email.setFrom(remetente.getRemetente());
-            email.setSubject(assunto);
-            email.setMsg(mensagem);
-            email.addTo(destinatario);
+            //Quem esta enviando
+            msg.setFrom(new InternetAddress(remetente.getRemetente()));
+            //Destinatario
+            msg.setRecipient(Message.RecipientType.TO, new InternetAddress(destinatario));
+            //Data de envio
+            msg.setSentDate(new Date());
+            //titulo email
+            msg.setSubject(titulo);
 
-            EmailAttachment attachment = new EmailAttachment();
-            attachment.setPath(caminho_arq);
-            attachment.setDisposition(EmailAttachment.ATTACHMENT);
-            attachment.setDescription(deAccent(nome_arq));
-            attachment.setName(deAccent(nome_arq));
+            Multipart mp = new MimeMultipart();
+            //mensagem
 
-            email.attach(attachment);
-            //email.setContent(attachment);
-            email.send();
-            System.out.println("enviado.");
-        } catch (Exception e) {
+            MimeBodyPart paragrafo = new MimeBodyPart();
+            paragrafo.setContent(mensagem, "text/html");
+            mp.addBodyPart(paragrafo);
+            //anexos
+            for (File file : files) {
+                MimeBodyPart mbp = new MimeBodyPart();
+                DataSource fds = new FileDataSource(file);
+                mbp.setDisposition(Part.ATTACHMENT);
+                mbp.setDataHandler(new DataHandler(fds));
+                mbp.setFileName(deAccent(fds.getName()));
+                mp.addBodyPart(mbp);
+            }
+
+            msg.setContent(mp);
+
+            //envia a mensagem
+            Transport.send(msg);
+            return true;
+        } catch (MessagingException e) {
             System.err.println(e);
+            GerarLogErro.gerar(e.getMessage());
+            return false;
         }
-
     }
 
     public static final String deAccent(String str) {

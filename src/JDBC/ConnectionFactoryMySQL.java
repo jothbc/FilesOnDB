@@ -86,11 +86,6 @@ public class ConnectionFactoryMySQL {
     }
 
     public static String ip() {
-        //File f = new File(ConnectionFactoryMySQL.class.getResource("/JDBC/ip_db.txt").getFile());
-        //InputStream test = Thread.currentThread().getClass().getResourceAsStream("/JDBC/ip_db.txt");
-        //System.out.println(test);
-        //File f = new File(test.toString());
-        //File f = new File("ip_db.txt");
         File f = new File(PATH + "ip_db.txt");
         try {
             InputStream os = new FileInputStream(f);

@@ -429,6 +429,7 @@ public class ClienteJD extends javax.swing.JDialog {
     }
 
     private void enviarEmail() {
-        
+        String destinatario = (String) jTable1.getValueAt(jTable1.getSelectedRow(), 1);
+        new EnviarEmailJD(null, true, destinatario).setVisible(true);
     }
 }
