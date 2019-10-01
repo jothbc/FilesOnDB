@@ -19,7 +19,8 @@ import java.util.logging.Logger;
  */
 public class GerarLogErro {
 
-    public static final String PATH = "C:\\JCR\\JCR LOG\\log - ";
+    //public static final String PATH = "C:\\JCR\\JCR LOG\\log - ";
+    public static final String PATH = "res/JCR LOG/log - ";
 
     public final static void gerar(String l) {
         try {

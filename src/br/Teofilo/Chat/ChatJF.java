@@ -221,7 +221,7 @@ public class ChatJF extends javax.swing.JFrame {
             status.setText("Conectado");
         } catch (IOException ex) {
             status.setText("Desconectado");
-            Logger.getLogger(ChatJF.class.getName()).log(Level.SEVERE, null, ex);
+            System.err.println(ex);
         }
     }
 

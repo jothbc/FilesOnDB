@@ -68,7 +68,8 @@ import javax.swing.JOptionPane;
  */
 public class DocumentoJF extends javax.swing.JFrame {
 
-    public static final String PATH = "C:\\JCR\\";
+    //public static final String PATH = "C:\\JCR\\";
+    public static final String PATH = "res/";
 
     private User user;
     private boolean conectado = false;
@@ -1610,8 +1611,7 @@ public class DocumentoJF extends javax.swing.JFrame {
                     Thread.sleep(3600000 * 6); //aguarda 6 horas
                 }
             } catch (InterruptedException ex) {
-                Logger.getLogger(DocumentoJF.class
-                        .getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(DocumentoJF.class.getName()).log(Level.SEVERE, null, ex);
             }
         }).start();
     }
@@ -1631,20 +1631,25 @@ public class DocumentoJF extends javax.swing.JFrame {
                     t.start();
                 }
             } catch (IOException ex) {
-                Logger.getLogger(DocumentoJF.class.getName()).log(Level.SEVERE, null, ex);
+                System.err.println(ex);
             }
         }).start();
     }
 
     private synchronized void chat() {
         new Thread(() -> {
+            ChatJF chat = null;
             try {
-                ChatJF chat = new ChatJF();
+                chat = new ChatJF();
                 chat.setVisible(true);
-                chat.conectar();
+            } catch (Exception ex) {
+                Logger.getLogger(DocumentoJF.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            chat.conectar();
+            try {
                 chat.escutar();
             } catch (IOException ex) {
-                Logger.getLogger(DocumentoJF.class.getName()).log(Level.SEVERE, null, ex);
+                System.err.println(ex);
             }
         }).start();
 
