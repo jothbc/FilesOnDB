@@ -229,8 +229,19 @@ public class EmailDAO {
                         List<Email> emailsDesseCartao = new EmailDAO().getDestinatarios(c.getId());
                         // se o cartao tiver emails cadastrados para enviar a info
                         if (!emailsDesseCartao.isEmpty()) {
-                            String msg = "Lembrete:\n\nA Atividade com titulo de ''" + c.getTitulo() + "'' está com data de entrega para " + c.getEntrega();
-                            enviarEmail(emailsDesseCartao, msg, "Lembrete de entrega");
+                            String msg = "Lembrete:\n\n A atividade com titulo de ''" + c.getTitulo()
+                                    + "'' está com data de entrega para " + c.getEntrega()
+                                    + "\n\n Por favor, não marcar esse email como spam!"
+                                    + "\n\n Email enviado automaticamente, não responder.";
+                            String destinatarios = "";
+                            for (int x = 0; x < emailsDesseCartao.size(); x++) {
+                                if (x + 1 == emailsDesseCartao.size()) {
+                                    destinatarios += emailsDesseCartao.get(x).getDestinatario();
+                                } else {
+                                    destinatarios += emailsDesseCartao.get(x).getDestinatario() + ",";
+                                }
+                            }
+                            enviarEmail(destinatarios, msg, "Lembrete de Entrega de Atividade", new ArrayList());
                         }
                     }
                 } catch (ParseException ex) {
@@ -261,8 +272,15 @@ public class EmailDAO {
         }
     }
 
-    public void enviarEmail(List<Email> destinatarios, String msg, String titulo) {
-        Email remetente = obterRemetente();
+    public static boolean enviarEmail(String destinatarios, String msg, String titulo, List<File> files) {
+        if (files.isEmpty()) {
+            return enviarEmail_SemAnexo(new EmailDAO().obterRemetente(), destinatarios, msg, titulo);
+        } else {
+            return enviarEmailAnexo(new EmailDAO().obterRemetente(), files, titulo, titulo, msg);
+        }
+    }
+
+    private static boolean enviarEmail_SemAnexo(Email remetente, String destinatarios, String msg, String titulo) {
 
         final String username = remetente.getRemetente();
         final String password = remetente.getSenha();
@@ -282,32 +300,24 @@ public class EmailDAO {
         });
 
         try {
-            String destinatariosString = "";
-            for (int x = 0; x < destinatarios.size(); x++) {
-                if (x + 1 == destinatarios.size()) {
-                    destinatariosString += destinatarios.get(x).getDestinatario();
-                } else {
-                    destinatariosString += destinatarios.get(x).getDestinatario() + ",";
-                }
-            }
             Message message = new MimeMessage(session);
             message.setFrom(new InternetAddress(remetente.getRemetente()));
             message.setRecipients(
                     Message.RecipientType.TO,
-                    InternetAddress.parse(destinatariosString)
+                    InternetAddress.parse(destinatarios)
             );
             message.setSubject(titulo);
-            message.setText(msg
-                    + "\n\n Por favor, não marcar esse email como spam!"
-                    + "\n\n Email enviado automaticamente, não responder.");
+            message.setText(msg);
             Transport.send(message);
+            return true;
         } catch (MessagingException e) {
             e.printStackTrace();
             GerarLogErro.gerar(e.getMessage());
+            return false;
         }
     }
 
-    public static boolean enviarEmailAnexo(Email remetente,List<File> files, String destinatario, String titulo, String mensagem) {
+    private static boolean enviarEmailAnexo(Email remetente, List<File> files, String destinatario, String titulo, String mensagem) {
 //        Email remetente = new Email();
 //        remetente.setRemetente("jothbc@gmail.com");
 //        remetente.setSenha("sbjzgrsfcsgldsnm");
@@ -338,7 +348,7 @@ public class EmailDAO {
             //mensagem
 
             MimeBodyPart paragrafo = new MimeBodyPart();
-            paragrafo.setContent(mensagem, "text/html");
+            paragrafo.setContent(mensagem + "\n\nJCR", "text/html");
             mp.addBodyPart(paragrafo);
             //anexos
             for (File file : files) {

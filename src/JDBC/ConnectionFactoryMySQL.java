@@ -41,6 +41,7 @@ public class ConnectionFactoryMySQL {
     private static final String PASS = "35v2l3x6AtWIglMg";
     //public static final String PATH = "C:\\JCR\\";
     public static final String PATH = "res/";
+    private static final int FATOR = 5662;
 
     public static Connection getConnection() {
         try {
@@ -92,13 +93,25 @@ public class ConnectionFactoryMySQL {
             byte[] dados = os.readAllBytes();
             os.close();
             String ipString = new String(dados);
-            System.out.print("IP do servidor: " + ipString);
-            return ipString;
+            int index = 0;
+            index = ipString.indexOf(":");
+            String[] ipSeparado = ipString.substring(0, index).split("\\.");
+            String temp = "";
+            for (int x = 0; x < ipSeparado.length; x++) {
+                ipSeparado[x] = Integer.toString(Integer.parseInt(ipSeparado[x]) / FATOR);
+                if (x + 1 < ipSeparado.length) {
+                    temp += ipSeparado[x] + ".";
+                } else {
+                    temp += ipSeparado[x];
+                }
+            }
+            temp += ipString.substring(index);
+            return temp;
         } catch (FileNotFoundException ex) {
-            Logger.getLogger(ConnectionFactoryMySQL.class.getName()).log(Level.SEVERE, null, ex);
+            System.err.println(ex);
             GerarLogErro.gerar(ex.getMessage());
         } catch (IOException ex) {
-            Logger.getLogger(ConnectionFactoryMySQL.class.getName()).log(Level.SEVERE, null, ex);
+            System.err.println(ex);
             GerarLogErro.gerar(ex.getMessage());
         }
         return "localhost";

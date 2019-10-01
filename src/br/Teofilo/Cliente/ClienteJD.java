@@ -276,7 +276,7 @@ public class ClienteJD extends javax.swing.JDialog {
     }//GEN-LAST:event_jButton7ActionPerformed
 
     private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
-        if (jTable1.getSelectedRow() < 0 || jTable1.getValueAt(jTable1.getSelectedRow(), 1) == null) {
+        if (jTable1.getSelectedRow() < 0 || jTable1.getValueAt(jTable1.getSelectedRow(), 2) == null) {
             return;
         }
         enviarEmail();
@@ -429,7 +429,7 @@ public class ClienteJD extends javax.swing.JDialog {
     }
 
     private void enviarEmail() {
-        String destinatario = (String) jTable1.getValueAt(jTable1.getSelectedRow(), 1);
+        String destinatario = (String) jTable1.getValueAt(jTable1.getSelectedRow(), 2);
         new EnviarEmailJD(null, true, destinatario).setVisible(true);
     }
 }

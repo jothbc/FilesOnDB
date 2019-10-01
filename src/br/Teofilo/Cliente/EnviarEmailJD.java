@@ -198,7 +198,7 @@ public class EnviarEmailJD extends javax.swing.JDialog {
             btn_enviar.setText("Enviando...");
             btn_enviar.setEnabled(false);
             new Thread(() -> {
-                if (EmailDAO.enviarEmailAnexo(remetente, file, destinatarios, titulo, mensagem)) {
+                if (EmailDAO.enviarEmail(destinatarios, mensagem, titulo, file)) {
                     btn_enviar.setText("Enviar");
                     btn_enviar.setEnabled(true);
                     JOptionPane.showMessageDialog(null, "Email Enviado!");
