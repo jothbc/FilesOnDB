@@ -87,6 +87,8 @@ public class DocumentoJF extends javax.swing.JFrame {
 
     private boolean isRunning = false;
 
+    private ChatJF chat = null;
+
     /**
      * Creates new form DocumentoJF
      */
@@ -1638,18 +1640,9 @@ public class DocumentoJF extends javax.swing.JFrame {
 
     private synchronized void chat() {
         new Thread(() -> {
-            ChatJF chat = null;
-            try {
-                chat = new ChatJF();
-                chat.setVisible(true);
-            } catch (Exception ex) {
-                Logger.getLogger(DocumentoJF.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            chat.conectar();
-            try {
-                chat.escutar();
-            } catch (IOException ex) {
-                System.err.println(ex);
+            chat.setVisible(true);
+            if (!chat.conectado()) {
+                chat.conectar();
             }
         }).start();
 
@@ -1659,6 +1652,14 @@ public class DocumentoJF extends javax.swing.JFrame {
         new Thread(() -> {
             //inicia jframes auxiliares, para poder ter o controle de instancia-los somente uma vez
             atvJF = new AtividadesJF();
+            //chat
+            chat = new ChatJF();
+            chat.conectar();
+            try {
+                chat.escutar();
+            } catch (IOException ex) {
+                System.err.println(ex);
+            }
         }).start();
     }
 }

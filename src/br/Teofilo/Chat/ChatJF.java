@@ -160,6 +160,8 @@ public class ChatJF extends javax.swing.JFrame {
             } catch (IOException ex) {
                 Logger.getLogger(ChatJF.class.getName()).log(Level.SEVERE, null, ex);
                 JOptionPane.showMessageDialog(null, "Algo deu errado ao tentar enviar sua mensagem.");
+                socket = null;
+                status.setText("Desconectado");
             }
         }
     }//GEN-LAST:event_sendtxtKeyPressed
@@ -189,7 +191,6 @@ public class ChatJF extends javax.swing.JFrame {
     // End of variables declaration//GEN-END:variables
 
     private void iniciar() {
-        JLabel lblMessage = new JLabel("Verificar!");
         String ip = ConnectionFactoryMySQL.ip();
         int index = 0;
         for (int x = 0; x < ip.length(); x++) {
@@ -199,8 +200,8 @@ public class ChatJF extends javax.swing.JFrame {
         }
         txtIP = new JTextField(ip.substring(0, index));
         txtPorta = new JTextField("5662");
-        Object[] texts = {lblMessage, txtIP, txtPorta};
-        JOptionPane.showMessageDialog(null, texts);
+        //Object[] texts = {lblMessage, txtIP, txtPorta};
+        //JOptionPane.showMessageDialog(null, texts);
         usuario = new UserDAO().getUser();
     }
 
@@ -220,6 +221,7 @@ public class ChatJF extends javax.swing.JFrame {
             bfw.flush();
             status.setText("Conectado");
         } catch (IOException ex) {
+            socket = null;
             status.setText("Desconectado");
             System.err.println(ex);
         }
@@ -283,6 +285,10 @@ public class ChatJF extends javax.swing.JFrame {
         ouw.close();
         ou.close();
         socket.close();
+    }
+
+    public boolean conectado() {
+        return socket != null;
     }
 
 }
