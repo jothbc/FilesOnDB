@@ -139,7 +139,7 @@ public class AES {
                 encryptedFile.delete();
             }
             //a linha a seguir retira o "decrip" do nome do arquivo
-            decryptedFile.renameTo(new File(decryptedFile.getParent()+"\\"+decryptedFile.getName().substring(6)));
+            //decryptedFile.renameTo(new File(decryptedFile.getParent()+"\\"+decryptedFile.getName().substring(6)));
             return decryptedFile;
         } catch (IOException | InvalidAlgorithmParameterException | InvalidKeyException | NoSuchAlgorithmException | BadPaddingException | IllegalBlockSizeException | NoSuchPaddingException e) {
             System.err.println(e);

@@ -59,7 +59,7 @@ public class UploadJD extends javax.swing.JDialog {
      * @param arquivo_
      * @param processo_
      */
-    public UploadJD(java.awt.Frame parent, boolean modal, Cliente cliente_, TipoDoc sub_pasta_, Arquivo arquivo_, Processo processo_) {
+    public UploadJD(java.awt.Frame parent, boolean modal, Cliente cliente_, TipoDoc sub_pasta_, Arquivo arquivo_, Processo processo_, PublicKey key_p) {
         super(parent, modal);
         this.lista_arquivos = new DefaultListModel<>();
         initComponents();
@@ -67,6 +67,7 @@ public class UploadJD extends javax.swing.JDialog {
         this.sub_pasta = sub_pasta_;
         this.arquivo = arquivo_;
         this.processo = processo_;
+        RSA_KEY = key_p;
         init();
     }
 
@@ -201,7 +202,9 @@ public class UploadJD extends javax.swing.JDialog {
 
         jCherCrip.setBackground(new java.awt.Color(255, 255, 255));
         jCherCrip.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jCherCrip.setSelected(true);
         jCherCrip.setText("Criptografar");
+        jCherCrip.setEnabled(false);
         jCherCrip.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jCherCripActionPerformed(evt);
@@ -353,7 +356,7 @@ public class UploadJD extends javax.swing.JDialog {
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                UploadJD dialog = new UploadJD(new javax.swing.JFrame(), true, null, null, null, null);
+                UploadJD dialog = new UploadJD(new javax.swing.JFrame(), true, null, null, null, null, KeyController.getPublicKey());
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {
@@ -397,6 +400,13 @@ public class UploadJD extends javax.swing.JDialog {
                 obs.setText("Documento pessoal.");
             }
             jProgressBar1.setVisible(false);
+        }
+        if (RSA_KEY == null) {
+            RSA_KEY = KeyController.getPublicKey();
+            if (RSA_KEY == null) {
+                JOptionPane.showMessageDialog(null, "Por favor, selecione a chave publica para criptografar os dados.\nA falta da chave publica deixa os dados desprotegidos no Banco de Dados.");
+                dispose();
+            }
         }
     }
 

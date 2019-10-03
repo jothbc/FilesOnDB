@@ -14,7 +14,7 @@ use teofilo;
 GRANT ALL PRIVILEGES ON 
 teofilo.* 
 TO 
-'root'@'%' ;
+'root'@'%';
 
 FLUSH PRIVILEGES;
 

@@ -38,7 +38,6 @@ import java.awt.HeadlessException;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -51,8 +50,8 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.security.PrivateKey;
+import java.security.PublicKey;
 import java.sql.Connection;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -88,6 +87,9 @@ public class DocumentoJF extends javax.swing.JFrame {
     private boolean isRunning = false;
 
     private ChatJF chat = null;
+
+    private PublicKey pk_public;
+    private PrivateKey pk_private;
 
     /**
      * Creates new form DocumentoJF
@@ -873,6 +875,7 @@ public class DocumentoJF extends javax.swing.JFrame {
              */
             verificarParamTXT();
             verificarDiaPassado();
+            pk_public = KeyController.carregarKey();
         }
 
     }
@@ -944,19 +947,58 @@ public class DocumentoJF extends javax.swing.JFrame {
             informtxt.setText("Carregando..");
             informtxt.setForeground(Color.red);
             Arquivo arquivo = null;
-            File f = null;
+            File file = null;
+            File file_temp = null;
             if (listDocumentos.getElementAt(jListDocumento.getSelectedIndex()) instanceof Documento) {
                 arquivo = (Documento) listDocumentos.getElementAt(jListDocumento.getSelectedIndex());
-                f = new DocumentoDAO().getArquivo(arquivo.getId(), PATH + "JCR LOG\\", "documentos");
-                f.deleteOnExit();
+                if (arquivo.isCrip()) {
+                    if (pk_private == null) {
+                        pk_private = KeyController.getPrivateKey();
+                        if (pk_private == null) {
+                            JOptionPane.showMessageDialog(null, "Arquivo criptografado, para baixa-lo selecione a chave privada.");
+                            return;
+                        }
+                    }
+                    byte[] chaveAES = arquivo.getCrip2();
+                    String chaveAES_String = RSA.decriptografa(chaveAES, pk_private);
+                    chaveAES = AES.hexStringToByteArray(chaveAES_String);
+                    SecretKey AES_KEY = new SecretKeySpec(chaveAES, "AES");
+                    //System.out.println("CHAVE AES CAPTURADA EM FORMATO HEXA: " + AES.bytesToHex(AES_KEY.getEncoded()));
+                    file = new DocumentoDAO().getArquivo(arquivo.getId(), PATH + "JCR LOG\\", "documentos");
+                    file_temp = AES.decrypt(file.getPath(), PATH + "JCR LOG\\decrip" + file.getName(), AES_KEY, true);
+                } else {
+                    file_temp = new DocumentoDAO().getArquivo(arquivo.getId(), PATH + "JCR LOG\\", "documentos");
+                }
+                file.deleteOnExit();
+                file_temp.deleteOnExit();
+                //file = new DocumentoDAO().getArquivo(arquivo.getId(), PATH + "JCR LOG\\", "documentos");
             } else if (listDocumentos.getElementAt(jListDocumento.getSelectedIndex()) instanceof DocumentoPessoal) {
                 arquivo = (DocumentoPessoal) listDocumentos.getElementAt(jListDocumento.getSelectedIndex());
-                f = new DocumentoDAO().getArquivo(arquivo.getId(), PATH + "JCR LOG\\", "documentos_pessoais");
-                f.deleteOnExit();
+                if (arquivo.isCrip()) {
+                    if (pk_private == null) {
+                        pk_private = KeyController.getPrivateKey();
+                        if (pk_private == null) {
+                            JOptionPane.showMessageDialog(null, "Arquivo criptografado, para baixa-lo selecione a chave privada.");
+                            return;
+                        }
+                    }
+                    byte[] chaveAES = arquivo.getCrip2();
+                    String chaveAES_String = RSA.decriptografa(chaveAES, pk_private);
+                    chaveAES = AES.hexStringToByteArray(chaveAES_String);
+                    SecretKey AES_KEY = new SecretKeySpec(chaveAES, "AES");
+                    //System.out.println("CHAVE AES CAPTURADA EM FORMATO HEXA: " + AES.bytesToHex(AES_KEY.getEncoded()));
+                    file = new DocumentoDAO().getArquivo(arquivo.getId(), PATH + "JCR LOG\\CRIP\\", "documentos_pessoais");
+                    file_temp = AES.decrypt(file.getPath(), PATH + "JCR LOG\\" + file.getName(), AES_KEY, true);
+                } else {
+                    file_temp = new DocumentoDAO().getArquivo(arquivo.getId(), PATH + "JCR LOG\\", "documentos_pessoais");
+                }
+                file.deleteOnExit();
+                file_temp.deleteOnExit();
+                //file = new DocumentoDAO().getArquivo(arquivo.getId(), PATH + "JCR LOG\\", "documentos_pessoais");
             }
-            if (arquivo != null) {
+            if (file_temp != null) {
                 try {
-                    Desktop.getDesktop().open(f);
+                    Desktop.getDesktop().open(file_temp);
                 } catch (IOException ex) {
                     Logger.getLogger(DocumentoJF.class.getName()).log(Level.SEVERE, null, ex);
                     GerarLogErro.gerar("Tentando visualizar um arquivo." + ex.getMessage());
@@ -1006,7 +1048,7 @@ public class DocumentoJF extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, ex, "Erro", JOptionPane.INFORMATION_MESSAGE);
             return;
         }
-        UploadJD jd = new UploadJD(null, true, cliente, sub_pasta, arquivo, processo);
+        UploadJD jd = new UploadJD(null, true, cliente, sub_pasta, arquivo, processo, pk_public);
         jd.setVisible(true);
     }
 
@@ -1024,8 +1066,8 @@ public class DocumentoJF extends javax.swing.JFrame {
                 downloadBtn.setEnabled(false);
                 informtxt.setText("Baixando...");
                 informtxt.setForeground(Color.red);
-                File arquivo = null;
-                PrivateKey CHAVE_RSA_PRIVADA = null;
+                File file = null;
+                File file_temp = null;
                 if (listDocumentos.getElementAt(jListDocumento.getSelectedIndices()[0]) instanceof Documento) {
                     Documento[] d = new Documento[jListDocumento.getSelectedIndices().length];
                     //dividido em 2 for, um para carregamento rápido dos selecionados, e outro para efetuar o download
@@ -1039,23 +1081,10 @@ public class DocumentoJF extends javax.swing.JFrame {
                      */
                     for (Documento doc : d) {
                         if (doc.isCrip()) {
-                            if (CHAVE_RSA_PRIVADA == null) {
-                                JFileChooser chooser = new JFileChooser();
-                                chooser.setDialogTitle("Selecione a chave privada para descriptografar o(s) arquivo(s)");
-                                chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-                                int op2 = chooser.showOpenDialog(null);
-                                if (op2 == JFileChooser.APPROVE_OPTION) {
-                                    try {
-                                        ObjectInputStream inputStream = null;
-                                        inputStream = new ObjectInputStream(new FileInputStream(chooser.getSelectedFile()));
-                                        CHAVE_RSA_PRIVADA = (PrivateKey) inputStream.readObject();
-                                    } catch (FileNotFoundException ex) {
-                                        Logger.getLogger(DocumentoJF.class.getName()).log(Level.SEVERE, null, ex);
-                                    } catch (IOException | ClassNotFoundException ex) {
-                                        Logger.getLogger(DocumentoJF.class.getName()).log(Level.SEVERE, null, ex);
-                                    }
-                                } else {
-                                    JOptionPane.showMessageDialog(null, "Operação abortada");
+                            if (pk_private == null) {
+                                pk_private = KeyController.getPrivateKey();
+                                if (pk_private == null) {
+                                    JOptionPane.showMessageDialog(null, "Arquivo criptografado, para baixa-lo selecione a chave privada.");
                                     return;
                                 }
                             }
@@ -1064,14 +1093,14 @@ public class DocumentoJF extends javax.swing.JFrame {
                              2* descriptografar o arquivo com a chave aes
                              */
                             byte[] chaveAES = doc.getCrip2();
-                            String chaveAES_String = RSA.decriptografa(chaveAES, CHAVE_RSA_PRIVADA);
+                            String chaveAES_String = RSA.decriptografa(chaveAES, pk_private);
                             chaveAES = AES.hexStringToByteArray(chaveAES_String);
                             SecretKey AES_KEY = new SecretKeySpec(chaveAES, "AES");
                             //System.out.println("CHAVE AES CAPTURADA EM FORMATO HEXA: "+AES.bytesToHex(AES_KEY.getEncoded()));
-                            arquivo = new DocumentoDAO().getArquivo(doc.getId(), fl.getSelectedFile().getPath() + "\\", "documentos");
-                            arquivo = AES.decrypt(arquivo.getPath(), arquivo.getParent() + "\\decrip" + arquivo.getName(), AES_KEY, true);
-                        } else {
-                            arquivo = new DocumentoDAO().getArquivo(doc.getId(), fl.getSelectedFile().getPath() + "\\", "documentos");
+                            file = new DocumentoDAO().getArquivo(doc.getId(), PATH+"JCR LOG\\CRIP\\", "documentos");
+                            file_temp = AES.decrypt(file.getPath(), fl.getSelectedFile().getPath(), AES_KEY, true);
+                        } else { //doc nao criptografado
+                            file_temp = new DocumentoDAO().getArquivo(doc.getId(), fl.getSelectedFile().getPath() + "\\", "documentos");
                         }
                     }
                     /*
@@ -1087,23 +1116,10 @@ public class DocumentoJF extends javax.swing.JFrame {
                     }
                     for (DocumentoPessoal doc : dp) {
                         if (doc.isCrip()) {
-                            if (CHAVE_RSA_PRIVADA == null) {
-                                JFileChooser chooser = new JFileChooser();
-                                chooser.setDialogTitle("Selecione a chave privada para descriptografar o(s) arquivo(s)");
-                                chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-                                int op2 = chooser.showOpenDialog(null);
-                                if (op2 == JFileChooser.APPROVE_OPTION) {
-                                    try {
-                                        ObjectInputStream inputStream = null;
-                                        inputStream = new ObjectInputStream(new FileInputStream(chooser.getSelectedFile()));
-                                        CHAVE_RSA_PRIVADA = (PrivateKey) inputStream.readObject();
-                                    } catch (FileNotFoundException ex) {
-                                        Logger.getLogger(DocumentoJF.class.getName()).log(Level.SEVERE, null, ex);
-                                    } catch (IOException | ClassNotFoundException ex) {
-                                        Logger.getLogger(DocumentoJF.class.getName()).log(Level.SEVERE, null, ex);
-                                    }
-                                } else {
-                                    JOptionPane.showMessageDialog(null, "Operação abortada");
+                            if (pk_private == null) {
+                                pk_private = KeyController.getPrivateKey();
+                                if (pk_private == null) {
+                                    JOptionPane.showMessageDialog(null, "Arquivo criptografado, para baixa-lo selecione a chave privada.");
                                     return;
                                 }
                             }
@@ -1112,17 +1128,18 @@ public class DocumentoJF extends javax.swing.JFrame {
                              2* descriptografar o arquivo com a chave aes
                              */
                             byte[] chaveAES = doc.getCrip2();
-                            String chaveAES_String = RSA.decriptografa(chaveAES, CHAVE_RSA_PRIVADA);
+                            String chaveAES_String = RSA.decriptografa(chaveAES, pk_private);
                             chaveAES = AES.hexStringToByteArray(chaveAES_String);
                             SecretKey AES_KEY = new SecretKeySpec(chaveAES, "AES");
                             //System.out.println("CHAVE AES CAPTURADA EM FORMATO HEXA: " + AES.bytesToHex(AES_KEY.getEncoded()));
-                            arquivo = new DocumentoDAO().getArquivo(doc.getId(), fl.getSelectedFile().getPath() + "\\", "documentos_pessoais");
-                            arquivo = AES.decrypt(arquivo.getPath(), arquivo.getParent() + "\\decrip" + arquivo.getName(), AES_KEY, true);
+                            file = new DocumentoDAO().getArquivo(doc.getId(), PATH+"JCR LOG\\CRIP\\", "documentos_pessoais");
+                            file_temp = AES.decrypt(file.getPath(), fl.getSelectedFile().getPath() + "\\", AES_KEY, true);
                         } else {
-                            arquivo = new DocumentoDAO().getArquivo(doc.getId(), fl.getSelectedFile().getPath() + "\\", "documentos_pessoais");
+                            file_temp = new DocumentoDAO().getArquivo(doc.getId(), fl.getSelectedFile().getPath() + "\\", "documentos_pessoais");
                         }
                     }
                 }
+                JOptionPane.showMessageDialog(null, "Download Concluído!");
             }
             downloadBtn.setEnabled(true);
             informtxt.setText("");
@@ -1613,7 +1630,8 @@ public class DocumentoJF extends javax.swing.JFrame {
                     Thread.sleep(3600000 * 6); //aguarda 6 horas
                 }
             } catch (InterruptedException ex) {
-                Logger.getLogger(DocumentoJF.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(DocumentoJF.class
+                        .getName()).log(Level.SEVERE, null, ex);
             }
         }).start();
     }

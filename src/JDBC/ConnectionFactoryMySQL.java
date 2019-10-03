@@ -39,6 +39,7 @@ public class ConnectionFactoryMySQL {
     private static final String USER = "teofilo";
     //private static final String PASS = "";
     private static final String PASS = "35v2l3x6AtWIglMg";
+    //56EA308434D279E4FE69972F35B082CF26D0E02A
     //public static final String PATH = "C:\\JCR\\";
     public static final String PATH = "res/";
     private static final int FATOR = 5662;
