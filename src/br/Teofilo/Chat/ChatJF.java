@@ -7,6 +7,7 @@ package br.Teofilo.Chat;
 
 import JDBC.ConnectionFactoryMySQL;
 import br.Teofilo.Bean.User;
+import br.Teofilo.DAO.ChatDAO;
 import br.Teofilo.DAO.UserDAO;
 import java.awt.event.KeyEvent;
 import java.io.BufferedReader;
@@ -235,15 +236,10 @@ public class ChatJF extends javax.swing.JFrame {
      * @throws IOException retorna IO Exception caso dê algum erro.
      */
     public void enviarMensagem(String msg) throws IOException {
-        if (msg.equals("Sair")) {
-            bfw.write("Desconectado \r\n");
-            jTextArea1.append("Desconectado \r\n");
-            bfw.flush();
-            dispose();
-        } else {
-            bfw.write(msg + "\r\n");
-            jTextArea1.append("[" + usuario.getNome() + "]\n" + sendtxt.getText() + "\r\n");
-        }
+        bfw.write(msg + "\r\n");
+        jTextArea1.append("                                                                  [" + usuario.getNome() + "]\n"
+                + "                                                                  " + sendtxt.getText() + "\r\n");
+        new ChatDAO().addComentario(usuario.getNome(), msg);
         bfw.flush();
         sendtxt.setText("");
     }
@@ -260,14 +256,10 @@ public class ChatJF extends javax.swing.JFrame {
         BufferedReader bfr = new BufferedReader(inr);
         String msg = "";
 
-        while (!"Sair".equalsIgnoreCase(msg)) {
+        while (true) {
             if (bfr.ready()) {
                 msg = bfr.readLine();
-                if (msg.equals("Sair")) {
-                    jTextArea1.append("Servidor caiu! \r\n");
-                } else {
-                    jTextArea1.append(msg + "\r\n");
-                }
+                jTextArea1.append(msg + "\r\n");
             }
         }
     }
