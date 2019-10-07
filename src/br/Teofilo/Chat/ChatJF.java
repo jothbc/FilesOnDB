@@ -30,14 +30,14 @@ import javax.swing.JTextField;
  * @author User
  */
 public class ChatJF extends javax.swing.JFrame {
-
+    
     private User usuario;
-
+    
     private Socket socket;
     private OutputStream ou;
     private Writer ouw;
     private BufferedWriter bfw;
-
+    
     private JTextField txtIP;
     private JTextField txtPorta;
 
@@ -152,6 +152,9 @@ public class ChatJF extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void sendtxtKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_sendtxtKeyPressed
+        if (evt.getKeyCode() == KeyEvent.VK_ESCAPE) {
+            dispose();
+        }
         if (status.getText().equals("Desconectado")) {
             return;
         }
@@ -160,9 +163,11 @@ public class ChatJF extends javax.swing.JFrame {
                 enviarMensagem(sendtxt.getText());
             } catch (IOException ex) {
                 Logger.getLogger(ChatJF.class.getName()).log(Level.SEVERE, null, ex);
-                JOptionPane.showMessageDialog(null, "Algo deu errado ao tentar enviar sua mensagem.");
+                JOptionPane.showMessageDialog(null, "Algo deu errado ao tentar enviar sua mensagem.\nProvavelmente servidor caiu.");
                 socket = null;
                 status.setText("Desconectado");
+                sendtxt.setText("");
+                sendtxt.setEnabled(false);
             }
         }
     }//GEN-LAST:event_sendtxtKeyPressed
@@ -179,7 +184,7 @@ public class ChatJF extends javax.swing.JFrame {
         } catch (IOException ex) {
             Logger.getLogger(ChatJF.class.getName()).log(Level.SEVERE, null, ex);
         }
-
+        
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
@@ -204,6 +209,8 @@ public class ChatJF extends javax.swing.JFrame {
         //Object[] texts = {lblMessage, txtIP, txtPorta};
         //JOptionPane.showMessageDialog(null, texts);
         usuario = new UserDAO().getUser();
+        jTextArea1.setText(new ChatDAO().getHistorico(usuario.getNome()));
+        jTextArea1.setCaretPosition(jTextArea1.getText().length());
     }
 
     /**
@@ -221,9 +228,11 @@ public class ChatJF extends javax.swing.JFrame {
             bfw.write(usuario.getNome() + "\r\n");
             bfw.flush();
             status.setText("Conectado");
+            sendtxt.setEnabled(true);
         } catch (IOException ex) {
             socket = null;
             status.setText("Desconectado");
+            sendtxt.setEnabled(false);
             System.err.println(ex);
         }
     }
@@ -236,12 +245,16 @@ public class ChatJF extends javax.swing.JFrame {
      * @throws IOException retorna IO Exception caso dê algum erro.
      */
     public void enviarMensagem(String msg) throws IOException {
+        if (msg.equals("")) {
+            return;
+        }
         bfw.write(msg + "\r\n");
-        jTextArea1.append("                                                                  [" + usuario.getNome() + "]\n"
+        jTextArea1.append("                                                                  [Você]\n"
                 + "                                                                  " + sendtxt.getText() + "\r\n");
         new ChatDAO().addComentario(usuario.getNome(), msg);
         bfw.flush();
         sendtxt.setText("");
+        jTextArea1.setCaretPosition(jTextArea1.getText().length());
     }
 
     /**
@@ -250,16 +263,17 @@ public class ChatJF extends javax.swing.JFrame {
      * @throws IOException retorna IO Exception caso dê algum erro.
      */
     public void escutar() throws IOException {
-
+        
         InputStream in = socket.getInputStream();
         InputStreamReader inr = new InputStreamReader(in);
         BufferedReader bfr = new BufferedReader(inr);
         String msg = "";
-
+        
         while (true) {
             if (bfr.ready()) {
                 msg = bfr.readLine();
                 jTextArea1.append(msg + "\r\n");
+                jTextArea1.setCaretPosition(jTextArea1.getText().length());
             }
         }
     }
@@ -271,16 +285,16 @@ public class ChatJF extends javax.swing.JFrame {
      * @throws IOException retorna IO Exception caso dê algum erro.
      */
     public void sair() throws IOException {
-
+        
         enviarMensagem("Sair");
         bfw.close();
         ouw.close();
         ou.close();
         socket.close();
     }
-
+    
     public boolean conectado() {
         return socket != null;
     }
-
+    
 }

@@ -209,7 +209,7 @@ public class DocumentoDAO {
     para fazer a substituição de um arquivo criptografado tem que excluir o mesmo e fazer o upload
     de novo, informando a chave e etc...
      */
-    public boolean updateDocumento(File f, int idArquivo, int tipo, int processo) {
+    public boolean updateDocumento(File f, int idArquivo, int tipo, int processo, byte[] bytes) {
         sql = "UPDATE documentos SET nome = ?, modificacao = ?, crip = ?, crip2 = ? , tam = ? WHERE ID_TIPO = ? and ID_PROCESSO = ? and id = ?";
         try {
             InputStream is = new FileInputStream(f);
@@ -217,11 +217,11 @@ public class DocumentoDAO {
             //stmt.setBlob(1, is);
             stmt.setString(1, f.getName());
             stmt.setString(2, CDate.DataPTBRtoDataMySQL(CDate.DataPTBRAtual()));
-            stmt.setBoolean(3, false); //arquivo não vai criptografado
-            stmt.setBytes(4, null);
-            stmt.setInt(5, tipo);
-            stmt.setInt(6, processo);
-            stmt.setDouble(7, f.length());
+            stmt.setBoolean(3, true); //arquivo vai criptografado
+            stmt.setBytes(4, bytes);
+            stmt.setDouble(5, f.length());
+            stmt.setInt(6, tipo);
+            stmt.setInt(7, processo);
             stmt.setInt(8, idArquivo);
             stmt.executeUpdate();
             sql = "UPDATE documentos_arq SET arq = ? WHERE id = ?";
@@ -245,7 +245,7 @@ public class DocumentoDAO {
     para fazer a substituição de um arquivo criptografado tem que excluir o mesmo e fazer o upload
     de novo, informando a chave e etc...
      */
-    public boolean updateDocumentoPessoal(File f, int idArquivo) {
+    public boolean updateDocumentoPessoal(File f, int idArquivo, byte[] bytes) {
         sql = "UPDATE documentos_pessoais SET nome = ?, alteracao = ?, crip = ?, crip2 = ? ,tam = ? WHERE id = ?";
         try {
             InputStream is = new FileInputStream(f);
@@ -253,8 +253,8 @@ public class DocumentoDAO {
             //stmt.setBlob(1, is);
             stmt.setString(1, f.getName());
             stmt.setString(2, CDate.DataPTBRtoDataMySQL(CDate.DataPTBRAtual()));
-            stmt.setBoolean(3, false);
-            stmt.setBytes(4, null);
+            stmt.setBoolean(3, true);
+            stmt.setBytes(4, bytes);
             stmt.setDouble(5, f.length());
             stmt.setInt(6, idArquivo);
             stmt.executeUpdate();
@@ -449,7 +449,7 @@ public class DocumentoDAO {
             ConnectionFactoryMySQL.closeConnection(con, stmt);
         }
     }
-    
+
     public boolean renomearDocumentoPessoal(int id, String novadesc) {
         sql = "UPDATE documentos_pessoais SET nome = ? WHERE id = ?";
         try {

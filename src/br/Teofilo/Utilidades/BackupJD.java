@@ -6,6 +6,7 @@
 package br.Teofilo.Utilidades;
 
 import br.Teofilo.Bean.GerarLogErro;
+import java.awt.Desktop;
 import java.awt.Point;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -288,14 +289,14 @@ public class BackupJD extends javax.swing.JDialog {
     }
 
     private void executar() {
-        if (caminhotxt.getText().equals("")){
+        if (caminhotxt.getText().equals("")) {
             return;
         }
         String[] cmds = {
             "@echo off",
             "echo Realizando backup do MySQL...",
             "cd C:\\xampp\\mysql\\bin\\",
-            "mysqldump -uteofilo -p35v2l3x6AtWIglMg --max_allowed_packet=512M teofilo > " + caminhotxt.getText(),
+            "mysqldump -e --default-character-set=utf8mb4 -uteofilo -p35v2l3x6AtWIglMg --max_allowed_packet=512M teofilo > " + caminhotxt.getText(),
             "echo Backup concluido com sucesso."
         };
         try {
@@ -310,7 +311,7 @@ public class BackupJD extends javax.swing.JDialog {
                 if (line == null) {
                     break;
                 }
-                area.append(line+"\n");
+                area.append(line + "\n");
             }
         } catch (IOException e) {
             area.append(e.getMessage());

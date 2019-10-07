@@ -149,6 +149,7 @@ public class DocumentoJF extends javax.swing.JFrame {
         bckBtn = new javax.swing.JButton();
         renomearDocumentoBtn = new javax.swing.JButton();
         chatBtn = new javax.swing.JButton();
+        keyPrivateBtn = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Advocacia Teófilo Rocha");
@@ -468,6 +469,16 @@ public class DocumentoJF extends javax.swing.JFrame {
             }
         });
 
+        keyPrivateBtn.setBackground(new java.awt.Color(255, 255, 255));
+        keyPrivateBtn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/Teofilo/IMG/1x/key-26.png"))); // NOI18N
+        keyPrivateBtn.setToolTipText("Descarregar Chave Privada");
+        keyPrivateBtn.setBorder(null);
+        keyPrivateBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                keyPrivateBtnActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -512,36 +523,39 @@ public class DocumentoJF extends javax.swing.JFrame {
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 537, Short.MAX_VALUE)
                             .addComponent(jLabelDocumentos, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addGroup(jPanel1Layout.createSequentialGroup()
-                            .addComponent(addTipoBtn)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(renomearDocumentoBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGap(39, 39, 39)
-                            .addComponent(cripLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 194, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGap(18, 18, 18)
-                            .addComponent(tamlbl, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(jPanel1Layout.createSequentialGroup()
-                            .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 306, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(visualizarBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                    .addComponent(modiftxt, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGap(230, 230, 230))
-                                .addGroup(jPanel1Layout.createSequentialGroup()
-                                    .addGap(10, 10, 10)
-                                    .addComponent(downloadBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                    .addComponent(uploadBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                    .addComponent(editarBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(deleteBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(informtxt, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(addTipoBtn, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 306, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(visualizarBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                        .addComponent(modiftxt, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(230, 230, 230))
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addGap(10, 10, 10)
+                                        .addComponent(downloadBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(uploadBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(editarBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(deleteBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(informtxt, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                .addComponent(keyPrivateBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGap(18, 18, 18)
+                                .addComponent(renomearDocumentoBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(39, 39, 39)
+                                .addComponent(cripLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 194, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(tamlbl, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                 .addGap(16, 16, 16))
             .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
@@ -599,19 +613,18 @@ public class DocumentoJF extends javax.swing.JFrame {
                                 .addComponent(modiftxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(informtxt, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(visualizarBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(downloadBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(uploadBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(editarBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(deleteBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(tamlbl, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(renomearDocumentoBtn, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addComponent(cripLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(visualizarBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(downloadBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(uploadBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(editarBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(deleteBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(tamlbl, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(renomearDocumentoBtn, javax.swing.GroupLayout.DEFAULT_SIZE, 25, Short.MAX_VALUE)
+                            .addComponent(cripLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(keyPrivateBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -771,6 +784,11 @@ public class DocumentoJF extends javax.swing.JFrame {
         System.out.println("\nisRunning = false;");
     }//GEN-LAST:event_formWindowClosing
 
+    private void keyPrivateBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_keyPrivateBtnActionPerformed
+        pk_private = null;
+        keyPrivateBtn.setBackground(Color.WHITE);
+    }//GEN-LAST:event_keyPrivateBtnActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -841,6 +859,7 @@ public class DocumentoJF extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane5;
+    private javax.swing.JButton keyPrivateBtn;
     private javax.swing.JFormattedTextField modiftxt;
     private javax.swing.JButton processoBtn;
     private javax.swing.JButton renomearDocumentoBtn;
@@ -956,8 +975,12 @@ public class DocumentoJF extends javax.swing.JFrame {
                         pk_private = KeyController.getPrivateKey();
                         if (pk_private == null) {
                             JOptionPane.showMessageDialog(null, "Arquivo criptografado, para baixa-lo selecione a chave privada.");
+                            informtxt.setText("");
                             return;
                         }
+                        keyPrivateBtn.setBackground(Color.GREEN);
+                    } else {
+                        keyPrivateBtn.setBackground(Color.GREEN);
                     }
                     byte[] chaveAES = arquivo.getCrip2();
                     String chaveAES_String = RSA.decriptografa(chaveAES, pk_private);
@@ -979,8 +1002,12 @@ public class DocumentoJF extends javax.swing.JFrame {
                         pk_private = KeyController.getPrivateKey();
                         if (pk_private == null) {
                             JOptionPane.showMessageDialog(null, "Arquivo criptografado, para baixa-lo selecione a chave privada.");
+                            informtxt.setText("");
                             return;
                         }
+                        keyPrivateBtn.setBackground(Color.GREEN);
+                    } else {
+                        keyPrivateBtn.setBackground(Color.GREEN);
                     }
                     byte[] chaveAES = arquivo.getCrip2();
                     String chaveAES_String = RSA.decriptografa(chaveAES, pk_private);
@@ -1085,8 +1112,13 @@ public class DocumentoJF extends javax.swing.JFrame {
                                 pk_private = KeyController.getPrivateKey();
                                 if (pk_private == null) {
                                     JOptionPane.showMessageDialog(null, "Arquivo criptografado, para baixa-lo selecione a chave privada.");
+                                    downloadBtn.setEnabled(true);
+                                    informtxt.setText("");
                                     return;
                                 }
+                                keyPrivateBtn.setBackground(Color.GREEN);
+                            } else {
+                                keyPrivateBtn.setBackground(Color.GREEN);
                             }
                             /* chave RSA privada ja esta carregada
                              1* descriptografar chave aes vinda do banco (a chave vai ta em HEXA)
@@ -1097,11 +1129,12 @@ public class DocumentoJF extends javax.swing.JFrame {
                             chaveAES = AES.hexStringToByteArray(chaveAES_String);
                             SecretKey AES_KEY = new SecretKeySpec(chaveAES, "AES");
                             //System.out.println("CHAVE AES CAPTURADA EM FORMATO HEXA: "+AES.bytesToHex(AES_KEY.getEncoded()));
-                            file = new DocumentoDAO().getArquivo(doc.getId(), PATH+"JCR LOG\\CRIP\\", "documentos");
+                            file = new DocumentoDAO().getArquivo(doc.getId(), PATH + "JCR LOG\\CRIP\\", "documentos");
                             file_temp = AES.decrypt(file.getPath(), fl.getSelectedFile().getPath(), AES_KEY, true);
                         } else { //doc nao criptografado
                             file_temp = new DocumentoDAO().getArquivo(doc.getId(), fl.getSelectedFile().getPath() + "\\", "documentos");
                         }
+                        file.deleteOnExit();
                     }
                     /*
                     fim verificação de criptografia
@@ -1120,8 +1153,13 @@ public class DocumentoJF extends javax.swing.JFrame {
                                 pk_private = KeyController.getPrivateKey();
                                 if (pk_private == null) {
                                     JOptionPane.showMessageDialog(null, "Arquivo criptografado, para baixa-lo selecione a chave privada.");
+                                    downloadBtn.setEnabled(true);
+                                    informtxt.setText("");
                                     return;
                                 }
+                                keyPrivateBtn.setBackground(Color.GREEN);
+                            } else {
+                                keyPrivateBtn.setBackground(Color.GREEN);
                             }
                             /* chave RSA privada ja esta carregada
                              1* descriptografar chave aes vinda do banco (a chave vai ta em HEXA)
@@ -1132,11 +1170,12 @@ public class DocumentoJF extends javax.swing.JFrame {
                             chaveAES = AES.hexStringToByteArray(chaveAES_String);
                             SecretKey AES_KEY = new SecretKeySpec(chaveAES, "AES");
                             //System.out.println("CHAVE AES CAPTURADA EM FORMATO HEXA: " + AES.bytesToHex(AES_KEY.getEncoded()));
-                            file = new DocumentoDAO().getArquivo(doc.getId(), PATH+"JCR LOG\\CRIP\\", "documentos_pessoais");
+                            file = new DocumentoDAO().getArquivo(doc.getId(), PATH + "JCR LOG\\CRIP\\", "documentos_pessoais");
                             file_temp = AES.decrypt(file.getPath(), fl.getSelectedFile().getPath() + "\\", AES_KEY, true);
                         } else {
                             file_temp = new DocumentoDAO().getArquivo(doc.getId(), fl.getSelectedFile().getPath() + "\\", "documentos_pessoais");
                         }
+                        file.deleteOnExit();
                     }
                 }
                 JOptionPane.showMessageDialog(null, "Download Concluído!");
@@ -1144,6 +1183,7 @@ public class DocumentoJF extends javax.swing.JFrame {
             downloadBtn.setEnabled(true);
             informtxt.setText("");
         }).start();
+
     }
 
     private void atualizarInfos() {
@@ -1221,51 +1261,51 @@ public class DocumentoJF extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Selecione um documento para editar.");
             return;
         }
-        Documento d = null;
-        DocumentoPessoal dp = null;
+        if (pk_public == null) {
+            JOptionPane.showMessageDialog(null, "Chave publica não carregada.");
+            pk_public = KeyController.getPublicKey();
+            if (pk_public == null) {
+                JOptionPane.showMessageDialog(null, "Abortando.. A falta de uma chave publica deixa vulnerável o arquivo no banco de dados.");
+                return;
+            }
+        }
+        Arquivo arquivo = null;
         TipoDoc tp = null;
         Processo p = null;
         Cliente c = null;
-        String msgCrip = "Esse documento esta criptografado!\n"
-                + "Fazer a substituição dessa forma vai substitui-lo por um arquivo descriptografado.\n"
-                + "Se deseja manter esse arquivo criptografado no Banco de Dados\n"
-                + "então exclua esse documento e faça o upload novamente informando a chave.";
         if (listDocumentos.getElementAt(jListDocumento.getSelectedIndex()) instanceof Documento) {
             try {
-                d = (Documento) listDocumentos.getElementAt(jListDocumento.getSelectedIndex());
+                arquivo = (Documento) listDocumentos.getElementAt(jListDocumento.getSelectedIndex());
                 tp = (TipoDoc) listTipo.getElementAt(jListTipos.getSelectedIndex());
                 p = (Processo) listProcessos.getElementAt(jListProcessos.getSelectedIndex());
-                if (d.isCrip()) {
-                    JOptionPane.showMessageDialog(null, msgCrip, "Upload de arquivo Descriptografado", JOptionPane.INFORMATION_MESSAGE);
-                }
             } catch (HeadlessException ex) {
                 System.err.println("Editar>> Documento, tipoDoc ou Processo retornaram erro.." + ex);
             }
         } else if (listDocumentos.getElementAt(jListDocumento.getSelectedIndex()) instanceof DocumentoPessoal) {
             try {
-                dp = (DocumentoPessoal) listDocumentos.getElementAt(jListDocumento.getSelectedIndex());
+                arquivo = (DocumentoPessoal) listDocumentos.getElementAt(jListDocumento.getSelectedIndex());
                 c = (Cliente) listClientes.getElementAt(jListCliente.getSelectedIndex());
-                if (dp.isCrip()) {
-                    JOptionPane.showMessageDialog(null, msgCrip, "Upload de arquivo Descriptografado", JOptionPane.INFORMATION_MESSAGE);
-                }
             } catch (HeadlessException ex) {
                 System.err.println("Editar>>DocumentoPessoal ou Cliente retornaram erro.." + ex);
             }
         }
-        if (d != null || dp != null) {
+        if (arquivo != null) {
             JFileChooser fl = new JFileChooser();
             fl.setDialogTitle("Selecionar arquivo");
             fl.setFileSelectionMode(JFileChooser.FILES_ONLY);
             int op = fl.showOpenDialog(null);
             if (op == JFileChooser.APPROVE_OPTION) {
-                File f = fl.getSelectedFile();
-                if (d != null && tp != null && p != null) {
-                    if (!new DocumentoDAO().updateDocumento(f, d.getId(), tp.getId(), p.getId())) {
+                File file = fl.getSelectedFile();
+                SecretKey aesKey = AES.gerarChave(256);
+                file = AES.encrypt(file.getPath(), PATH + "JCR LOG\\CRIP\\" + file.getName(), aesKey);
+                byte[] aes = RSA.criptografa(AES.bytesToHex(aesKey.getEncoded()), pk_public);
+                if (arquivo instanceof Documento) {
+                    if (!new DocumentoDAO().updateDocumento(file, arquivo.getId(), tp.getId(), p.getId(), aes)) {
                         JOptionPane.showMessageDialog(null, "Erro ao tentar atualizar o arquivo no banco de dados.", "Erro", JOptionPane.ERROR_MESSAGE);
                     }
                     carregarDocumentosDoTipoEProcessoSelecionado();
-                } else if (dp != null && c != null) {
-                    if (!new DocumentoDAO().updateDocumentoPessoal(f, dp.getId())) {
+                } else if (arquivo instanceof DocumentoPessoal) {
+                    if (!new DocumentoDAO().updateDocumentoPessoal(file, arquivo.getId(), aes)) {
                         JOptionPane.showMessageDialog(null, "Erro ao tentar atualizar o arquivo no banco de dados.", "Erro", JOptionPane.ERROR_MESSAGE);
                     }
                     carregarDadosPessoaisDoClienteSelecionado(c);
