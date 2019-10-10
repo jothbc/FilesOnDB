@@ -22,7 +22,7 @@ import java.util.logging.Logger;
  *
  * @author User
  */
-public class UserDAO {
+public class UserDAO extends DAO{
     Connection con;
     PreparedStatement stmt;
     ResultSet rs;

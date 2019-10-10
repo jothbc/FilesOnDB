@@ -22,12 +22,7 @@ import java.util.logging.Logger;
  *
  * @author Jonathan
  */
-public class ProcessoDAO {
-
-    Connection con;
-    String sql;
-    PreparedStatement stmt;
-    ResultSet rs;
+public class ProcessoDAO extends DAO{
 
     public ProcessoDAO() {
         con = ConnectionFactoryMySQL.getConnection();

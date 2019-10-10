@@ -33,12 +33,7 @@ import javax.swing.JOptionPane;
  *
  * @author User
  */
-public class DocumentoDAO {
-
-    Connection con;
-    PreparedStatement stmt;
-    ResultSet rs;
-    String sql;
+public class DocumentoDAO extends DAO{
 
     public DocumentoDAO() {
         con = ConnectionFactoryMySQL.getConnection();

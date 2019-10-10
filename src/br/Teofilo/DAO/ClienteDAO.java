@@ -9,9 +9,6 @@ import JDBC.ConnectionFactoryMySQL;
 import br.Teofilo.Bean.Cliente;
 import br.Teofilo.Bean.GerarLogErro;
 import funcoes.CDate;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,12 +19,8 @@ import java.util.logging.Logger;
  *
  * @author User
  */
-public class ClienteDAO {
+public class ClienteDAO extends DAO{
 
-    Connection con = null;
-    PreparedStatement stmt;
-    ResultSet rs;
-    String sql;
 
     public ClienteDAO() {
         con = ConnectionFactoryMySQL.getConnection();

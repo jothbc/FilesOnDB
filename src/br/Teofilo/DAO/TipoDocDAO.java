@@ -23,12 +23,7 @@ import java.util.logging.Logger;
  *
  * @author User
  */
-public class TipoDocDAO {
-
-    Connection con;
-    PreparedStatement stmt;
-    ResultSet rs;
-    String sql;
+public class TipoDocDAO extends DAO{
 
     public TipoDocDAO() {
         con = ConnectionFactoryMySQL.getConnection();

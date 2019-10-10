@@ -23,12 +23,7 @@ import java.util.logging.Logger;
  *
  * @author User
  */
-public class ContaDAO {
-
-    Connection con;
-    PreparedStatement stmt;
-    ResultSet rs;
-    String sql;
+public class ContaDAO extends DAO {
 
     public ContaDAO() {
         con = ConnectionFactoryMySQL.getConnection();
