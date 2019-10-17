@@ -110,10 +110,10 @@ public class AES {
         }
     }
 
-    public final static File decrypt(String srcPath, String destPath, SecretKey chaveAES, boolean deletarCriptografado) {
+    public final static File decrypt(String encript_path, String decript_path, SecretKey chaveAES, boolean deletarCriptografado) {
         try {
-            File encryptedFile = new File(srcPath);
-            File decryptedFile = new File(destPath);
+            File encryptedFile = new File(encript_path);
+            File decryptedFile = new File(decript_path);
             InputStream inStream = null;
             OutputStream outStream = null;
 

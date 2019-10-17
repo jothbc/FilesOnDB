@@ -1084,101 +1084,119 @@ public class DocumentoJF extends javax.swing.JFrame {
             return;
         }
         new Thread(() -> {
-            JFileChooser fl = new JFileChooser();
-            fl.setDialogTitle("Selecionar diretório");
-            fl.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-            int op = fl.showSaveDialog(null);
-            if (op == JFileChooser.APPROVE_OPTION) {
-                //desabilitei o botao de download enquanto realiza um download para não acontecer te clicar para baixar duas vezes
-                downloadBtn.setEnabled(false);
-                informtxt.setText("Baixando...");
-                informtxt.setForeground(Color.red);
-                File file = null;
-                File file_temp = null;
-                if (listDocumentos.getElementAt(jListDocumento.getSelectedIndices()[0]) instanceof Documento) {
-                    Documento[] d = new Documento[jListDocumento.getSelectedIndices().length];
-                    //dividido em 2 for, um para carregamento rápido dos selecionados, e outro para efetuar o download
-                    //como é uma thread, acaba deixando livre para o usuário desselecionar os documentos, isso altera o getSelectedIndices
-                    //por isso o primeiro for pega rapidamente essas referencias enquanto o segundo só baixa(e é um pouco mais demorado)
-                    for (int x = 0; x < d.length; x++) {
-                        d[x] = (Documento) listDocumentos.getElementAt(jListDocumento.getSelectedIndices()[x]);
-                    }
-                    /*
+            //desabilitei o botao de download enquanto realiza um download para não acontecer te clicar para baixar duas vezes
+            downloadBtn.setEnabled(false);
+            informtxt.setText("Baixando...");
+            informtxt.setForeground(Color.red);
+            File file = null;
+            File file_temp = null;
+            
+            ////////////////////////////////
+            Arquivo[] arquives = new Arquivo[jListDocumento.getSelectedIndices().length];
+            for (int x = 0; x < arquives.length; x++) {
+                arquives[x] = (Arquivo) listDocumentos.getElementAt(jListDocumento.getSelectedIndices()[x]);
+            }
+            String tabela_banco;
+            if (arquives[0] instanceof Documento) {
+                tabela_banco = "documentos";
+            } else if (arquives[0] instanceof DocumentoPessoal) {
+                tabela_banco = "documentos_pessoais";
+            }
+
+            ///////////////////////////////////
+            
+            if (listDocumentos.getElementAt(jListDocumento.getSelectedIndices()[0]) instanceof Documento) {
+                Documento[] d = new Documento[jListDocumento.getSelectedIndices().length];
+                //dividido em 2 for, um para carregamento rápido dos selecionados, e outro para efetuar o download
+                //como é uma thread, acaba deixando livre para o usuário desselecionar os documentos, isso altera o getSelectedIndices
+                //por isso o primeiro for pega rapidamente essas referencias enquanto o segundo só baixa(e é um pouco mais demorado)
+                for (int x = 0; x < d.length; x++) {
+                    d[x] = (Documento) listDocumentos.getElementAt(jListDocumento.getSelectedIndices()[x]);
+                }
+                /*
                     inicio verificação de criptografia
-                     */
-                    for (Documento doc : d) {
-                        if (doc.isCrip()) {
+                 */
+                for (Documento doc : d) {
+                    if (doc.isCrip()) {
+                        if (pk_private == null) {
+                            pk_private = KeyController.getPrivateKey();
                             if (pk_private == null) {
-                                pk_private = KeyController.getPrivateKey();
-                                if (pk_private == null) {
-                                    JOptionPane.showMessageDialog(null, "Arquivo criptografado, para baixa-lo selecione a chave privada.");
-                                    downloadBtn.setEnabled(true);
-                                    informtxt.setText("");
-                                    return;
-                                }
-                                keyPrivateBtn.setBackground(Color.GREEN);
-                            } else {
-                                keyPrivateBtn.setBackground(Color.GREEN);
+                                JOptionPane.showMessageDialog(null, "Arquivo criptografado, para baixa-lo selecione a chave privada.");
+                                downloadBtn.setEnabled(true);
+                                informtxt.setText("");
+                                return;
                             }
-                            /* chave RSA privada ja esta carregada
-                             1* descriptografar chave aes vinda do banco (a chave vai ta em HEXA)
-                             2* descriptografar o arquivo com a chave aes
-                             */
-                            byte[] chaveAES = doc.getCrip2();
-                            String chaveAES_String = RSA.decriptografa(chaveAES, pk_private);
-                            chaveAES = AES.hexStringToByteArray(chaveAES_String);
-                            SecretKey AES_KEY = new SecretKeySpec(chaveAES, "AES");
-                            //System.out.println("CHAVE AES CAPTURADA EM FORMATO HEXA: "+AES.bytesToHex(AES_KEY.getEncoded()));
-                            file = new DocumentoDAO().getArquivo(doc.getId(), PATH + "JCR LOG\\CRIP\\", "documentos");
-                            file_temp = AES.decrypt(file.getPath(), fl.getSelectedFile().getPath(), AES_KEY, true);
-                        } else { //doc nao criptografado
-                            file_temp = new DocumentoDAO().getArquivo(doc.getId(), fl.getSelectedFile().getPath() + "\\", "documentos");
-                        }
-                        file.deleteOnExit();
-                    }
-                    /*
-                    fim verificação de criptografia
-                     */
-                } else if (listDocumentos.getElementAt(jListDocumento.getSelectedIndex()) instanceof DocumentoPessoal) {
-                    DocumentoPessoal[] dp = new DocumentoPessoal[jListDocumento.getSelectedIndices().length];
-                    //dividido em 2 for, um para carregamento rápido dos selecionados, e outro para efetuar o download
-                    //como é uma thread, acaba deixando livre para o usuário desselecionar os documentos, isso altera o getSelectedIndices
-                    //por isso o primeiro for pega rapidamente essas referencias enquanto o segundo só baixa(e é um pouco mais demorado)
-                    for (int x = 0; x < dp.length; x++) {
-                        dp[x] = (DocumentoPessoal) listDocumentos.getElementAt(jListDocumento.getSelectedIndices()[x]);
-                    }
-                    for (DocumentoPessoal doc : dp) {
-                        if (doc.isCrip()) {
-                            if (pk_private == null) {
-                                pk_private = KeyController.getPrivateKey();
-                                if (pk_private == null) {
-                                    JOptionPane.showMessageDialog(null, "Arquivo criptografado, para baixa-lo selecione a chave privada.");
-                                    downloadBtn.setEnabled(true);
-                                    informtxt.setText("");
-                                    return;
-                                }
-                                keyPrivateBtn.setBackground(Color.GREEN);
-                            } else {
-                                keyPrivateBtn.setBackground(Color.GREEN);
-                            }
-                            /* chave RSA privada ja esta carregada
-                             1* descriptografar chave aes vinda do banco (a chave vai ta em HEXA)
-                             2* descriptografar o arquivo com a chave aes
-                             */
-                            byte[] chaveAES = doc.getCrip2();
-                            String chaveAES_String = RSA.decriptografa(chaveAES, pk_private);
-                            chaveAES = AES.hexStringToByteArray(chaveAES_String);
-                            SecretKey AES_KEY = new SecretKeySpec(chaveAES, "AES");
-                            //System.out.println("CHAVE AES CAPTURADA EM FORMATO HEXA: " + AES.bytesToHex(AES_KEY.getEncoded()));
-                            file = new DocumentoDAO().getArquivo(doc.getId(), PATH + "JCR LOG\\CRIP\\", "documentos_pessoais");
-                            file_temp = AES.decrypt(file.getPath(), fl.getSelectedFile().getPath() + "\\", AES_KEY, true);
+                            keyPrivateBtn.setBackground(Color.GREEN);
                         } else {
-                            file_temp = new DocumentoDAO().getArquivo(doc.getId(), fl.getSelectedFile().getPath() + "\\", "documentos_pessoais");
+                            keyPrivateBtn.setBackground(Color.GREEN);
                         }
-                        file.deleteOnExit();
+                        /* chave RSA privada ja esta carregada
+                             1* descriptografar chave aes vinda do banco (a chave vai ta em HEXA)
+                             2* descriptografar o arquivo com a chave aes
+                         */
+                        byte[] chaveAES = doc.getCrip2();
+                        String chaveAES_String = RSA.decriptografa(chaveAES, pk_private);
+                        chaveAES = AES.hexStringToByteArray(chaveAES_String);
+                        SecretKey AES_KEY = new SecretKeySpec(chaveAES, "AES");
+                        //System.out.println("CHAVE AES CAPTURADA EM FORMATO HEXA: "+AES.bytesToHex(AES_KEY.getEncoded()));
+                        file = new DocumentoDAO().getArquivo(doc.getId(), PATH + "JCR LOG\\CRIP\\", "documentos");
+                        file_temp = AES.decrypt(file.getPath(), file.getAbsoluteFile().getParent() + "\\Download\\" + file.getName(), AES_KEY, true);
+                    } else { //doc nao criptografado
+                        file_temp = new DocumentoDAO().getArquivo(doc.getId(), PATH + "JCR LOG\\CRIP\\Download", "documentos");
+                    }
+                    file.deleteOnExit();
+                    try {
+                        Runtime.getRuntime().exec("explorer " + file_temp.getAbsoluteFile().getParent());
+                    } catch (IOException e) {
+                        System.err.println(e);
                     }
                 }
-                JOptionPane.showMessageDialog(null, "Download Concluído!");
+                /*
+                    fim verificação de criptografia
+                 */
+            } else if (listDocumentos.getElementAt(jListDocumento.getSelectedIndex()) instanceof DocumentoPessoal) {
+                DocumentoPessoal[] dp = new DocumentoPessoal[jListDocumento.getSelectedIndices().length];
+                //dividido em 2 for, um para carregamento rápido dos selecionados, e outro para efetuar o download
+                //como é uma thread, acaba deixando livre para o usuário desselecionar os documentos, isso altera o getSelectedIndices
+                //por isso o primeiro for pega rapidamente essas referencias enquanto o segundo só baixa(e é um pouco mais demorado)
+                for (int x = 0; x < dp.length; x++) {
+                    dp[x] = (DocumentoPessoal) listDocumentos.getElementAt(jListDocumento.getSelectedIndices()[x]);
+                }
+                for (DocumentoPessoal doc : dp) {
+                    if (doc.isCrip()) {
+                        if (pk_private == null) {
+                            pk_private = KeyController.getPrivateKey();
+                            if (pk_private == null) {
+                                JOptionPane.showMessageDialog(null, "Arquivo criptografado, para baixa-lo selecione a chave privada.");
+                                downloadBtn.setEnabled(true);
+                                informtxt.setText("");
+                                return;
+                            }
+                            keyPrivateBtn.setBackground(Color.GREEN);
+                        } else {
+                            keyPrivateBtn.setBackground(Color.GREEN);
+                        }
+                        /* chave RSA privada ja esta carregada
+                             1* descriptografar chave aes vinda do banco (a chave vai ta em HEXA)
+                             2* descriptografar o arquivo com a chave aes
+                         */
+                        byte[] chaveAES = doc.getCrip2();
+                        String chaveAES_String = RSA.decriptografa(chaveAES, pk_private);
+                        chaveAES = AES.hexStringToByteArray(chaveAES_String);
+                        SecretKey AES_KEY = new SecretKeySpec(chaveAES, "AES");
+                        //System.out.println("CHAVE AES CAPTURADA EM FORMATO HEXA: " + AES.bytesToHex(AES_KEY.getEncoded()));
+                        file = new DocumentoDAO().getArquivo(doc.getId(), PATH + "JCR LOG\\CRIP\\", "documentos_pessoais");
+                        file_temp = AES.decrypt(file.getPath(), file.getAbsoluteFile().getParent() + "\\Download\\" + file.getName(), AES_KEY, true);
+                    } else {
+                        file_temp = new DocumentoDAO().getArquivo(doc.getId(), PATH + "JCR LOG\\CRIP\\", "documentos_pessoais");
+                    }
+                    file.deleteOnExit();
+                    try {
+                        Runtime.getRuntime().exec("explorer " + file_temp.getAbsoluteFile().getParent());
+                    } catch (IOException e) {
+                        System.err.println(e);
+                    }
+                }
             }
             downloadBtn.setEnabled(true);
             informtxt.setText("");
@@ -1426,33 +1444,86 @@ public class DocumentoJF extends javax.swing.JFrame {
         int op = JOptionPane.showOptionDialog(null, "Deseja realmente excluir esse(s) arquivo(s)?", "Confirmação de exclusão", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, null, null, null);
         if (op == JOptionPane.YES_OPTION) {
             if (listDocumentos.getElementAt(jListDocumento.getSelectedIndices()[0]) instanceof Documento) {
-                Documento[] d = new Documento[jListDocumento.getSelectedIndices().length];
-                for (int x = 0; x < d.length; x++) {
-                    d[x] = (Documento) listDocumentos.getElementAt(jListDocumento.getSelectedIndices()[x]);
+                Documento[] arquivo = new Documento[jListDocumento.getSelectedIndices().length];
+                for (int x = 0; x < arquivo.length; x++) {
+                    arquivo[x] = (Documento) listDocumentos.getElementAt(jListDocumento.getSelectedIndices()[x]);
                 }
-                for (int x = 0; x < d.length; x++) {
-                    File f = new DocumentoDAO().getArquivo(d[x].getId(), PATH + "JCR LOG\\", "documentos");
-                    boolean moveToTrash = Desktop.getDesktop().moveToTrash(f);
+                for (int x = 0; x < arquivo.length; x++) {
+                    //descriptografar
+                    File f = null;
+                    File f_temp;
+                    if (arquivo[x].isCrip()) {
+                        if (pk_private == null) {
+                            pk_private = KeyController.getPrivateKey();
+                            if (pk_private == null) {
+                                JOptionPane.showMessageDialog(null, "Arquivo criptografado, para remove-lo é necessário ter a chave para descriptografá-lo.\n.");
+                                informtxt.setText("");
+                                return;
+                            }
+                            keyPrivateBtn.setBackground(Color.GREEN);
+                        } else {
+                            keyPrivateBtn.setBackground(Color.GREEN);
+                        }
+                        byte[] chaveAES = arquivo[x].getCrip2();
+                        String chaveAES_String = RSA.decriptografa(chaveAES, pk_private);
+                        chaveAES = AES.hexStringToByteArray(chaveAES_String);
+                        SecretKey AES_KEY = new SecretKeySpec(chaveAES, "AES");
+                        //System.out.println("CHAVE AES CAPTURADA EM FORMATO HEXA: " + AES.bytesToHex(AES_KEY.getEncoded()));
+                        f = new DocumentoDAO().getArquivo(arquivo[x].getId(), PATH + "JCR LOG\\", "documentos");
+                        f_temp = AES.decrypt(f.getPath(), PATH + "JCR LOG\\decrip" + f.getName(), AES_KEY, true);
+                    } else {
+                        f_temp = new DocumentoDAO().getArquivo(arquivo[x].getId(), PATH + "JCR LOG\\", "documentos");
+                    }
+                    f.delete();
+                    boolean moveToTrash = Desktop.getDesktop().moveToTrash(f_temp);
                     if (moveToTrash) {
-                        if (!new DocumentoDAO().removeDocumento(d[x])) {
+                        if (!new DocumentoDAO().removeDocumento(arquivo[x])) {
                             JOptionPane.showMessageDialog(null, "Erro ao tentar remover o documento do Bando de Dados.", "Erro", JOptionPane.ERROR_MESSAGE);
                         }
+                        f_temp.delete();
                     }
                 }
                 carregarDocumentosDoTipoEProcessoSelecionado();
             } else if (listDocumentos.getElementAt(jListDocumento.getSelectedIndices()[0]) instanceof DocumentoPessoal) {
-                DocumentoPessoal[] dp = new DocumentoPessoal[jListDocumento.getSelectedIndices().length];
-                for (int x = 0; x < dp.length; x++) {
-                    dp[x] = (DocumentoPessoal) listDocumentos.getElementAt(jListDocumento.getSelectedIndices()[x]);
+                DocumentoPessoal[] arquivo = new DocumentoPessoal[jListDocumento.getSelectedIndices().length];
+                for (int x = 0; x < arquivo.length; x++) {
+                    arquivo[x] = (DocumentoPessoal) listDocumentos.getElementAt(jListDocumento.getSelectedIndices()[x]);
                 }
-                for (int x = 0; x < dp.length; x++) {
-                    File f = new DocumentoDAO().getArquivo(dp[x].getId(), PATH + "JCR LOG\\", "documentos_pessoais");
-                    boolean moveToTrash = Desktop.getDesktop().moveToTrash(f);
+                for (int x = 0; x < arquivo.length; x++) {
+                    //descriptografar
+
+                    File f = null;
+                    File f_temp;
+                    if (arquivo[x].isCrip()) {
+                        if (pk_private == null) {
+                            pk_private = KeyController.getPrivateKey();
+                            if (pk_private == null) {
+                                JOptionPane.showMessageDialog(null, "Arquivo criptografado, para remove-lo é necessário ter a chave para descriptografá-lo.\n.");
+                                informtxt.setText("");
+                                return;
+                            }
+                            keyPrivateBtn.setBackground(Color.GREEN);
+                        } else {
+                            keyPrivateBtn.setBackground(Color.GREEN);
+                        }
+                        byte[] chaveAES = arquivo[x].getCrip2();
+                        String chaveAES_String = RSA.decriptografa(chaveAES, pk_private);
+                        chaveAES = AES.hexStringToByteArray(chaveAES_String);
+                        SecretKey AES_KEY = new SecretKeySpec(chaveAES, "AES");
+                        //System.out.println("CHAVE AES CAPTURADA EM FORMATO HEXA: " + AES.bytesToHex(AES_KEY.getEncoded()));
+                        f = new DocumentoDAO().getArquivo(arquivo[x].getId(), PATH + "JCR LOG\\", "documentos_pessoais");
+                        f_temp = AES.decrypt(f.getPath(), PATH + "JCR LOG\\decrip" + f.getName(), AES_KEY, true);
+                    } else {
+                        f_temp = new DocumentoDAO().getArquivo(arquivo[x].getId(), PATH + "JCR LOG\\", "documentos_pessoais");
+                    }
+                    f.delete();
+                    boolean moveToTrash = Desktop.getDesktop().moveToTrash(f_temp);
                     if (moveToTrash) {
-                        if (!new DocumentoDAO().removeDocumentoPessoal(dp[x])) {
-                            JOptionPane.showMessageDialog(null, "Erro ao tentar remover o documento pessoal do Bando de Dados.", "Erro", JOptionPane.ERROR_MESSAGE);
+                        if (!new DocumentoDAO().removeDocumentoPessoal(arquivo[x])) {
+                            JOptionPane.showMessageDialog(null, "Erro ao tentar remover o documento do Bando de Dados.", "Erro", JOptionPane.ERROR_MESSAGE);
                         }
                     }
+                    f_temp.delete();
                 }
                 carregarDadosPessoaisDoClienteSelecionado((Cliente) listClientes.getElementAt(jListCliente.getSelectedIndex()));
             }
