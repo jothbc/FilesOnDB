@@ -43,7 +43,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.ObjectInputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.URI;
@@ -52,6 +51,7 @@ import java.net.URL;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.sql.Connection;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -72,12 +72,14 @@ public class DocumentoJF extends javax.swing.JFrame {
 
     private User user;
     private boolean conectado = false;
-    private List<Cliente> clientes;
-    private DefaultListModel listClientes = new DefaultListModel();
-    private DefaultListModel listProcessos = new DefaultListModel();
-    private DefaultListModel listTipo = new DefaultListModel();
-    private DefaultListModel listDocumentos = new DefaultListModel();
-    private boolean btnPessoal = false;
+    private static List<Cliente> clientes;
+    private List<Processo> list_processo_do_cliente;
+    private List<DocumentoPessoal> list_documento_pessoal_do_cliente;
+
+    public static DefaultListModel listClientes = new DefaultListModel();
+    public static DefaultListModel listProcessos = new DefaultListModel();
+    public static DefaultListModel listTipo = new DefaultListModel();
+    public static DefaultListModel listDocumentos = new DefaultListModel();
     private ContasClienteJF contasjf;
 
     private String data_abertura_programa;
@@ -127,7 +129,6 @@ public class DocumentoJF extends javax.swing.JFrame {
         jListProcessos = new javax.swing.JList<>();
         jScrollPane5 = new javax.swing.JScrollPane();
         jListTipos = new javax.swing.JList<>();
-        jLabelRelacionadoCliente = new javax.swing.JLabel();
         jLabelProcessos = new javax.swing.JLabel();
         jLabelTiposDocumentos = new javax.swing.JLabel();
         addProcessoBtn = new javax.swing.JButton();
@@ -141,8 +142,6 @@ public class DocumentoJF extends javax.swing.JFrame {
         jLabel8 = new javax.swing.JLabel();
         abertoEmtxt = new javax.swing.JTextField();
         informtxt = new javax.swing.JLabel();
-        processoBtn = new javax.swing.JButton();
-        dadosPessoaisBtn = new javax.swing.JButton();
         cripLabel = new javax.swing.JLabel();
         tamlbl = new javax.swing.JLabel();
         gerenciarClientesBtn = new javax.swing.JButton();
@@ -150,6 +149,7 @@ public class DocumentoJF extends javax.swing.JFrame {
         renomearDocumentoBtn = new javax.swing.JButton();
         chatBtn = new javax.swing.JButton();
         keyPrivateBtn = new javax.swing.JButton();
+        progress = new javax.swing.JProgressBar();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Advocacia Teófilo Rocha");
@@ -305,10 +305,6 @@ public class DocumentoJF extends javax.swing.JFrame {
         });
         jScrollPane5.setViewportView(jListTipos);
 
-        jLabelRelacionadoCliente.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        jLabelRelacionadoCliente.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabelRelacionadoCliente.setText("Relacionado ao Cliente");
-
         jLabelProcessos.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabelProcessos.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabelProcessos.setText("Processos");
@@ -405,26 +401,6 @@ public class DocumentoJF extends javax.swing.JFrame {
         abertoEmtxt.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         abertoEmtxt.setBorder(null);
 
-        processoBtn.setBackground(new java.awt.Color(255, 255, 255));
-        processoBtn.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        processoBtn.setText("Processos");
-        processoBtn.setBorder(null);
-        processoBtn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                processoBtnActionPerformed(evt);
-            }
-        });
-
-        dadosPessoaisBtn.setBackground(new java.awt.Color(255, 255, 255));
-        dadosPessoaisBtn.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        dadosPessoaisBtn.setText("Dados Pessoais");
-        dadosPessoaisBtn.setBorder(null);
-        dadosPessoaisBtn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                dadosPessoaisBtnActionPerformed(evt);
-            }
-        });
-
         cripLabel.setFont(new java.awt.Font("Tahoma", 3, 12)); // NOI18N
         cripLabel.setForeground(new java.awt.Color(51, 204, 0));
 
@@ -479,6 +455,8 @@ public class DocumentoJF extends javax.swing.JFrame {
             }
         });
 
+        progress.setStringPainted(true);
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -500,7 +478,6 @@ public class DocumentoJF extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jLabelRelacionadoCliente, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jLabelProcessos, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jLabelTiposDocumentos, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGroup(jPanel1Layout.createSequentialGroup()
@@ -511,14 +488,13 @@ public class DocumentoJF extends javax.swing.JFrame {
                                 .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(statustxt, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(processoBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(dadosPessoaisBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jScrollPane4)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGap(10, 10, 10)
                                 .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(abertoEmtxt, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addComponent(abertoEmtxt, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(progress, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 537, Short.MAX_VALUE)
@@ -567,19 +543,15 @@ public class DocumentoJF extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                         .addComponent(jLabelClientes, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabelDocumentos)
-                            .addComponent(jLabelRelacionadoCliente)))
+                        .addComponent(jLabelDocumentos, javax.swing.GroupLayout.Alignment.TRAILING))
                     .addComponent(gerenciarClientesBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(processoBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(dadosPessoaisBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(19, 19, 19)
+                                .addComponent(progress, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(51, 51, 51)
                                 .addComponent(jLabelProcessos)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -596,7 +568,7 @@ public class DocumentoJF extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(jLabelTiposDocumentos)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 96, Short.MAX_VALUE))
+                                .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 93, Short.MAX_VALUE))
                             .addComponent(jScrollPane1))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -653,7 +625,34 @@ public class DocumentoJF extends javax.swing.JFrame {
         modiftxt.setText("");
         abertoEmtxt.setText("");
         limparListas();
+        if (jListCliente.getSelectedIndex() >= 0)
+            pre_carregar_listas_relacionadas_ao_cliente((Cliente) listClientes.getElementAt(jListCliente.getSelectedIndex()));
     }//GEN-LAST:event_jListClienteMouseClicked
+
+    private void pre_carregar_listas_relacionadas_ao_cliente(Cliente cliente) {
+        progress.setValue(0);
+        new Thread(() -> {
+            list_processo_do_cliente = new ProcessoDAO().getProcessos(cliente.getId());
+            progress.setValue(progress.getValue() + 25);
+            listProcessos.removeAllElements();
+            if (!list_processo_do_cliente.isEmpty()) {
+                list_processo_do_cliente.forEach((p) -> {
+                    p.setTipos_doc(new TipoDocDAO().findAll(cliente, p));
+                    listProcessos.addElement(p);
+                });
+            }
+            progress.setValue(progress.getValue() + 25);
+        }).start();
+        new Thread(() -> {
+            jLabelDocumentos.setText("Documentos Pessoais");
+            list_documento_pessoal_do_cliente = new DocumentoDAO().getDocumentosPessoais(cliente.getId());
+            progress.setValue(progress.getValue() + 25);
+            if (!list_documento_pessoal_do_cliente.isEmpty()) {
+                list_documento_pessoal_do_cliente.forEach(d -> listDocumentos.addElement(d));
+            }
+            progress.setValue(progress.getValue() + 25);
+        }).start();
+    }
 
     private void jListDocumentoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jListDocumentoMouseClicked
         if (evt.getClickCount() == 2) {
@@ -664,14 +663,15 @@ public class DocumentoJF extends javax.swing.JFrame {
 
     private void jListProcessosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jListProcessosMouseClicked
         statusDoProcesso();
-        carregarDocumentosDoProcessoSelecionado();
+        if (jListProcessos.getSelectedIndex() >= 0)
+            popular_jlist_tipo_documento();
     }//GEN-LAST:event_jListProcessosMouseClicked
 
     private void jListTiposMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jListTiposMouseClicked
         statustxt.setText("");
         modiftxt.setText("");
         abertoEmtxt.setText("");
-        carregarDocumentosDoTipoEProcessoSelecionado();
+        popular_jlist_documento_nao_pessoal();
     }//GEN-LAST:event_jListTiposMouseClicked
 
     private void visualizarBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_visualizarBtnActionPerformed
@@ -705,24 +705,6 @@ public class DocumentoJF extends javax.swing.JFrame {
     private void deleteBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteBtnActionPerformed
         deletarDocumento();
     }//GEN-LAST:event_deleteBtnActionPerformed
-
-    private void processoBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_processoBtnActionPerformed
-        if (jListCliente.getSelectedIndex() < 0) {
-            return;
-        }
-        limparListas();
-        carregarProcessosDoClienteSelecionado((Cliente) listClientes.getElementAt(jListCliente.getSelectedIndex()));
-        btnPessoal = false;
-    }//GEN-LAST:event_processoBtnActionPerformed
-
-    private void dadosPessoaisBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dadosPessoaisBtnActionPerformed
-        if (jListCliente.getSelectedIndex() < 0) {
-            return;
-        }
-        limparListas();
-        carregarDadosPessoaisDoClienteSelecionado((Cliente) listClientes.getElementAt(jListCliente.getSelectedIndex()));
-        btnPessoal = true;
-    }//GEN-LAST:event_dadosPessoaisBtnActionPerformed
 
     private void jListProcessosKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jListProcessosKeyPressed
         if (evt.getKeyCode() == KeyEvent.VK_DELETE) {
@@ -834,7 +816,6 @@ public class DocumentoJF extends javax.swing.JFrame {
     private javax.swing.JButton contasBtn;
     private javax.swing.JButton contasBtn1;
     private javax.swing.JLabel cripLabel;
-    private javax.swing.JButton dadosPessoaisBtn;
     private javax.swing.JButton deleteBtn;
     private javax.swing.JButton downloadBtn;
     private javax.swing.JButton editarBtn;
@@ -847,12 +828,11 @@ public class DocumentoJF extends javax.swing.JFrame {
     private javax.swing.JLabel jLabelClientes;
     private javax.swing.JLabel jLabelDocumentos;
     private javax.swing.JLabel jLabelProcessos;
-    private javax.swing.JLabel jLabelRelacionadoCliente;
     private javax.swing.JLabel jLabelTiposDocumentos;
-    private javax.swing.JList<String> jListCliente;
-    private javax.swing.JList<String> jListDocumento;
-    private javax.swing.JList<String> jListProcessos;
-    private javax.swing.JList<String> jListTipos;
+    public static javax.swing.JList<String> jListCliente;
+    public static javax.swing.JList<String> jListDocumento;
+    public static javax.swing.JList<String> jListProcessos;
+    public static javax.swing.JList<String> jListTipos;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
@@ -861,7 +841,7 @@ public class DocumentoJF extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JButton keyPrivateBtn;
     private javax.swing.JFormattedTextField modiftxt;
-    private javax.swing.JButton processoBtn;
+    private javax.swing.JProgressBar progress;
     private javax.swing.JButton renomearDocumentoBtn;
     private javax.swing.JTextField statustxt;
     private javax.swing.JLabel tamlbl;
@@ -878,17 +858,25 @@ public class DocumentoJF extends javax.swing.JFrame {
         } catch (Exception e) {
             GerarLogErro.gerar("Icone não pode ser carregado devido a um erro.\n" + e.getMessage());
         }
+        progress.setMinimum(0);
+        progress.setMaximum(100);
+        progress.setValue(0);
+
+        list_documento_pessoal_do_cliente = new ArrayList<>();
+        list_processo_do_cliente = new ArrayList<>();
+
+        jListCliente.setModel(listClientes);
+        jListDocumento.setModel(listDocumentos);
+        jListProcessos.setModel(listProcessos);
+        jListTipos.setModel(listTipo);
+        //variavel de controle responsavel por saber quando um dia se passou
         data_abertura_programa = CDate.DataPTBRAtual();
         testarConexao();
         if (conectado) {
             isRunning = true;
-            verificar_user();
-            jListCliente.setModel(listClientes);
-            jListDocumento.setModel(listDocumentos);
-            jListProcessos.setModel(listProcessos);
-            jListTipos.setModel(listTipo);
-            popularListClientes();
-            initJFramesAux();
+            obter_usuario_deste_pc();
+            iniciar_lista_de_clientes();
+            iniciar_frames_auxiliares();
             /*
                 funcoes obtidas pelo "param.txt"
              */
@@ -896,133 +884,82 @@ public class DocumentoJF extends javax.swing.JFrame {
             verificarDiaPassado();
             pk_public = KeyController.carregarKey();
         }
-
     }
 
-    private void popularListClientes() {
+    private void iniciar_lista_de_clientes() {
         new Thread(() -> {
-            listClientes.removeAllElements();
             jLabelClientes.setForeground(Color.BLUE);
             jLabelClientes.setText("Clientes [carregando]");
             clientes = new ClienteDAO().getClintes();
-            clientes.forEach((c) -> {
-                if (c.isAtivo()) {
-                    listClientes.addElement(c);
-                }
-            });
             jLabelClientes.setForeground(Color.BLACK);
             jLabelClientes.setText("Clientes");
+            atualizar_jlist_cliente();
         }).start();
     }
 
-    private synchronized void carregarProcessosDoClienteSelecionado(Cliente c) {
-        /*as Threads estavam dando problemas*/
-        //new Thread(() -> {
-        jLabelProcessos.setForeground(Color.BLUE);
-        jLabelProcessos.setText("Processos [carregando]");
-        listProcessos.removeAllElements();
-        List<Processo> processos = new ProcessoDAO().getProcessos(c.getId());
-        processos.forEach((p) -> {
-            listProcessos.addElement(p);
+    /*
+        verificado
+     */
+    private void atualizar_jlist_cliente() {
+        listClientes.removeAllElements();
+        clientes.forEach((c) -> {
+            if (c.isAtivo()) {
+                listClientes.addElement(c);
+            }
         });
-        jLabelProcessos.setForeground(Color.BLACK);
-        jLabelProcessos.setText("Processos");
-        //}).start();
     }
 
-    private synchronized void carregarDadosPessoaisDoClienteSelecionado(Cliente c) {
-        /*as Threads estavam dando problemas*/
-        //new Thread(() -> {
-        jLabelDocumentos.setForeground(Color.BLUE);
-        jLabelDocumentos.setText("Documentos [carregando]");
-        listDocumentos.removeAllElements();
-        List<DocumentoPessoal> docuemnto_pessoal = new DocumentoDAO().getDocumentosPessoais(c.getId());
-        docuemnto_pessoal.forEach((d) -> {
-            listDocumentos.addElement(d);
-        });
-        jLabelDocumentos.setForeground(Color.BLACK);
-        jLabelDocumentos.setText("Documentos");
-        //}).start();
-    }
-
+    /*
+        verificado
+     */
     private void limparListas() {
         listDocumentos.removeAllElements();
         listProcessos.removeAllElements();
         listTipo.removeAllElements();
     }
 
+    /*
+        verificado
+     */
     private synchronized void visualizarArquivo() {
-        if (listDocumentos.isEmpty()) {
+        if (listDocumentos.isEmpty() || jListDocumento.getSelectedIndex() < 0) {
             return;
         }
         if (jListDocumento.getSelectedIndices().length > 1) {
             JOptionPane.showMessageDialog(null, "Selecione apenas um arquivo por vez para visualizar.");
             return;
         }
-        if (jListDocumento.getSelectedIndex() < 0) {
-            return;
-        }
         new Thread(() -> {
             informtxt.setText("Carregando..");
             informtxt.setForeground(Color.red);
-            Arquivo arquivo = null;
+            Arquivo arquivo = (Arquivo) listDocumentos.getElementAt(jListDocumento.getSelectedIndex());
+            String tabela = arquivo instanceof Documento ? "documentos" : "documentos_pessoais";
             File file = null;
             File file_temp = null;
-            if (listDocumentos.getElementAt(jListDocumento.getSelectedIndex()) instanceof Documento) {
-                arquivo = (Documento) listDocumentos.getElementAt(jListDocumento.getSelectedIndex());
-                if (arquivo.isCrip()) {
+            if (arquivo.isCrip()) {
+                if (pk_private == null) {
+                    pk_private = KeyController.getPrivateKey();
                     if (pk_private == null) {
-                        pk_private = KeyController.getPrivateKey();
-                        if (pk_private == null) {
-                            JOptionPane.showMessageDialog(null, "Arquivo criptografado, para baixa-lo selecione a chave privada.");
-                            informtxt.setText("");
-                            return;
-                        }
-                        keyPrivateBtn.setBackground(Color.GREEN);
-                    } else {
-                        keyPrivateBtn.setBackground(Color.GREEN);
+                        JOptionPane.showMessageDialog(null, "Arquivo criptografado, para baixa-lo selecione a chave privada.");
+                        informtxt.setText("");
+                        return;
                     }
-                    byte[] chaveAES = arquivo.getCrip2();
-                    String chaveAES_String = RSA.decriptografa(chaveAES, pk_private);
-                    chaveAES = AES.hexStringToByteArray(chaveAES_String);
-                    SecretKey AES_KEY = new SecretKeySpec(chaveAES, "AES");
-                    //System.out.println("CHAVE AES CAPTURADA EM FORMATO HEXA: " + AES.bytesToHex(AES_KEY.getEncoded()));
-                    file = new DocumentoDAO().getArquivo(arquivo.getId(), PATH + "JCR LOG\\", "documentos");
-                    file_temp = AES.decrypt(file.getPath(), PATH + "JCR LOG\\decrip" + file.getName(), AES_KEY, true);
+                    keyPrivateBtn.setBackground(Color.GREEN);
                 } else {
-                    file_temp = new DocumentoDAO().getArquivo(arquivo.getId(), PATH + "JCR LOG\\", "documentos");
+                    keyPrivateBtn.setBackground(Color.GREEN);
                 }
-                file.deleteOnExit();
-                file_temp.deleteOnExit();
-                //file = new DocumentoDAO().getArquivo(arquivo.getId(), PATH + "JCR LOG\\", "documentos");
-            } else if (listDocumentos.getElementAt(jListDocumento.getSelectedIndex()) instanceof DocumentoPessoal) {
-                arquivo = (DocumentoPessoal) listDocumentos.getElementAt(jListDocumento.getSelectedIndex());
-                if (arquivo.isCrip()) {
-                    if (pk_private == null) {
-                        pk_private = KeyController.getPrivateKey();
-                        if (pk_private == null) {
-                            JOptionPane.showMessageDialog(null, "Arquivo criptografado, para baixa-lo selecione a chave privada.");
-                            informtxt.setText("");
-                            return;
-                        }
-                        keyPrivateBtn.setBackground(Color.GREEN);
-                    } else {
-                        keyPrivateBtn.setBackground(Color.GREEN);
-                    }
-                    byte[] chaveAES = arquivo.getCrip2();
-                    String chaveAES_String = RSA.decriptografa(chaveAES, pk_private);
-                    chaveAES = AES.hexStringToByteArray(chaveAES_String);
-                    SecretKey AES_KEY = new SecretKeySpec(chaveAES, "AES");
-                    //System.out.println("CHAVE AES CAPTURADA EM FORMATO HEXA: " + AES.bytesToHex(AES_KEY.getEncoded()));
-                    file = new DocumentoDAO().getArquivo(arquivo.getId(), PATH + "JCR LOG\\CRIP\\", "documentos_pessoais");
-                    file_temp = AES.decrypt(file.getPath(), PATH + "JCR LOG\\" + file.getName(), AES_KEY, true);
-                } else {
-                    file_temp = new DocumentoDAO().getArquivo(arquivo.getId(), PATH + "JCR LOG\\", "documentos_pessoais");
-                }
-                file.deleteOnExit();
-                file_temp.deleteOnExit();
-                //file = new DocumentoDAO().getArquivo(arquivo.getId(), PATH + "JCR LOG\\", "documentos_pessoais");
+                byte[] chaveAES = arquivo.getCrip2();
+                String chaveAES_String = RSA.decriptografa(chaveAES, pk_private);
+                chaveAES = AES.hexStringToByteArray(chaveAES_String);
+                SecretKey AES_KEY = new SecretKeySpec(chaveAES, "AES");
+                //System.out.println("CHAVE AES CAPTURADA EM FORMATO HEXA: " + AES.bytesToHex(AES_KEY.getEncoded()));
+                file = new DocumentoDAO().getArquivo(arquivo.getId(), PATH + "JCR LOG\\", tabela);
+                file_temp = AES.decrypt(file.getPath(), PATH + "JCR LOG\\decrip" + file.getName(), AES_KEY, true);
+            } else {
+                file_temp = new DocumentoDAO().getArquivo(arquivo.getId(), PATH + "JCR LOG\\", tabela);
             }
+            file.deleteOnExit();
+            file_temp.deleteOnExit();
             if (file_temp != null) {
                 try {
                     Desktop.getDesktop().open(file_temp);
@@ -1036,46 +973,22 @@ public class DocumentoJF extends javax.swing.JFrame {
         }).start();
     }
 
+    /*
+        função verificada, resta conferir o UploadJD
+    */
     private void upload() {
-        if (jListCliente.getSelectedIndices().length == 0) {
-            JOptionPane.showMessageDialog(this, "Sem cliente selecionado", "Cliente", JOptionPane.INFORMATION_MESSAGE);
-            return;
-        }
-        if (jListCliente.getSelectedIndices().length > 1) {
-            JOptionPane.showMessageDialog(this, "Selecione apenas um cliente", "Cliente", JOptionPane.INFORMATION_MESSAGE);
+        if (jListCliente.getSelectedIndices().length == 0 || jListCliente.getSelectedIndices().length > 1) {
+            JOptionPane.showMessageDialog(this, "Especifique um cliente.", "Cliente", JOptionPane.INFORMATION_MESSAGE);
             return;
         }
         Cliente cliente = (Cliente) listClientes.getElementAt(jListCliente.getSelectedIndex());
-        Arquivo arquivo = null;
         Processo processo = null;
         TipoDoc sub_pasta = null;
-        try {
-            if (!btnPessoal) { //processo
-                try {
-                    processo = (Processo) listProcessos.getElementAt(jListProcessos.getSelectedIndex());
-                } catch (Exception e) {
-                    String erro = "Sem processo selecionado para upload.";
-                    System.err.println(erro);
-                    JOptionPane.showMessageDialog(this, erro, "Processo", JOptionPane.INFORMATION_MESSAGE);
-                    return;
-                }
-                try {
-                    sub_pasta = (TipoDoc) listTipo.getElementAt(jListTipos.getSelectedIndex());
-                } catch (Exception e) {
-                    String erro = "Sem tipo de documento selecionado para upload.";
-                    System.err.println(erro);
-                    JOptionPane.showMessageDialog(this, erro, "Tipo de Documento", JOptionPane.INFORMATION_MESSAGE);
-                    return;
-                }
-            } else if (btnPessoal) { //dados pessoais
-                arquivo = new DocumentoPessoal();
-                arquivo.setID_CLIENTE(cliente.getId());
-            }
-        } catch (HeadlessException ex) {
-            JOptionPane.showMessageDialog(this, ex, "Erro", JOptionPane.INFORMATION_MESSAGE);
-            return;
+        if (jLabelDocumentos.getText().equals("Documentos")) {
+            processo = (Processo) listProcessos.getElementAt(jListProcessos.getSelectedIndex());
+            sub_pasta = (TipoDoc) listTipo.getElementAt(jListTipos.getSelectedIndex());
         }
-        UploadJD jd = new UploadJD(null, true, cliente, sub_pasta, arquivo, processo, pk_public);
+        UploadJD jd = new UploadJD(null, true, cliente, sub_pasta, jLabelDocumentos.getText(), processo, pk_public);
         jd.setVisible(true);
     }
 
@@ -1178,7 +1091,7 @@ public class DocumentoJF extends javax.swing.JFrame {
                     JOptionPane.showMessageDialog(null, "Atualizando tamanho dos arquivos no banco de dados.. aguarde..");
                     new DocumentoDAO().ifNotExistTam();
                     JOptionPane.showMessageDialog(null, "Concluido!");
-                    dadosPessoaisBtnActionPerformed(null);
+                    //dadosPessoaisBtnActionPerformed(null);
                     return;
                 }
                 tamlbl.setText(Conv.CDblDuasCasas((dp.getTamanho() / 1024) / 1024) + "MB");
@@ -1261,72 +1174,46 @@ public class DocumentoJF extends javax.swing.JFrame {
                     if (!new DocumentoDAO().updateDocumento(file, arquivo.getId(), tp.getId(), p.getId(), aes)) {
                         JOptionPane.showMessageDialog(null, "Erro ao tentar atualizar o arquivo no banco de dados.", "Erro", JOptionPane.ERROR_MESSAGE);
                     }
-                    carregarDocumentosDoTipoEProcessoSelecionado();
+                    popular_jlist_documento_nao_pessoal();
                 } else if (arquivo instanceof DocumentoPessoal) {
                     if (!new DocumentoDAO().updateDocumentoPessoal(file, arquivo.getId(), aes)) {
                         JOptionPane.showMessageDialog(null, "Erro ao tentar atualizar o arquivo no banco de dados.", "Erro", JOptionPane.ERROR_MESSAGE);
                     }
-                    carregarDadosPessoaisDoClienteSelecionado(c);
+                    //carregarDadosPessoaisDoClienteSelecionado(c);
                 }
             }
         }
     }
 
-    private synchronized void carregarDocumentosDoProcessoSelecionado() {
-        new Thread(() -> {
-            jLabelTiposDocumentos.setForeground(Color.BLUE);
-            jLabelTiposDocumentos.setText("Tipos de Documentos [carregando]");
-            Cliente c;
-            try {
-                c = (Cliente) listClientes.getElementAt(jListCliente.getSelectedIndex());
-            } catch (Exception e) {
-                System.err.println("carregarDocumentosDoProcessoSelecionado>>Sem cliente selecionado.");
-                GerarLogErro.gerar("carregarDocumentosDoProcessoSelecionado>>Sem cliente selecionado.\n" + e.getMessage());
-                return;
-            }
-            Processo p;
-            try {
-                p = (Processo) listProcessos.getElementAt(jListProcessos.getSelectedIndex());
-            } catch (Exception e) {
-                System.err.println("carregarDocumentosDoProcessoSelecionado>>Sem processo selecionado.");
-                GerarLogErro.gerar("carregarDocumentosDoProcessoSelecionado>>Sem processo selecionado.\n" + e.getMessage());
-                return;
-            }
-            listTipo.removeAllElements();
-            listDocumentos.removeAllElements();
-            if (!listProcessos.isEmpty()) {
-                List<TipoDoc> tiposDeDocumentos = new TipoDocDAO().findAllByClienteEProcesso(c, p);
-                for (TipoDoc t : tiposDeDocumentos) {
-                    listTipo.addElement(t);
-                }
-            }
-            jLabelTiposDocumentos.setForeground(Color.BLACK);
-            jLabelTiposDocumentos.setText("Tipos de Documentos");
-        }).start();
+    /*
+        verificado
+     */
+    private void popular_jlist_tipo_documento() {
+        jLabelTiposDocumentos.setForeground(Color.BLUE);
+        jLabelTiposDocumentos.setText("Tipos de Documentos [carregando]");
+        listTipo.removeAllElements();
+        listDocumentos.removeAllElements();
+        Processo p = (Processo) listProcessos.getElementAt(jListProcessos.getSelectedIndex());
+        p.getTipos_doc().forEach(d -> listTipo.addElement(d));
+        jLabelTiposDocumentos.setForeground(Color.BLACK);
+        jLabelTiposDocumentos.setText("Tipos de Documentos");
     }
 
-    private synchronized void carregarDocumentosDoTipoEProcessoSelecionado() {
-        new Thread(() -> {
+    /*
+        verificado
+     */
+    private void popular_jlist_documento_nao_pessoal() {
+        listDocumentos.removeAllElements();
+        if (!listTipo.isEmpty()) {
             jLabelDocumentos.setForeground(Color.BLUE);
             jLabelDocumentos.setText("Documentos [carregando]");
-            listDocumentos.removeAllElements();
-            if (listTipo.isEmpty()) {
-                return;
-            }
-            try {
-                Cliente c = (Cliente) listClientes.getElementAt(jListCliente.getSelectedIndex());
-                Processo p = (Processo) listProcessos.getElementAt(jListProcessos.getSelectedIndex());
-                TipoDoc t = (TipoDoc) listTipo.getElementAt(jListTipos.getSelectedIndex());
-                List<Documento> documentos = new DocumentoDAO().getDocumentosDeProcessoETipo(c.getId(), p.getId(), t.getId());
-                documentos.forEach((d) -> {
-                    listDocumentos.addElement(d);
-                });
-            } catch (Exception ex) {
-                System.err.println(ex);
-            }
+            TipoDoc tipo_documento = (TipoDoc) listTipo.getElementAt(jListTipos.getSelectedIndex());
+            tipo_documento.getDocumentos().forEach((d) -> {
+                listDocumentos.addElement(d);
+            });
             jLabelDocumentos.setForeground(Color.BLACK);
             jLabelDocumentos.setText("Documentos");
-        }).start();
+        }
     }
 
     private void addProcesso() {
@@ -1334,7 +1221,7 @@ public class DocumentoJF extends javax.swing.JFrame {
             Cliente c = (Cliente) listClientes.getElementAt(jListCliente.getSelectedIndex());
             NovoProcessoJD jd = new NovoProcessoJD(null, true, c);
             jd.setVisible(true);
-            processoBtnActionPerformed(null);
+            //processoBtnActionPerformed(null);
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, "Sem cliente selecionado.\n" + ex, "Erro", JOptionPane.INFORMATION_MESSAGE);
         }
@@ -1346,7 +1233,7 @@ public class DocumentoJF extends javax.swing.JFrame {
             Processo p = (Processo) listProcessos.getElementAt(jListProcessos.getSelectedIndex());
             NovoTipoDocJD jd = new NovoTipoDocJD(null, true, c, p);
             jd.setVisible(true);
-            carregarDocumentosDoProcessoSelecionado();
+            popular_jlist_tipo_documento();
         } catch (Exception ex) {
             System.out.println("Sem processo selecionado." + ex);
         }
@@ -1370,7 +1257,7 @@ public class DocumentoJF extends javax.swing.JFrame {
                 jd.setVisible(true);
                 statustxt.setText("");
                 Cliente c = (Cliente) listClientes.getElementAt(jListCliente.getSelectedIndex());
-                carregarProcessosDoClienteSelecionado(c);
+                //carregarProcessosDoClienteSelecionado(c);
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(null, "Sem processo selecionado.", "Status Processo", JOptionPane.INFORMATION_MESSAGE);
             }
@@ -1426,12 +1313,12 @@ public class DocumentoJF extends javax.swing.JFrame {
                         if (!new DocumentoDAO().removeDocumento((Documento) arq)) {
                             JOptionPane.showMessageDialog(null, "Erro ao tentar remover o documento do Bando de Dados.", "Erro", JOptionPane.ERROR_MESSAGE);
                         }
-                        carregarDocumentosDoTipoEProcessoSelecionado();
+                        popular_jlist_documento_nao_pessoal();
                     } else if (arq instanceof DocumentoPessoal) {
                         if (!new DocumentoDAO().removeDocumentoPessoal((DocumentoPessoal) arq)) {
                             JOptionPane.showMessageDialog(null, "Erro ao tentar remover o documento do Bando de Dados.", "Erro", JOptionPane.ERROR_MESSAGE);
                         }
-                        carregarDadosPessoaisDoClienteSelecionado((Cliente) listClientes.getElementAt(jListCliente.getSelectedIndex()));
+                        //carregarDadosPessoaisDoClienteSelecionado((Cliente) list_clientes.getElementAt(jListCliente.getSelectedIndex()));
                     }
                     f_temp.delete();
                 }
@@ -1447,7 +1334,7 @@ public class DocumentoJF extends javax.swing.JFrame {
                     if (!new DocumentoDAO().removerProcesso((Processo) listProcessos.getElementAt(jListProcessos.getSelectedIndex()))) {
                         JOptionPane.showMessageDialog(null, "Erro ao tentar remover o processo selecioado.");
                     } else {
-                        processoBtnActionPerformed(null);
+                        //processoBtnActionPerformed(null);
                     }
                 }
             }
@@ -1458,7 +1345,7 @@ public class DocumentoJF extends javax.swing.JFrame {
 
     private void gerenciarClientes() {
         new ClienteJD(null, true).setVisible(true);
-        popularListClientes();
+        iniciar_lista_de_clientes();
     }
 
     private void testarConexao() {
@@ -1487,7 +1374,7 @@ public class DocumentoJF extends javax.swing.JFrame {
         }).start();
     }
 
-    private void verificar_user() {
+    private void obter_usuario_deste_pc() {
         user = new UserDAO().getUser();
         if (user == null) {
             cadastrar_Usuario();
@@ -1515,7 +1402,7 @@ public class DocumentoJF extends javax.swing.JFrame {
             int op1 = JOptionPane.showOptionDialog(null, "Existem documentos vinculados a esse tipo, deseja realmente excluir todos?", "Confirmação de exclusão", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, null, null, null);
             if (op1 == JOptionPane.YES_OPTION) {
                 if (new DocumentoDAO().removerTipoDeDocumento((TipoDoc) listTipo.getElementAt(jListTipos.getSelectedIndex()))) {
-                    processoBtnActionPerformed(null);
+                    //processoBtnActionPerformed(null);
                 } else {
                     JOptionPane.showMessageDialog(null, "Erro ao tentar realizar a ação.");
                 }
@@ -1570,7 +1457,7 @@ public class DocumentoJF extends javax.swing.JFrame {
         }
         //System.out.println(nova+obterExtensaoDoAquivo(documentoPessoal.getNome()));
         if (new DocumentoDAO().renomearDocumentoPessoal(documentoPessoal.getId(), nova + Arquivo.obterExtensaoDoAquivo(documentoPessoal.getNome()))) {
-            dadosPessoaisBtnActionPerformed(null); //atualiza os documentos de novo
+            //dadosPessoaisBtnActionPerformed(null); //atualiza os documentos de novo
         } else {
             JOptionPane.showMessageDialog(null, "Ocorreu um problema ao tentar renomear o arquivo no Banco de Dados.");
         }
@@ -1686,7 +1573,7 @@ public class DocumentoJF extends javax.swing.JFrame {
 
     }
 
-    private void initJFramesAux() {
+    private void iniciar_frames_auxiliares() {
         new Thread(() -> {
             //inicia jframes auxiliares, para poder ter o controle de instancia-los somente uma vez
             atvJF = new AtividadesJF();
@@ -1700,4 +1587,5 @@ public class DocumentoJF extends javax.swing.JFrame {
             }
         }).start();
     }
+
 }

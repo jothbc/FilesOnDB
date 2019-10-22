@@ -23,7 +23,7 @@ import java.util.logging.Logger;
  *
  * @author User
  */
-public class TipoDocDAO extends DAO{
+public class TipoDocDAO extends DAO {
 
     public TipoDocDAO() {
         con = ConnectionFactoryMySQL.getConnection();
@@ -118,7 +118,7 @@ public class TipoDocDAO extends DAO{
         }
     }
 
-    public List<TipoDoc> findAllByClienteEProcesso(Cliente c, Processo p) {
+    public List<TipoDoc> findAll(Cliente c, Processo p) {
         List<TipoDoc> tipos = new ArrayList<>();
         sql = "SELECT * FROM tipo WHERE ID_CLIENTE = ? AND ID_PROCESSO = ? ORDER BY descricao";
         try {
@@ -131,6 +131,9 @@ public class TipoDocDAO extends DAO{
                 t.setId(rs.getInt("id"));
                 t.setNome(rs.getString("descricao"));
                 tipos.add(t);
+            }
+            if (!tipos.isEmpty()) {
+                tipos.forEach(t -> t.setDocumentos(new DocumentoDAO().getDocumentos_ByTipo(t.getId())));
             }
         } catch (SQLException ex) {
             Logger.getLogger(TipoDocDAO.class.getName()).log(Level.SEVERE, null, ex);

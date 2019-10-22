@@ -7,6 +7,7 @@ package br.Teofilo.Documentos;
 
 import br.Teofilo.Bean.Arquivo;
 import br.Teofilo.Bean.Cliente;
+import br.Teofilo.Bean.Documento;
 import br.Teofilo.Bean.GerarLogErro;
 import br.Teofilo.Bean.Processo;
 import br.Teofilo.Bean.TipoDoc;
@@ -43,11 +44,11 @@ public class UploadJD extends javax.swing.JDialog {
     private static Point point = new Point();
     private DefaultListModel lista_arquivos;
     private Cliente cliente;
-    private Arquivo arquivo;
     private Processo processo;
     private TipoDoc sub_pasta;
     private double tamanho_doc = 0;
     private PublicKey RSA_KEY;
+    private String desc_tipo;
 
     /**
      * Creates new form UploadJD
@@ -56,17 +57,17 @@ public class UploadJD extends javax.swing.JDialog {
      * @param modal
      * @param cliente_
      * @param sub_pasta_
-     * @param arquivo_
+     * @param desc_tipo_arquivo_
      * @param processo_
      */
-    public UploadJD(java.awt.Frame parent, boolean modal, Cliente cliente_, TipoDoc sub_pasta_, Arquivo arquivo_, Processo processo_, PublicKey key_p) {
+    public UploadJD(java.awt.Frame parent, boolean modal, Cliente cliente_, TipoDoc sub_pasta_, String desc_tipo_arquivo_, Processo processo_, PublicKey key_p) {
         super(parent, modal);
         this.lista_arquivos = new DefaultListModel<>();
         initComponents();
         this.cliente = cliente_;
         this.sub_pasta = sub_pasta_;
-        this.arquivo = arquivo_;
         this.processo = processo_;
+        this.desc_tipo = desc_tipo_arquivo_;
         RSA_KEY = key_p;
         init();
     }
@@ -394,19 +395,21 @@ public class UploadJD extends javax.swing.JDialog {
         bg.add(jCheckBox2);
         if (cliente != null) {
             clientetxt.setText(cliente.getNome());
-            if (processo != null) { //verifica se é processo (se for processo tem que ter o numero do processo e o tipo de documento (documento,petição,etc..))
+            if (desc_tipo.equals("Documentos")) {
                 obs.setText("Nº Processo: " + processo.getN_processo() + " --> " + sub_pasta.getNome());
-            } else if (arquivo != null) {  //senão é um documento pessoal, e vai ser feito upload na tabela documentos_pessoais
+            } else {
                 obs.setText("Documento pessoal.");
             }
             jProgressBar1.setVisible(false);
-        }
-        if (RSA_KEY == null) {
-            RSA_KEY = KeyController.getPublicKey();
             if (RSA_KEY == null) {
-                JOptionPane.showMessageDialog(null, "Por favor, selecione a chave publica para criptografar os dados.\nA falta da chave publica deixa os dados desprotegidos no Banco de Dados.");
-                dispose();
+                RSA_KEY = KeyController.getPublicKey();
+                if (RSA_KEY == null) {
+                    JOptionPane.showMessageDialog(null, "Por favor, selecione a chave publica para criptografar os dados.\nA falta da chave publica deixa os dados desprotegidos no Banco de Dados.");
+                    dispose();
+                }
             }
+        } else {
+            JOptionPane.showMessageDialog(null, "Sem cliente Selecionado. Como você veio parar aqui?");
         }
     }
 
@@ -472,7 +475,7 @@ public class UploadJD extends javax.swing.JDialog {
                     //3 e 4
                     aes = RSA.criptografa(AES.bytesToHex(aesKey.getEncoded()), RSA_KEY);
                 }
-                if (processo != null) {
+                if (desc_tipo.equals("Documentos")) {
                     if (!new DocumentoDAO().addDocumento(file, cliente.getId(), sub_pasta.getId(), processo.getId(), jCherCrip.isSelected(), aes)) {
                         JOptionPane.showMessageDialog(null, "Erro ao tentar salvar o arquivo " + file.getName() + " no Banco de dados", "Erro", JOptionPane.ERROR_MESSAGE);
                         return;
@@ -481,7 +484,7 @@ public class UploadJD extends javax.swing.JDialog {
                         jProgressBar1.setValue(count);
                         count++;
                     }
-                } else if (arquivo != null) {
+                } else if (desc_tipo.equals("Documentos Pessoais")) {
                     if (!new DocumentoDAO().addDocumentoPessoal(file, cliente.getId(), jCherCrip.isSelected(), aes)) {
                         JOptionPane.showMessageDialog(null, "Erro ao tentar salvar o arquivo " + file.getName() + " no Banco de dados", "Erro", JOptionPane.ERROR_MESSAGE);
                         return;
@@ -493,6 +496,20 @@ public class UploadJD extends javax.swing.JDialog {
                 }
                 tamanho_doc -= file.length();
                 setTamtxt();
+            }
+            if (desc_tipo.equals("Documentos")) {
+                Processo pros = (Processo) DocumentoJF.listProcessos.getElementAt(DocumentoJF.jListProcessos.getSelectedIndex());
+                for (TipoDoc tp : pros.getTipos_doc()) {
+                    if (tp.getId() == sub_pasta.getId()) {
+                        tp.setDocumentos(new DocumentoDAO().getDocumentos_ByTipo(tp.getId()));
+                    }
+                }
+            }else if(desc_tipo.equals("Documentos Pessoais")){
+                
+                //para melhorar o desempenho, os documentos upados tem que serem criados
+                //e depois salvos aqui
+                // e nao passado parte por parte para o update
+                //DocumentoJF.listDocumentos.addElement(cliente); <<- não é essa tabela só pra consta
             }
             jProgressBar1.setVisible(false);
         }).start();

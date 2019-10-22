@@ -33,7 +33,7 @@ import javax.swing.JOptionPane;
  *
  * @author User
  */
-public class DocumentoDAO extends DAO{
+public class DocumentoDAO extends DAO {
 
     public DocumentoDAO() {
         con = ConnectionFactoryMySQL.getConnection();
@@ -134,6 +134,7 @@ public class DocumentoDAO extends DAO{
     }
 
     //nao retorna o file em si
+    @Deprecated
     public List<Documento> getDocumentosDeProcessoETipo(int idCliente, int processo, int tipo) {
         List<Documento> arquivos = new ArrayList<>();
         sql = "SELECT id,nome,modificacao,status,ID_PROCESSO,ID_TIPO,crip,crip2,tam FROM documentos WHERE ID_CLIENTE = ?"
@@ -460,5 +461,35 @@ public class DocumentoDAO extends DAO{
         } finally {
             ConnectionFactoryMySQL.closeConnection(con, stmt);
         }
+    }
+
+    public List<Documento> getDocumentos_ByTipo(int id) {
+        sql = "SELECT * FROM documentos WHERE ID_TIPO = ?";
+        List<Documento> arquivos = new ArrayList<>();
+        try {
+            stmt = con.prepareStatement(sql);
+            stmt.setInt(1, id);
+            rs = stmt.executeQuery();
+            while (rs.next()) {
+                Documento d = new Documento();
+                d.setId(rs.getInt("id"));
+                d.setNome(rs.getString("nome"));
+                if (rs.getString("modificacao") != null) {
+                    d.setAlteracao(CDate.DataMySQLtoDataStringPT(rs.getString("modificacao")));
+                }
+                d.setStatus(rs.getString("status"));
+                d.setID_PROCESSO(rs.getInt("ID_PROCESSO"));
+                d.setID_TIPO(rs.getInt("ID_TIPO"));
+                d.setCrip(rs.getBoolean("crip"));
+                d.setCrip2(rs.getBytes("crip2"));
+                d.setTamanho(rs.getDouble("tam"));
+                arquivos.add(d);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DocumentoDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }finally{
+            ConnectionFactoryMySQL.closeConnection(con, stmt, rs);
+        }
+        return arquivos;
     }
 }
